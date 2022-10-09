@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Movies</string>
+    <string name="home_tab">Home</string>
+    <string name="trending_tab">Trending</string>
+    <string name="search_tab">Search</string>
+    <string name="favourite_tab">Favourite</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

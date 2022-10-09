@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_tab"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_48px"
+        android:title="@string/home_tab"/>
+
+    <item
+        android:id="@+id/trending_tab"
+        android:enabled="true"
+        android:icon="@drawable/ic_trending_48px"
+        android:title="@string/trending_tab"/>
+
+    <item
+        android:id="@+id/search_tab"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_48px"
+        android:title="@string/search_tab"/>
+
+    <item
+        android:id="@+id/favourite_tab"
+        android:enabled="true"
+        android:icon="@drawable/ic_star_48px"
+        android:title="@string/favourite_tab"/>
+
+</menu>

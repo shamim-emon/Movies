@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_title">16sp</dimen>
+    <dimen name="secondary_title">14sp</dimen>
+</resources>
