@@ -7,8 +7,10 @@ import bd.emon.movies.entity.Genres
 import bd.emon.movies.usecase.GetGenresUseCase
 import bd.emon.movies.usecase.PARAM_API_KEY
 import bd.emon.movies.usecase.PARAM_LANGUAGE
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class HomeViewModel @Inject constructor(private val getGenresUseCase: GetGenresUseCase) :
     BaseViewModel() {
 
@@ -24,9 +26,9 @@ class HomeViewModel @Inject constructor(private val getGenresUseCase: GetGenresU
             .subscribe(
                 {
                     it.value?.let {
-                        genres.value = it
+                        genres.postValue(it)
                     } ?: run {
-                        errorState.value = Throwable(NO_DATA_ERR)
+                        errorState.postValue(Throwable(NO_DATA_ERR))
                     }
                 },
                 {
