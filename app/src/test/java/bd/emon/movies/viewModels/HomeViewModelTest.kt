@@ -218,7 +218,7 @@ class HomeViewModelTest {
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_passedToApi() {
-        TODO("")
+        TODO()
     }
 
     @Test
