@@ -36,10 +36,8 @@ class HomeViewModelTest {
     val genreList = MovieApiDummyDataProvider.genreList
 
     lateinit var movieApisTd: MovieApisTd
-
     lateinit var getGenresUseCase: GetGenresUseCase
     lateinit var getDiscoverMoviesUseCase: GetDiscoverMoviesUseCase
-
     lateinit var homeViewModel: HomeViewModel
 
     @Before
@@ -220,7 +218,7 @@ class HomeViewModelTest {
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_passedToApi() {
-        TODO()
+        TODO("")
     }
 
     @Test
