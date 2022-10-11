@@ -11,7 +11,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
     lateinit var binding: ActivityMainBinding
 
     @Inject
@@ -19,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpViewListeners()
         screensNavigator.goTo(HomeFragment.newInstance())

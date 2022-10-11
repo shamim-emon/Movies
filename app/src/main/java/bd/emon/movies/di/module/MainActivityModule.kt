@@ -1,9 +1,8 @@
-package bd.emon.movies.di.modules
+package bd.emon.movies.di.module
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import bd.emon.movies.R
-import bd.emon.movies.databinding.ActivityMainBinding
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +19,4 @@ object MainActivityModule {
 
     @Provides
     fun containerId() = R.id.fragmentContainer
-
-    @Provides
-    fun provideMainActivityBinding(activity: Activity) =
-        ActivityMainBinding.inflate(activity.layoutInflater)
 }

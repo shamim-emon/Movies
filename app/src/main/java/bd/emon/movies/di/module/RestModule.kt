@@ -1,10 +1,11 @@
-package bd.emon.movies.di.modules
+package bd.emon.movies.di.module
 
 import bd.emon.movies.common.ASyncTransformer
 import bd.emon.movies.rest.MovieApiInterface
 import bd.emon.movies.rest.MovieApis
 import bd.emon.movies.rest.MovieApisImpl
 import bd.emon.movies.rest.RestApiServiceProvider
+import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
 import dagger.Module
 import dagger.Provides
@@ -39,4 +40,8 @@ object RestModule {
     @Provides
     fun provideGetGenresUseCase(movieApisImpl: MovieApis): GetGenresUseCase =
         GetGenresUseCase(ASyncTransformer(), movieApisImpl)
+
+    @Provides
+    fun provideGetDiscoverMoviesUseCase(movieApisImpl: MovieApis): GetDiscoverMoviesUseCase =
+        GetDiscoverMoviesUseCase(ASyncTransformer(), movieApisImpl)
 }

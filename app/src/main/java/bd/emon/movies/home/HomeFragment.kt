@@ -1,74 +1,68 @@
 package bd.emon.movies.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import bd.emon.movies.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import bd.emon.movies.base.BaseFragment
+import bd.emon.movies.databinding.FragmentHomeBinding
 import bd.emon.movies.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class HomeFragment : BaseFragment() {
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var adapter: HomePatchesAdapter
+    override fun showLoader() {
+        binding.loader.visibility = VISIBLE
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    override fun hideLoader() {
+        binding.loader.visibility = GONE
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+    ): View {
 
-        viewModel.loadGenres("e6cf8962018fc2d2e61d9dd07689dc26", "en-US")
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        viewModel.loadGenres(apiKey, language)
         viewModel.genres.observe(
-            viewLifecycleOwner,
-            Observer {
-                Log.e("TAG", it.genres[0].name)
+            viewLifecycleOwner
+        ) {
+            adapter = HomePatchesAdapter(it.genres)
+            binding.homeContents.adapter = adapter
+            binding.homeContents.layoutManager = LinearLayoutManager(context)
+        }
+
+        viewModel.errorState.observe(viewLifecycleOwner) {
+            showToast(requireContext(), it.message!!)
+        }
+        viewModel.loadingState.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    showLoader()
+                }
+                false -> {
+                    hideLoader()
+                }
             }
-        )
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        }
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
-            HomeFragment().apply {
-            }
+            HomeFragment()
     }
 }
