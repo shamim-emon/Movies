@@ -3,13 +3,12 @@ package bd.emon.movies.usecase
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.Transformer
-import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.entity.Optional
+import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.rest.MovieApis
 import io.reactivex.rxjava3.core.Observable
 
-
-class GetGenresUseCase(
+open class GetGenresUseCase(
     transformer: Transformer<Optional<Genres>>,
     private val movieApis: MovieApis
 ) : UseCase<Optional<Genres>>(transformer) {

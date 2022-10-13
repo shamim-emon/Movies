@@ -35,7 +35,6 @@ class HomeViewModel @Inject constructor(
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = apiKey
         params[PARAM_LANGUAGE] = lang
-
         addDisposable(
             getGenresUseCase.createObservable(params)
                 .subscribe(

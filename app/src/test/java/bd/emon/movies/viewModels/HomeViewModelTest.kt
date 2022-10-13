@@ -1,6 +1,8 @@
 package bd.emon.movies.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import bd.emon.movies.any
+import bd.emon.movies.capture
 import bd.emon.movies.common.ASyncTransformer
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.NO_DATA_ERR
@@ -18,6 +20,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
+import org.mockito.Mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -33,18 +41,20 @@ class HomeViewModelTest {
     val VOTE_COUNT_GREATER_THAN = 10000
     val GENRE_SINGULAR = "28"
     val GENRE_MULTIPLE = "12,16,28"
-    val genreList = MovieApiDummyDataProvider.genreList
 
-    lateinit var movieApisTd: MovieApisTd
+    @Captor
+    lateinit var stringCaptor: ArgumentCaptor<String>
+
+    @Mock
+    lateinit var movieApis: MovieApis
     lateinit var getGenresUseCase: GetGenresUseCase
     lateinit var getDiscoverMoviesUseCase: GetDiscoverMoviesUseCase
     lateinit var homeViewModel: HomeViewModel
 
     @Before
     fun setUp() {
-        movieApisTd = MovieApisTd()
-        getGenresUseCase = GetGenresUseCase(ASyncTransformer(), movieApisTd)
-        getDiscoverMoviesUseCase = GetDiscoverMoviesUseCase(ASyncTransformer(), movieApisTd)
+        getGenresUseCase = GetGenresUseCase(ASyncTransformer(), movieApis)
+        getDiscoverMoviesUseCase = GetDiscoverMoviesUseCase(ASyncTransformer(), movieApis)
         homeViewModel = HomeViewModel(
             getGenresUseCase = getGenresUseCase,
             getDiscoverMoviesUseCase = getDiscoverMoviesUseCase
@@ -62,14 +72,15 @@ class HomeViewModelTest {
     @Test
     fun loadGenres_rightParamsPassedToApi() {
         homeViewModel.loadGenres(API_KEY, LANG)
-        assertThat(movieApisTd.apiKey, `is`(API_KEY))
-        assertThat(movieApisTd.lang, `is`(LANG))
+        verify(movieApis, times(1)).getGenres(capture(stringCaptor), capture(stringCaptor))
+        assertThat(stringCaptor.allValues[0], `is`(API_KEY))
+        assertThat(stringCaptor.allValues[1], `is`(LANG))
     }
 
     @Test
     fun loadGenres_success_genreListEmitted() {
         homeViewModel.loadGenres(API_KEY, LANG)
-        assertThat(homeViewModel.genres.value!! == genreList, `is`(true))
+        assertThat(homeViewModel.genres.value!! == MovieApiDummyDataProvider.genreList, `is`(true))
     }
 
     @Test
@@ -92,21 +103,21 @@ class HomeViewModelTest {
         assertThat(homeViewModel.genres.value, nullValue())
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun loadGenres_networkError_errorEmitted() {
         getGenres_networkErr()
         homeViewModel.loadGenres(API_KEY, LANG)
         assertThat(homeViewModel.errorState.value!!.message, `is`(NETWORK_ERROR_DEFAULT))
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun loadGenres_networkError_LoadStateFalseEmitted() {
         getGenres_networkErr()
         homeViewModel.loadGenres(API_KEY, LANG)
         assertThat(homeViewModel.loadingState.value == false, `is`(true))
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun loadGenres_networkError_emptyListEmitted() {
         getGenres_networkErr()
         homeViewModel.loadGenres(API_KEY, LANG)
@@ -218,118 +229,80 @@ class HomeViewModelTest {
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_singleGenre_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_multipleGenre_passedToApi() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_success_listEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_success_loadStateFalseEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_successEmptyList_nullEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_successEmptyList_noDataErrorMessageEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_successEmptyList_loadStateFalseEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_networkError_nullEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_networkError_networkErrorMessageEmitted() {
-        TODO()
     }
 
     @Test
     fun loadDiscoverMovies_networkError_loadStateFalseEmitted() {
-        TODO()
     }
 
     //region helper methods
     fun getGenres_success() {
-        movieApisTd.status = MovieApisTd.Companion.API_STATUS.SUCCESS
+        `when`(movieApis.getGenres(any(String::class.java), any(String::class.java)))
+            .thenReturn(Observable.just(Optional.of(MovieApiDummyDataProvider.genreList)))
     }
 
     fun getGenres_networkErr() {
-        movieApisTd.status = MovieApisTd.Companion.API_STATUS.ERROR
+        `when`(movieApis.getGenres(any(String::class.java), any(String::class.java)))
+            .thenThrow(Throwable(NETWORK_ERROR_DEFAULT))
     }
 
     fun getGenres_noData() {
-        movieApisTd.status = MovieApisTd.Companion.API_STATUS.NODATA
+        `when`(movieApis.getGenres(any(String::class.java), any(String::class.java)))
+            .thenReturn(Observable.just(Optional.empty()))
     }
     //endregion
-
-    //region helper classes
-    class MovieApisTd : MovieApis {
-
-        companion object {
-            enum class API_STATUS {
-                SUCCESS, ERROR, NODATA
-            }
-        }
-
-        var status: API_STATUS = API_STATUS.SUCCESS
-        var apiKey: String? = ""
-        var lang: String? = ""
-        val genreList = MovieApiDummyDataProvider.genreList
-
-        override fun getGenres(apiKey: String, language: String): Observable<Optional<Genres>> {
-            this.apiKey = apiKey
-            this.lang = language
-            when (status) {
-                API_STATUS.SUCCESS -> return Observable.just(Optional.of(genreList))
-                API_STATUS.NODATA -> return Observable.just(Optional.empty())
-                API_STATUS.ERROR -> throw Throwable(NETWORK_ERROR_DEFAULT)
-                else -> throw IllegalStateException("${this.javaClass} has Invalid api status")
-            }
-        }
-    }
 
     object MovieApiDummyDataProvider {
         val genreList = Genres(
