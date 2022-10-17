@@ -10,6 +10,7 @@ import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.PARAM_PAGE
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
+import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
@@ -23,9 +24,11 @@ class HomeViewModel @Inject constructor(
 ) :
     BaseViewModel() {
 
-    var errorState: MutableLiveData<Throwable> = MutableLiveData()
     var genres: MutableLiveData<Genres> = MutableLiveData()
+    var discoverMovies: MutableLiveData<DiscoverMovie> = MutableLiveData()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
+    var errorState: MutableLiveData<Throwable> = MutableLiveData()
+
 
     init {
         loadingState.postValue(true)
@@ -71,7 +74,21 @@ class HomeViewModel @Inject constructor(
         params[PARAM_PAGE] = page
         params[PARAM_VOTE_COUNT_GREATER_THAN] = voteCountGreaterThan
         params[PARAM_GENRES] = genres
+        addDisposable(getDiscoverMoviesUseCase.createObservable(params)
+            .subscribe(
+                {
+                    it.value?.let { data ->
+                        discoverMovies.postValue(data)
+                    } ?: run {
+                        errorState.postValue(Throwable(NO_DATA_ERR))
+                    }
+                    loadingState.postValue(false)
+                },
+                {
+                    errorState.postValue(it)
+                    loadingState.postValue(false)
+                }
+            ))
 
-        getDiscoverMoviesUseCase.createObservable(params)
     }
 }

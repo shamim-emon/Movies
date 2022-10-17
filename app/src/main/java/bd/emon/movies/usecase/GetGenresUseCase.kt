@@ -5,22 +5,19 @@ import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.Transformer
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.genre.Genres
-import bd.emon.movies.rest.MovieApis
+import bd.emon.movies.rest.MovieRepository
 import io.reactivex.rxjava3.core.Observable
 
 open class GetGenresUseCase(
     transformer: Transformer<Optional<Genres>>,
-    private val movieApis: MovieApis
+    private val movieRepository: MovieRepository
 ) : UseCase<Optional<Genres>>(transformer) {
-    lateinit var apiKey: String
-    lateinit var lang: String
-
+    var params :HashMap<String, Any?>?=null
     override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<Genres>> {
-        apiKey = withParam!![PARAM_API_KEY] as String
-        lang = withParam[PARAM_LANGUAGE] as String
+        params=withParam
         var throwable: Throwable
         try {
-            return movieApis.getGenres(apiKey, lang)
+            return movieRepository.getGenres(params as Map<String, Any?>)
         } catch (t: Throwable) {
             throwable = t
         }

@@ -10,28 +10,45 @@ import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.common.Transformer
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.discover.DiscoverMovie
-import bd.emon.movies.rest.MovieApis
+import bd.emon.movies.rest.MovieRepository
 import io.reactivex.rxjava3.core.Observable
 
 class GetDiscoverMoviesUseCase(
     transformer: Transformer<Optional<DiscoverMovie>>,
-    private val movieApis: MovieApis
+    private val movieRepository: MovieRepository
 ) :UseCase<Optional<DiscoverMovie>>(transformer) {
-    lateinit var apiKey: String
-    lateinit var lang: String
-    var sortBy: String?=null
-    var includeAdult: Boolean?=null
-    var page: Int?=null
-    var vote_count_greater_than: Int?=null
-    var genres: String?=null
+    lateinit var params:HashMap<String, Any?>
     override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
-        apiKey = withParam!![PARAM_API_KEY] as String
-        lang = withParam[PARAM_LANGUAGE] as String
-        sortBy = withParam[PARAM_SORT_BY] as String?
-        includeAdult = withParam[PARAM_INCLUDE_ADULT] as Boolean?
-        page = withParam[PARAM_PAGE] as Int?
-        vote_count_greater_than = withParam[PARAM_VOTE_COUNT_GREATER_THAN] as Int?
-        genres = withParam[PARAM_GENRES] as String?
-        return Observable.just(Optional.empty())
+        params= hashMapOf()
+        params[PARAM_API_KEY]=withParam!![PARAM_API_KEY]
+        params[PARAM_LANGUAGE]= withParam[PARAM_LANGUAGE]
+        withParam[PARAM_SORT_BY]?.let {
+            params[PARAM_SORT_BY] = withParam[PARAM_SORT_BY]
+        }
+        withParam[PARAM_INCLUDE_ADULT]?.let {
+            params[PARAM_INCLUDE_ADULT] = withParam[PARAM_INCLUDE_ADULT]
+        }
+
+        withParam[PARAM_PAGE]?.let {
+            params[PARAM_PAGE] = withParam[PARAM_PAGE]
+        }
+
+        withParam[PARAM_VOTE_COUNT_GREATER_THAN]?.let {
+            params[PARAM_VOTE_COUNT_GREATER_THAN] = withParam[PARAM_VOTE_COUNT_GREATER_THAN]
+        }
+
+        withParam[PARAM_GENRES]?.let {
+            params[PARAM_GENRES] = withParam[PARAM_GENRES]
+        }
+
+
+        var throwable: Throwable
+        try {
+            return movieRepository.getDiscoverMovies(params)
+        } catch (t: Throwable) {
+            throwable = t
+        }
+
+        return Observable.error(throwable)
     }
 }

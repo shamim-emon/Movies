@@ -1,11 +1,13 @@
 package bd.emon.movies.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.base.BaseFragment
@@ -36,6 +38,7 @@ class HomeFragment : BaseFragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         viewModel.loadGenres(apiKey, language)
+
         viewModel.genres.observe(
             viewLifecycleOwner
         ) {
@@ -57,6 +60,14 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
+
+        viewModel.discoverMovies.observe(
+            viewLifecycleOwner,
+            Observer {
+                Log.e("DMs", "${it.results}")
+            }
+        )
+
         return binding.root
     }
 
