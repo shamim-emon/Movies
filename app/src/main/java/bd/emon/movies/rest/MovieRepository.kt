@@ -9,5 +9,5 @@ interface MovieRepository {
     fun getGenres(withParam: Map<String, Any?>): Observable<Optional<Genres>>
     fun getDiscoverMovies(
         withParam: Map<String, Any?>
-    ):Observable<Optional<DiscoverMovie>>
+    ): Observable<Optional<DiscoverMovie>>
 }

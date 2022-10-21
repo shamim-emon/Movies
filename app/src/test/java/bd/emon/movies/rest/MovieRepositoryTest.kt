@@ -35,8 +35,7 @@ class MovieRepositoryTest {
     val INCLUDE_ADULT = true
     val PAGE = 11
     val VOTE_COUNT_GREATER_THAN = 10000
-    val GENRE_SINGULAR = "28"
-    val GENRE_MULTIPLE = "12,16,28"
+    val GENRE = "28"
 
     @Mock
     lateinit var movieApiInterface: MovieApiInterface
@@ -77,23 +76,26 @@ class MovieRepositoryTest {
     }
 
     @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_passedToApi() {
+    fun getDiscoverMovies_correctParams_apiKey_lang_genre_passedToApi() {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
         movieRepository.getDiscoverMovies(params)
         verify(movieApiInterface, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
     }
 
     @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_sortBy_passedToApi() {
+    fun getDiscoverMovies_correctParams_apiKey_lang_genre_sortBy_passedToApi() {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
         movieRepository.getDiscoverMovies(params)
         verify(movieApiInterface, times(1)).getDiscoverMovies(
@@ -101,14 +103,16 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
     }
 
     @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_sortBy_includeAdult_passedToApi() {
+    fun getDiscoverMovies_correctParams_apiKey_lang_genre_sortBy_includeAdult_passedToApi() {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         movieRepository.getDiscoverMovies(params)
@@ -117,15 +121,17 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
     }
 
     @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_sortBy_includeAdult_page_passedToApi() {
+    fun getDiscoverMovies_correctParams_apiKey_lang_genre_sortBy_includeAdult_page_passedToApi() {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         params[PARAM_PAGE] = PAGE
@@ -135,16 +141,18 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
         assertThat(mapCaptor.value[PARAM_PAGE.toApiParam()], `is`(PAGE.toString()))
     }
 
     @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_sortBy_includeAdult_page_voteCountGreaterThan_passedToApi() {
+    fun getDiscoverMovies_correctParams_apiKey_lang_genre_sortBy_includeAdult_page_voteCountGreaterThan_passedToApi() {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         params[PARAM_PAGE] = PAGE
@@ -155,57 +163,14 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
         assertThat(mapCaptor.value[PARAM_PAGE.toApiParam()], `is`(PAGE.toString()))
         assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN.toApiParam()], `is`(VOTE_COUNT_GREATER_THAN.toString()))
     }
 
-    @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_sortBy_includeAdult_page_voteCountGreaterThan_genrenSingular_passedToApi() {
-        val params = hashMapOf<String, Any?>()
-        params[PARAM_API_KEY] = API_KEY
-        params[PARAM_LANGUAGE] = LANG
-        params[PARAM_SORT_BY] = SORT_BY
-        params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
-        params[PARAM_PAGE] = PAGE
-        params[PARAM_VOTE_COUNT_GREATER_THAN] = VOTE_COUNT_GREATER_THAN
-        params[PARAM_GENRES] = GENRE_SINGULAR
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
-            capture(mapCaptor)
-        )
-        assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
-        assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
-        assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
-        assertThat(mapCaptor.value[PARAM_PAGE.toApiParam()], `is`(PAGE.toString()))
-        assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN.toApiParam()], `is`(VOTE_COUNT_GREATER_THAN.toString()))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE_SINGULAR))
-    }
 
-    @Test
-    fun getDiscoverMovies_correctParams_apiKey_lang_sortBy_includeAdult_page_voteCountGreaterThan_genrenMutiple_passedToApi() {
-        val params = hashMapOf<String, Any?>()
-        params[PARAM_API_KEY] = API_KEY
-        params[PARAM_LANGUAGE] = LANG
-        params[PARAM_SORT_BY] = SORT_BY
-        params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
-        params[PARAM_PAGE] = PAGE
-        params[PARAM_VOTE_COUNT_GREATER_THAN] = VOTE_COUNT_GREATER_THAN
-        params[PARAM_GENRES] = GENRE_MULTIPLE
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
-            capture(mapCaptor)
-        )
-        assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
-        assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
-        assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
-        assertThat(mapCaptor.value[PARAM_PAGE.toApiParam()], `is`(PAGE.toString()))
-        assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN.toApiParam()], `is`(VOTE_COUNT_GREATER_THAN.toString()))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE_MULTIPLE))
-    }
 
     private fun getGenresApiResponse() {
         Mockito.`when`(movieApiInterface.getGenres(anyMap()))

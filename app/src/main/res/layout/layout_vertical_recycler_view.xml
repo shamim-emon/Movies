@@ -12,7 +12,8 @@
 
         <TextView
             android:id="@+id/title"
-            android:textSize="@dimen/primary_title"
+            android:textSize="@dimen/header_title"
+            android:fontFamily="@font/open_sans_extra_bold"
             android:layout_margin="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,6 +34,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

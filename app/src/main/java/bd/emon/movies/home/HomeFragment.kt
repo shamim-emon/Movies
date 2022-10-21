@@ -12,15 +12,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.databinding.FragmentHomeBinding
+import bd.emon.movies.di.assistedFactory.HomePatchesAdapteFactory
+import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(),DiscoverListAdapterCallBack {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: HomePatchesAdapter
+    private lateinit var discoverListAdaptersContainer: DiscoverListAdaptersContainer
+    private lateinit  var genres:List<Genre>
+
+    @Inject
+    lateinit var homePatchesAdapteFactory: HomePatchesAdapteFactory
+
     override fun showLoader() {
         binding.loader.visibility = VISIBLE
     }
@@ -37,14 +46,18 @@ class HomeFragment : BaseFragment() {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
         viewModel.loadGenres(apiKey, language)
 
         viewModel.genres.observe(
             viewLifecycleOwner
         ) {
-            adapter = HomePatchesAdapter(it.genres)
+            genres=it.genres
+            adapter = homePatchesAdapteFactory.create(genres,this)
+            discoverListAdaptersContainer=adapter.getDiscoverListAdapterContainer()
             binding.homeContents.adapter = adapter
             binding.homeContents.layoutManager = LinearLayoutManager(context)
+
         }
 
         viewModel.errorState.observe(viewLifecycleOwner) {
@@ -62,11 +75,12 @@ class HomeFragment : BaseFragment() {
         }
 
         viewModel.discoverMovies.observe(
-            viewLifecycleOwner,
-            Observer {
-                Log.e("DMs", "${it.results}")
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            Log.e("Genre","$ M->${it.grp_genre_id}")
+            discoverListAdaptersContainer.getAdapterFromContainer(it.grp_genre_id)?.populateList(it.results.toMutableList())
+
+        }
 
         return binding.root
     }
@@ -76,4 +90,9 @@ class HomeFragment : BaseFragment() {
         fun newInstance() =
             HomeFragment()
     }
+
+    override fun loadDiscoverItemByGenreId(genreId: Int) {
+        viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
+    }
 }
+

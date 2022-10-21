@@ -2,6 +2,7 @@ package bd.emon.movies.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import bd.emon.movies.base.BaseViewModel
+import bd.emon.movies.common.MultipleLiveEvent
 import bd.emon.movies.common.NO_DATA_ERR
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_GENRES
@@ -25,10 +26,9 @@ class HomeViewModel @Inject constructor(
     BaseViewModel() {
 
     var genres: MutableLiveData<Genres> = MutableLiveData()
-    var discoverMovies: MutableLiveData<DiscoverMovie> = MutableLiveData()
+    var discoverMovies: MultipleLiveEvent<DiscoverMovie> = MultipleLiveEvent()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
     var errorState: MutableLiveData<Throwable> = MutableLiveData()
-
 
     init {
         loadingState.postValue(true)
@@ -60,11 +60,11 @@ class HomeViewModel @Inject constructor(
     fun loadDiscoverMovies(
         apiKey: String,
         lang: String,
+        genres: Int,
         sortBy: String? = null,
         includeAdult: Boolean? = null,
         page: Int? = null,
         voteCountGreaterThan: Int? = null,
-        genres: String? = null
     ) {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = apiKey
@@ -74,21 +74,22 @@ class HomeViewModel @Inject constructor(
         params[PARAM_PAGE] = page
         params[PARAM_VOTE_COUNT_GREATER_THAN] = voteCountGreaterThan
         params[PARAM_GENRES] = genres
-        addDisposable(getDiscoverMoviesUseCase.createObservable(params)
-            .subscribe(
-                {
-                    it.value?.let { data ->
-                        discoverMovies.postValue(data)
-                    } ?: run {
-                        errorState.postValue(Throwable(NO_DATA_ERR))
+        addDisposable(
+            getDiscoverMoviesUseCase.getDiscoverMovies(params)
+                .subscribe(
+                    {
+                        it.value?.let { data ->
+                            discoverMovies.postValue(data)
+                        } ?: run {
+                            errorState.postValue(Throwable(NO_DATA_ERR))
+                        }
+                        loadingState.postValue(false)
+                    },
+                    {
+                        errorState.postValue(it)
+                        loadingState.postValue(false)
                     }
-                    loadingState.postValue(false)
-                },
-                {
-                    errorState.postValue(it)
-                    loadingState.postValue(false)
-                }
-            ))
-
+                )
+        )
     }
 }

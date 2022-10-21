@@ -1,6 +1,7 @@
 package bd.emon.movies.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import bd.emon.movies.RxImmediateSchedulerRule
 import bd.emon.movies.capture
 import bd.emon.movies.common.ASyncTransformer
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
@@ -36,6 +37,8 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelTest {
+    @get:Rule
+    val schedulers = RxImmediateSchedulerRule()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -45,8 +48,7 @@ class HomeViewModelTest {
     val INCLUDE_ADULT = true
     val PAGE = 11
     val VOTE_COUNT_GREATER_THAN = 10000
-    val GENRE_SINGULAR = "28"
-    val GENRE_MULTIPLE = "12,16,28"
+    val GENRE = 28
 
     @Captor
     lateinit var mapCaptor: ArgumentCaptor<HashMap<String, Any?>>
@@ -132,55 +134,67 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_passedToUseCase() {
-        homeViewModel.loadDiscoverMovies(apiKey = API_KEY, lang = LANG)
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_passedToUseCase() {
+        homeViewModel.loadDiscoverMovies(apiKey = API_KEY, lang = LANG, genres = GENRE)
         assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_passedToUseCase() {
-        homeViewModel.loadDiscoverMovies(apiKey = API_KEY, lang = LANG, sortBy = SORT_BY)
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_passedToUseCase() {
+        homeViewModel.loadDiscoverMovies(
+            apiKey = API_KEY,
+            lang = LANG,
+            genres = GENRE,
+            sortBy = SORT_BY
+        )
         assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_passedToUseCase() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_passedToUseCase() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY,
             includeAdult = INCLUDE_ADULT
         )
         assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_passedToUseCase() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_page_passedToUseCase() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY,
             includeAdult = INCLUDE_ADULT,
             page = PAGE
         )
         assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_PAGE], `is`(PAGE))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_passedToUseCase() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_page_voteCountGreaterThan_passedToUseCase() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY,
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
@@ -188,70 +202,37 @@ class HomeViewModelTest {
         )
         assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
         assertThat(getDiscoverMoviesUseCase.params[PARAM_PAGE], `is`(PAGE))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
+        assertThat(
+            getDiscoverMoviesUseCase.params[PARAM_VOTE_COUNT_GREATER_THAN],
+            `is`(VOTE_COUNT_GREATER_THAN)
+        )
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_singleGenre_passedToUseCase() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_passedToRepository() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
-            sortBy = SORT_BY,
-            includeAdult = INCLUDE_ADULT,
-            page = PAGE,
-            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_SINGULAR
-        )
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_PAGE], `is`(PAGE))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE_SINGULAR))
-    }
-
-    @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_multipleGenre_passedToUseCase() {
-        homeViewModel.loadDiscoverMovies(
-            apiKey = API_KEY,
-            lang = LANG,
-            sortBy = SORT_BY,
-            includeAdult = INCLUDE_ADULT,
-            page = PAGE,
-            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
-        )
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_PAGE], `is`(PAGE))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
-        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE_MULTIPLE))
-    }
-
-    @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_passedToRepository() {
-        homeViewModel.loadDiscoverMovies(
-            apiKey = API_KEY,
-            lang = LANG
+            genres = GENRE
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
             capture(mapCaptor),
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_passedToRepository() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_passedToRepository() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
@@ -259,14 +240,16 @@ class HomeViewModelTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_passedToRepository() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_passedToRepository() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY,
             includeAdult = INCLUDE_ADULT
         )
@@ -275,15 +258,17 @@ class HomeViewModelTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_passedToRepository() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_page_passedToRepository() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY,
             includeAdult = INCLUDE_ADULT,
             page = PAGE
@@ -293,16 +278,18 @@ class HomeViewModelTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
         assertThat(mapCaptor.value[PARAM_PAGE], `is`(PAGE))
     }
 
     @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_passedToRepository() {
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_page_voteCountGreaterThan_passedToRepository() {
         homeViewModel.loadDiscoverMovies(
             apiKey = API_KEY,
             lang = LANG,
+            genres = GENRE,
             sortBy = SORT_BY,
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
@@ -313,56 +300,11 @@ class HomeViewModelTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE))
         assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
         assertThat(mapCaptor.value[PARAM_PAGE], `is`(PAGE))
         assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
-    }
-
-    @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_singleGenre_passedToRepository() {
-        homeViewModel.loadDiscoverMovies(
-            apiKey = API_KEY,
-            lang = LANG,
-            sortBy = SORT_BY,
-            includeAdult = INCLUDE_ADULT,
-            page = PAGE,
-            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_SINGULAR
-        )
-        verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
-        )
-        assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
-        assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
-        assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
-        assertThat(mapCaptor.value[PARAM_PAGE], `is`(PAGE))
-        assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
-        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE_SINGULAR))
-    }
-
-    @Test
-    fun loadDiscoverMovies_correctParams_apiKey_language_sortBy_includeAdult_page_voteCountGreaterThan_multipleGenre_passedToRepository() {
-        homeViewModel.loadDiscoverMovies(
-            apiKey = API_KEY,
-            lang = LANG,
-            sortBy = SORT_BY,
-            includeAdult = INCLUDE_ADULT,
-            page = PAGE,
-            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
-        )
-        verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
-        )
-        assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
-        assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
-        assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
-        assertThat(mapCaptor.value[PARAM_PAGE], `is`(PAGE))
-        assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
-        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE_MULTIPLE))
     }
 
     @Test
@@ -374,12 +316,26 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
         assertThat(
             homeViewModel.discoverMovies.value,
             `is`(MovieApiDummyDataProvider.disocoverMovies)
         )
+    }
+
+    @Test
+    fun loadDiscoverMovies_success_correct_grp_gen_idEmitted() {
+        homeViewModel.loadDiscoverMovies(
+            apiKey = API_KEY,
+            lang = LANG,
+            sortBy = SORT_BY,
+            includeAdult = INCLUDE_ADULT,
+            page = PAGE,
+            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
+            genres = GENRE
+        )
+        assertThat(homeViewModel.discoverMovies.value!!.grp_genre_id, `is`(GENRE))
     }
 
     @Test
@@ -391,7 +347,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
         assertThat(
             homeViewModel.loadingState.value,
@@ -409,7 +365,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
         assertThat(
             homeViewModel.discoverMovies.value,
@@ -427,7 +383,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
 
         assertThat(homeViewModel.errorState.value!!.message == NO_DATA_ERR, `is`(true))
@@ -443,7 +399,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
 
         assertThat(homeViewModel.loadingState.value, `is`(false))
@@ -459,7 +415,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
 
         assertThat(homeViewModel.discoverMovies.value, `is`(nullValue()))
@@ -475,7 +431,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
 
         assertThat(homeViewModel.errorState.value!!.message, `is`(NETWORK_ERROR_DEFAULT))
@@ -491,7 +447,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT,
             page = PAGE,
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
-            genres = GENRE_MULTIPLE
+            genres = GENRE
         )
         assertThat(homeViewModel.loadingState.value, `is`(false))
     }
@@ -525,7 +481,11 @@ class HomeViewModelTest {
     }
 
     fun getDiscoverMovies_networkError() {
-        `when`(movieRepository.getDiscoverMovies(anyMap())).thenThrow(RuntimeException(NETWORK_ERROR_DEFAULT))
+        `when`(movieRepository.getDiscoverMovies(anyMap())).thenThrow(
+            RuntimeException(
+                NETWORK_ERROR_DEFAULT
+            )
+        )
     }
     //endregion
 }

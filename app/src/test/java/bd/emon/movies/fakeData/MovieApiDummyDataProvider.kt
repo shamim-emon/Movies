@@ -56,6 +56,7 @@ object MovieApiDummyDataProvider {
             )
         ),
         total_pages = 10,
-        total_results = 200
+        total_results = 200,
+        grp_genre_id = 28
     )
 }

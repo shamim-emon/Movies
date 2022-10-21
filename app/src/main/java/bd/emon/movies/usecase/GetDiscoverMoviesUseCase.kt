@@ -16,12 +16,13 @@ import io.reactivex.rxjava3.core.Observable
 class GetDiscoverMoviesUseCase(
     transformer: Transformer<Optional<DiscoverMovie>>,
     private val movieRepository: MovieRepository
-) :UseCase<Optional<DiscoverMovie>>(transformer) {
-    lateinit var params:HashMap<String, Any?>
+) : UseCase<Optional<DiscoverMovie>>(transformer) {
+    lateinit var params: HashMap<String, Any?>
     override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
-        params= hashMapOf()
-        params[PARAM_API_KEY]=withParam!![PARAM_API_KEY]
-        params[PARAM_LANGUAGE]= withParam[PARAM_LANGUAGE]
+        params = hashMapOf()
+        params[PARAM_API_KEY] = withParam!![PARAM_API_KEY]
+        params[PARAM_LANGUAGE] = withParam[PARAM_LANGUAGE]
+        params[PARAM_GENRES] = withParam[PARAM_GENRES]
         withParam[PARAM_SORT_BY]?.let {
             params[PARAM_SORT_BY] = withParam[PARAM_SORT_BY]
         }
@@ -37,11 +38,6 @@ class GetDiscoverMoviesUseCase(
             params[PARAM_VOTE_COUNT_GREATER_THAN] = withParam[PARAM_VOTE_COUNT_GREATER_THAN]
         }
 
-        withParam[PARAM_GENRES]?.let {
-            params[PARAM_GENRES] = withParam[PARAM_GENRES]
-        }
-
-
         var throwable: Throwable
         try {
             return movieRepository.getDiscoverMovies(params)
@@ -50,5 +46,9 @@ class GetDiscoverMoviesUseCase(
         }
 
         return Observable.error(throwable)
+    }
+
+    fun getDiscoverMovies(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
+        return observable(withParam)
     }
 }

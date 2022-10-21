@@ -1,5 +1,7 @@
 package bd.emon.movies.entity.discover
 
+import bd.emon.movies.common.IMAGE_BASE_URL
+
 data class Result(
     val adult: Boolean,
     val backdrop_path: String,
@@ -15,4 +17,7 @@ data class Result(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
-)
+) {
+    val imageUrl: String
+        get() = IMAGE_BASE_URL + poster_path
+}

@@ -20,4 +20,5 @@ class AppModule {
     @AppLanguage
     @Provides
     fun provideAppLanguage() = "en-US"
+
 }
