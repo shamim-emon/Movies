@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
         params[PARAM_API_KEY] = apiKey
         params[PARAM_LANGUAGE] = lang
         addDisposable(
-            getGenresUseCase.createObservable(params)
+            getGenresUseCase.getGenres(params)
                 .subscribe(
                     {
                         it.value?.let {

@@ -35,7 +35,7 @@ class MovieRepositoryTest {
     val INCLUDE_ADULT = true
     val PAGE = 11
     val VOTE_COUNT_GREATER_THAN = 10000
-    val GENRE = "28"
+    val GENRE = 28
 
     @Mock
     lateinit var movieApiInterface: MovieApiInterface
@@ -87,7 +87,7 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`("$GENRE"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`("$GENRE"))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
     }
 
@@ -121,7 +121,7 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`("$GENRE"))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
     }
@@ -141,7 +141,7 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`("$GENRE"))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
         assertThat(mapCaptor.value[PARAM_PAGE.toApiParam()], `is`(PAGE.toString()))
@@ -163,14 +163,12 @@ class MovieRepositoryTest {
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE.toApiParam()], `is`(LANG))
-        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`(GENRE))
+        assertThat(mapCaptor.value[PARAM_GENRES.toApiParam()], `is`("$GENRE"))
         assertThat(mapCaptor.value[PARAM_SORT_BY.toApiParam()], `is`(SORT_BY))
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT.toApiParam()], `is`(INCLUDE_ADULT.toString()))
         assertThat(mapCaptor.value[PARAM_PAGE.toApiParam()], `is`(PAGE.toString()))
         assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN.toApiParam()], `is`(VOTE_COUNT_GREATER_THAN.toString()))
     }
-
-
 
     private fun getGenresApiResponse() {
         Mockito.`when`(movieApiInterface.getGenres(anyMap()))

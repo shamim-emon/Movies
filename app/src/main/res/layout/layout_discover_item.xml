@@ -10,48 +10,35 @@
         android:layout_width="240dp"
         android:layout_height="360dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+        <ImageView
+            android:id="@+id/thumbnail"
+            imageUrl="@{movie.imageUrl}"
+            android:background="@null"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:elevation="2dp"
             app:layout_constraintDimensionRatio="h,0.75:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/thumbnail"
-                imageUrl="@{movie.imageUrl}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="h,0.75:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/title"
+            android:textColor="@color/teal_700"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:maxLines="2"
             android:ellipsize="end"
             android:fontFamily="@font/open_sans_bold"
+            android:maxLines="2"
             android:text="@{movie.original_title}"
             android:textSize="@dimen/primary_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView" />
+            app:layout_constraintEnd_toEndOf="@+id/thumbnail"
+            app:layout_constraintStart_toStartOf="@+id/thumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/thumbnail" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
