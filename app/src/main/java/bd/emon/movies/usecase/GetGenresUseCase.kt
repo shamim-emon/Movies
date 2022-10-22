@@ -23,7 +23,7 @@ open class GetGenresUseCase(
         return Observable.error(throwable)
     }
 
-    fun getGenres(withParam: HashMap<String, Any?>?): Observable<Optional<Genres>>{
+    fun getGenres(withParam: HashMap<String, Any?>?): Observable<Optional<Genres>> {
         return observable(withParam)
     }
 }

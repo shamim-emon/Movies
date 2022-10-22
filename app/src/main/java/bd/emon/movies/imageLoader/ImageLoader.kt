@@ -17,8 +17,8 @@ object ImageLoader {
             .load(imageUrl)
             .transform(CenterCrop(), RoundedCorners(8))
             .transition(DrawableTransitionOptions.withCrossFade(1000))
-            .placeholder(R.drawable.place_holder_potrait)
-            .error(R.drawable.error_potrait)
+            .placeholder(R.drawable.place_holder_w240_h360)
+            .error(R.drawable.error_w240_h360)
             .into(imageView)
     }
 }

@@ -4,6 +4,10 @@
     <string name="trending_tab">Trending</string>
     <string name="search_tab">Search</string>
     <string name="favourite_tab">Favourite</string>
+    <string name="no_internet_primary_text">Opps! Something went wrong</string>
+    <string name="no_internet_secondary_text">Check your internet and try again</string>4
+    <string name="no_result_primary_text">No item available</string>
+    <string name="no_result_secondary_text">Nothing available on this criteria</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

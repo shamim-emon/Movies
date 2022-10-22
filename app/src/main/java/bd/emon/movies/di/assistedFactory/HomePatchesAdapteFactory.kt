@@ -7,5 +7,5 @@ import dagger.assisted.AssistedFactory
 
 @AssistedFactory
 interface HomePatchesAdapteFactory {
-    fun create(genres: List<Genre>,callBack: DiscoverListAdapterCallBack):HomePatchesAdapter
+    fun create(genres: List<Genre>, callBack: DiscoverListAdapterCallBack): HomePatchesAdapter
 }

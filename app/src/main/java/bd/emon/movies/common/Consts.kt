@@ -1,6 +1,6 @@
 package bd.emon.movies.common
 
-const val IMAGE_BASE_URL ="https://image.tmdb.org/t/p/original"
+const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original"
 
 const val NO_DATA_ERR = "Missing Data"
 const val NETWORK_ERROR_DEFAULT = "No Internet"
@@ -13,6 +13,4 @@ const val PARAM_PAGE = "param:page"
 const val PARAM_VOTE_COUNT_GREATER_THAN = "param:vote_count.gte"
 const val PARAM_GENRES = "param:with_genres"
 
-
 fun String.toApiParam() = this.replace("param:", "")
-

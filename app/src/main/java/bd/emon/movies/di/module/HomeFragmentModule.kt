@@ -10,5 +10,5 @@ import dagger.hilt.android.components.FragmentComponent
 @InstallIn(FragmentComponent::class)
 @Module
 class HomeFragmentModule {
-    @Provides fun provideDiscoverListAdapterHelper() : DiscoverListAdaptersContainer = DiscoverListAdaptersContainerImpl()
+    @Provides fun provideDiscoverListAdapterHelper(): DiscoverListAdaptersContainer = DiscoverListAdaptersContainerImpl()
 }

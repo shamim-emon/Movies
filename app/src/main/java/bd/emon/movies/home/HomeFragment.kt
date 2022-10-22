@@ -1,13 +1,11 @@
 package bd.emon.movies.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.base.BaseFragment
@@ -19,23 +17,31 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(),DiscoverListAdapterCallBack {
+class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var adapter: HomePatchesAdapter
+    private var adapter: HomePatchesAdapter? = null
     private lateinit var discoverListAdaptersContainer: DiscoverListAdaptersContainer
-    private lateinit  var genres:List<Genre>
+    private var genres: List<Genre>? = null
 
     @Inject
     lateinit var homePatchesAdapteFactory: HomePatchesAdapteFactory
 
     override fun showLoader() {
-        binding.loader.visibility = VISIBLE
+        binding.swipeContainer.isRefreshing = true
     }
 
     override fun hideLoader() {
-        binding.loader.visibility = GONE
+        binding.swipeContainer.isRefreshing = false
+    }
+
+    override fun showNoInternetView() {
+        binding.noInternetView.root.visibility = VISIBLE
+    }
+
+    override fun hideNoInternetView() {
+        binding.noInternetView.root.visibility = GONE
     }
 
     override fun onCreateView(
@@ -43,25 +49,29 @@ class HomeFragment : BaseFragment(),DiscoverListAdapterCallBack {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
+        binding.noInternetView.root.visibility = GONE
         viewModel.loadGenres(apiKey, language)
 
         viewModel.genres.observe(
             viewLifecycleOwner
         ) {
-            genres=it.genres
-            adapter = homePatchesAdapteFactory.create(genres,this)
-            discoverListAdaptersContainer=adapter.getDiscoverListAdapterContainer()
+            hideNoInternetView()
+            genres = it.genres
+            adapter = homePatchesAdapteFactory.create(genres!!, this)
+            discoverListAdaptersContainer = adapter!!.getDiscoverListAdapterContainer()
             binding.homeContents.adapter = adapter
             binding.homeContents.layoutManager = LinearLayoutManager(context)
-
         }
 
         viewModel.errorState.observe(viewLifecycleOwner) {
-            showToast(requireContext(), it.message!!)
+            if (adapter == null || adapter!!.isEmpty()) {
+                showNoInternetView()
+            } else {
+                hideNoInternetView()
+            }
         }
         viewModel.loadingState.observe(viewLifecycleOwner) {
             when (it) {
@@ -77,10 +87,21 @@ class HomeFragment : BaseFragment(),DiscoverListAdapterCallBack {
         viewModel.discoverMovies.observe(
             viewLifecycleOwner
         ) {
-            Log.e("Genre","$ M->${it.grp_genre_id}")
-            discoverListAdaptersContainer.getAdapterFromContainer(it.grp_genre_id)?.populateList(it.results.toMutableList())
-
+            discoverListAdaptersContainer.getAdapterFromContainer(it.grp_genre_id)
+                ?.populateList(it.results.toMutableList())
         }
+
+        binding.swipeContainer.setOnRefreshListener {
+            adapter?.clearItems()
+            viewModel.loadGenres(apiKey, language)
+        }
+
+        binding.swipeContainer.setColorSchemeResources(
+            android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light
+        )
 
         return binding.root
     }
@@ -95,4 +116,3 @@ class HomeFragment : BaseFragment(),DiscoverListAdapterCallBack {
         viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
     }
 }
-

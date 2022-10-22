@@ -21,6 +21,8 @@ abstract class BaseFragment : Fragment() {
 
     abstract fun showLoader()
     abstract fun hideLoader()
+    abstract fun showNoInternetView()
+    abstract fun hideNoInternetView()
     protected fun showToast(context: Context, text: String, duration: Int = Toast.LENGTH_LONG) {
         Toast.makeText(context, text, duration).show()
     }

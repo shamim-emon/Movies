@@ -5,5 +5,5 @@ data class DiscoverMovie(
     val results: List<Result>,
     val total_pages: Int,
     val total_results: Int,
-    var grp_genre_id:Int
+    var grp_genre_id: Int
 )
