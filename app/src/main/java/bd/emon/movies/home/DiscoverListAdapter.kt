@@ -8,9 +8,8 @@ import bd.emon.movies.R
 import bd.emon.movies.databinding.LayoutDiscoverItemBinding
 import bd.emon.movies.entity.discover.Result
 
-class DiscoverListAdapter(val genre: String) : RecyclerView.Adapter<DiscoverListAdapter.ViewHolder>() {
-
-    private var movies: MutableList<Result> = mutableListOf()
+class DiscoverListAdapter(private var movies: MutableList<Result>) :
+    RecyclerView.Adapter<DiscoverListAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: LayoutDiscoverItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -30,9 +29,4 @@ class DiscoverListAdapter(val genre: String) : RecyclerView.Adapter<DiscoverList
     }
 
     override fun getItemCount() = movies.size
-
-    fun populateList(movies: MutableList<Result>) {
-        this.movies = movies
-        notifyDataSetChanged()
-    }
 }

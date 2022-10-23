@@ -1,9 +1,9 @@
 package bd.emon.movies.home
 
 import android.view.LayoutInflater
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bd.emon.movies.R
 import bd.emon.movies.databinding.LayoutVerticalRecyclerViewBinding
@@ -14,12 +14,14 @@ import dagger.assisted.AssistedInject
 class HomePatchesAdapter @AssistedInject constructor(
     @Assisted private var genres: List<Genre>,
     @Assisted private val callBack: DiscoverListAdapterCallBack,
-    private val discoverListAdapterContainer: DiscoverListAdaptersContainer = DiscoverListAdaptersContainerImpl()
+    private val homePatchViewHolderContainer: HomePatchAdapterViewHolderContainer = HomePatchAdapterViewHolderContainerImpl()
 ) :
     RecyclerView.Adapter<HomePatchesAdapter.ViewHolder>() {
 
     inner class ViewHolder(var binding: LayoutVerticalRecyclerViewBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        var tag: Int? = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: LayoutVerticalRecyclerViewBinding = DataBindingUtil.inflate(
@@ -33,13 +35,8 @@ class HomePatchesAdapter @AssistedInject constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.genre = genres[position]
-        val adapter: DiscoverListAdapter =
-            discoverListAdapterContainer.getAdapterFromContainer(genres[position].id)
-                ?: DiscoverListAdapter(genres[position].name)
-        holder.binding.list.adapter = adapter
-        holder.binding.list.layoutManager =
-            LinearLayoutManager(holder.binding.list.context, LinearLayoutManager.HORIZONTAL, false)
-        discoverListAdapterContainer.addAdapterToContainer(genres[position].id, adapter)
+        homePatchViewHolderContainer.addViewHolder(genres[position].id, holder)
+        holder.binding.progressBar.visibility = VISIBLE
         callBack.loadDiscoverItemByGenreId(genres[position].id)
     }
 
@@ -52,5 +49,5 @@ class HomePatchesAdapter @AssistedInject constructor(
 
     override fun getItemCount() = genres.size
 
-    fun getDiscoverListAdapterContainer() = discoverListAdapterContainer
+    fun getDiscoverListAdapterContainer() = homePatchViewHolderContainer
 }

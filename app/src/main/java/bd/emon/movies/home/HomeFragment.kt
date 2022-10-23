@@ -22,11 +22,14 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private var adapter: HomePatchesAdapter? = null
-    private lateinit var discoverListAdaptersContainer: DiscoverListAdaptersContainer
+    private lateinit var homePatchAdapterViewHolderContainer: HomePatchAdapterViewHolderContainer
     private var genres: List<Genre>? = null
 
     @Inject
     lateinit var homePatchesAdapteFactory: HomePatchesAdapteFactory
+
+    @Inject
+    lateinit var homePatchViewHolderHelper: HomePatchViewHolderHelper
 
     override fun showLoader() {
         binding.swipeContainer.isRefreshing = true
@@ -61,7 +64,7 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
             hideNoInternetView()
             genres = it.genres
             adapter = homePatchesAdapteFactory.create(genres!!, this)
-            discoverListAdaptersContainer = adapter!!.getDiscoverListAdapterContainer()
+            homePatchAdapterViewHolderContainer = adapter!!.getDiscoverListAdapterContainer()
             binding.homeContents.adapter = adapter
             binding.homeContents.layoutManager = LinearLayoutManager(context)
         }
@@ -87,8 +90,8 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
         viewModel.discoverMovies.observe(
             viewLifecycleOwner
         ) {
-            discoverListAdaptersContainer.getAdapterFromContainer(it.grp_genre_id)
-                ?.populateList(it.results.toMutableList())
+            val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(it.grp_genre_id)
+            homePatchViewHolderHelper.handleViewHolder(viewHolder, it.results)
         }
 
         binding.swipeContainer.setOnRefreshListener {
@@ -108,8 +111,7 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            HomeFragment()
+        fun newInstance() = HomeFragment()
     }
 
     override fun loadDiscoverItemByGenreId(genreId: Int) {
