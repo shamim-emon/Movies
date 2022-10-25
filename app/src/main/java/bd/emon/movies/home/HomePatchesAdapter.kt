@@ -12,8 +12,8 @@ import dagger.assisted.AssistedInject
 
 class HomePatchesAdapter @AssistedInject constructor(
     @Assisted private var genres: List<Genre>,
-    @Assisted private val callBack: DiscoverListAdapterCallBack,
-    private val homePatchAdapterViewHolderContainer: HomePatchAdapterViewHolderContainer = HomePatchAdapterViewHolderContainerImpl()
+    @Assisted private val callBack: HomeFragmentAdaptersCallBack,
+    private val homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
 ) :
     RecyclerView.Adapter<HomePatchesAdapter.ViewHolder>(), HomePatchesAdapterHelper {
 
@@ -34,7 +34,7 @@ class HomePatchesAdapter @AssistedInject constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.genre = genres[position]
-        homePatchAdapterViewHolderContainer.addViewHolder(genres[position].id, holder)
+        homePatchAdapterViewHolderFacade.addViewHolder(genres[position].id, holder)
         callBack.loadDiscoverItemByGenreId(genres[position].id)
     }
 
@@ -47,6 +47,5 @@ class HomePatchesAdapter @AssistedInject constructor(
     }
 
     override fun isEmpty() = genres.isEmpty()
-    override fun getViewHoldersContainer() = homePatchAdapterViewHolderContainer
 //endregion
 }
