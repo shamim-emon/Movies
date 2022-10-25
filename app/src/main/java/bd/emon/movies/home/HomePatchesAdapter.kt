@@ -20,7 +20,6 @@ class HomePatchesAdapter @AssistedInject constructor(
     inner class ViewHolder(var binding: LayoutVerticalRecyclerViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var tag: Int? = null
-        var hasData = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +35,6 @@ class HomePatchesAdapter @AssistedInject constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.genre = genres[position]
         homePatchAdapterViewHolderContainer.addViewHolder(genres[position].id, holder)
-        callBack.showLoader(genres[position].id)
         callBack.loadDiscoverItemByGenreId(genres[position].id)
     }
 

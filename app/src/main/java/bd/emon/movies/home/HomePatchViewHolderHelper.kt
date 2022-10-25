@@ -3,10 +3,8 @@ package bd.emon.movies.home
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.recyclerview.widget.LinearLayoutManager
-import bd.emon.movies.common.NO_DATA_ERR
 import bd.emon.movies.common.view.NoContentView
 import bd.emon.movies.common.view.NoInternetView
-import bd.emon.movies.throwable.DiscverMovieThrowable
 
 class HomePatchViewHolderHelper {
     fun handleViewHolderSuccess(
@@ -14,7 +12,6 @@ class HomePatchViewHolderHelper {
         movies: MutableList<bd.emon.movies.entity.discover.Result>
     ) {
         viewHolder?.let { vh ->
-            vh.hasData = true
             val context = viewHolder.binding.exceptionView.root.context
             val noContentView = NoContentView(viewHolder.binding.exceptionView, context)
             if (movies.size == 0) {
@@ -33,18 +30,12 @@ class HomePatchViewHolderHelper {
     }
 
     fun handleViewHolderError(
-        viewHolder: HomePatchesAdapter.ViewHolder?,
-        throwable: DiscverMovieThrowable
+        viewHolder: HomePatchesAdapter.ViewHolder?
     ) {
         viewHolder?.let { vh ->
             val context = viewHolder.binding.exceptionView.root.context
-            if (throwable.errorMessage == NO_DATA_ERR) {
-                val noContentView = NoContentView(viewHolder.binding.exceptionView, context)
-                noContentView.layoutAndshowExceptionView()
-            } else if (throwable.errorMessage != NO_DATA_ERR && !vh.hasData) {
-                val noInternetView = NoInternetView(viewHolder.binding.exceptionView, context)
-                noInternetView.layoutAndshowExceptionView()
-            }
+            val noInternetView = NoInternetView(viewHolder.binding.exceptionView, context)
+            noInternetView.layoutAndshowExceptionView()
         }
     }
 

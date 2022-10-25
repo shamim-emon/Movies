@@ -43,6 +43,7 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
     lateinit var noContentViewAssistedFactory: NoContentViewAssistedFactory
 
     lateinit var homePatchViewHolderHelper: HomePatchViewHolderHelper
+    lateinit var discoverItemDataContainer: DiscoverItemDataContainer
 
     lateinit var viewLoaderImpl: ViewLoader
 
@@ -69,6 +70,7 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         homePatchViewHolderHelper = HomePatchViewHolderHelper()
+        discoverItemDataContainer = DiscoverItemDataContainer()
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
         noContentView = noContentViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
@@ -105,7 +107,7 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
         viewModel.discoverMoviesErrorState.observe(viewLifecycleOwner) {
             val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(it.grp_genre_id)
             homePatchViewHolderHelper.hideLoading(viewHolder)
-            homePatchViewHolderHelper.handleViewHolderError(viewHolder, it)
+            homePatchViewHolderHelper.handleViewHolderError(viewHolder)
         }
 
         viewModel.loadingState.observe(viewLifecycleOwner) {
@@ -122,9 +124,7 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
         viewModel.discoverMovies.observe(
             viewLifecycleOwner
         ) {
-            val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(it.grp_genre_id)
-            homePatchViewHolderHelper.hideLoading(viewHolder)
-            homePatchViewHolderHelper.handleViewHolderSuccess(viewHolder, it.results)
+            inflateHomePatchViewHolder(it.grp_genre_id, it.results)
         }
 
         binding.swipeContainer.setOnRefreshListener {
@@ -140,11 +140,30 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
     }
 
     override fun loadDiscoverItemByGenreId(genreId: Int) {
-        viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
+        val list = discoverItemDataContainer.getDistcoverListFromMap(genreId)
+        if (list == null) {
+            showLoader(genreId)
+            viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
+        } else {
+            inflateHomePatchViewHolder(
+                genreId,
+                list
+            )
+        }
     }
 
     override fun showLoader(genreId: Int) {
         val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(genreId)
         homePatchViewHolderHelper.showLoading(viewHolder)
+    }
+
+    private fun inflateHomePatchViewHolder(
+        genreId: Int,
+        list: MutableList<bd.emon.movies.entity.discover.Result>
+    ) {
+        val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(genreId)
+        homePatchViewHolderHelper.hideLoading(viewHolder)
+        discoverItemDataContainer.addDiscoverListToMap(genreId, list)
+        homePatchViewHolderHelper.handleViewHolderSuccess(viewHolder, list)
     }
 }
