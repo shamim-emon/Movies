@@ -5,11 +5,12 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import bd.emon.movies.R
 import bd.emon.movies.databinding.LayoutExceptionBinding
+import bd.emon.movies.di.qualifier.NoInternet
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 
-@bd.emon.movies.di.qualifier.NoInternetView
+@NoInternet
 class NoInternetView @AssistedInject constructor(
     @Assisted private val binding: LayoutExceptionBinding,
     @ApplicationContext private val context: Context

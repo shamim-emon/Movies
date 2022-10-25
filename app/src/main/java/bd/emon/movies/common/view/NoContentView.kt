@@ -9,7 +9,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 
-@bd.emon.movies.di.qualifier.NoContentView
+@bd.emon.movies.di.qualifier.NoContent
 class NoContentView @AssistedInject constructor(
     @Assisted private val binding: LayoutExceptionBinding,
     @ApplicationContext private val context: Context

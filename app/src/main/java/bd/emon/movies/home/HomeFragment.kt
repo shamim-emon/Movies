@@ -138,15 +138,15 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
 
     override fun loadDiscoverItemByGenreId(genreId: Int) {
         val list = homePatchAdapterViewHolderFacade.getDistcoverListFromMap(genreId)
-        if (list == null) {
-            val holder = homePatchAdapterViewHolderFacade.getViewHolder(genreId)
-            homePatchAdapterViewHolderFacade.showLoading(holder)
-            viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
-        } else {
+        list?.let {
             homePatchAdapterViewHolderFacade.inflateHomePatchViewHolder(
                 genreId,
                 list
             )
+        } ?: run {
+            val holder = homePatchAdapterViewHolderFacade.getViewHolder(genreId)
+            homePatchAdapterViewHolderFacade.showLoading(holder)
+            viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
         }
     }
 }
