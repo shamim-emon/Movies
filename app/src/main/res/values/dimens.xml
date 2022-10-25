@@ -3,4 +3,5 @@
     <dimen name="header_title">26sp</dimen>
     <dimen name="primary_title">16sp</dimen>
     <dimen name="secondary_title">14sp</dimen>
+    <dimen name="default_exception_view_height">216dp</dimen>
 </resources>

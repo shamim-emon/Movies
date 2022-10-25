@@ -13,6 +13,7 @@ import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
+import bd.emon.movies.throwable.DiscverMovieThrowable
 import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +29,8 @@ class HomeViewModel @Inject constructor(
     var genres: MutableLiveData<Genres> = MutableLiveData()
     var discoverMovies: MultipleLiveEvent<DiscoverMovie> = MultipleLiveEvent()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
-    var errorState: MutableLiveData<Throwable> = MutableLiveData()
+    var genreErrorState: MutableLiveData<Throwable> = MutableLiveData()
+    var discoverMoviesErrorState: MutableLiveData<DiscverMovieThrowable> = MutableLiveData()
 
     init {
         loadingState.postValue(true)
@@ -45,12 +47,12 @@ class HomeViewModel @Inject constructor(
                         it.value?.let {
                             genres.postValue(it)
                         } ?: run {
-                            errorState.postValue(Throwable(NO_DATA_ERR))
+                            genreErrorState.postValue(Throwable(NO_DATA_ERR))
                         }
                         loadingState.postValue(false)
                     },
                     {
-                        errorState.postValue(it)
+                        genreErrorState.postValue(it)
                         loadingState.postValue(false)
                     }
                 )
@@ -64,7 +66,7 @@ class HomeViewModel @Inject constructor(
         sortBy: String? = null,
         includeAdult: Boolean? = null,
         page: Int? = null,
-        voteCountGreaterThan: Int? = null,
+        voteCountGreaterThan: Int? = null
     ) {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = apiKey
@@ -81,12 +83,14 @@ class HomeViewModel @Inject constructor(
                         it.value?.let { data ->
                             discoverMovies.postValue(data)
                         } ?: run {
-                            errorState.postValue(Throwable(NO_DATA_ERR))
+                            discoverMoviesErrorState.postValue(DiscverMovieThrowable(NO_DATA_ERR, genres))
                         }
                         loadingState.postValue(false)
                     },
                     {
-                        errorState.postValue(it)
+                        discoverMoviesErrorState.postValue(
+                            DiscverMovieThrowable(it.localizedMessage, genres)
+                        )
                         loadingState.postValue(false)
                     }
                 )

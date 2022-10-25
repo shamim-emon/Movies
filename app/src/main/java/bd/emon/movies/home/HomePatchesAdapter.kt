@@ -1,7 +1,6 @@
 package bd.emon.movies.home
 
 import android.view.LayoutInflater
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,13 +13,14 @@ import dagger.assisted.AssistedInject
 class HomePatchesAdapter @AssistedInject constructor(
     @Assisted private var genres: List<Genre>,
     @Assisted private val callBack: DiscoverListAdapterCallBack,
-    private val homePatchViewHolderContainer: HomePatchAdapterViewHolderContainer = HomePatchAdapterViewHolderContainerImpl()
+    private val homePatchAdapterViewHolderContainer: HomePatchAdapterViewHolderContainer = HomePatchAdapterViewHolderContainerImpl()
 ) :
-    RecyclerView.Adapter<HomePatchesAdapter.ViewHolder>() {
+    RecyclerView.Adapter<HomePatchesAdapter.ViewHolder>(), HomePatchesAdapterHelper {
 
     inner class ViewHolder(var binding: LayoutVerticalRecyclerViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var tag: Int? = null
+        var hasData = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,19 +35,20 @@ class HomePatchesAdapter @AssistedInject constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.genre = genres[position]
-        homePatchViewHolderContainer.addViewHolder(genres[position].id, holder)
-        holder.binding.progressBar.visibility = VISIBLE
+        homePatchAdapterViewHolderContainer.addViewHolder(genres[position].id, holder)
+        callBack.showLoader(genres[position].id)
         callBack.loadDiscoverItemByGenreId(genres[position].id)
     }
 
-    fun clearItems() {
+    override fun getItemCount() = genres.size
+
+    //region homePatchesAdapterHelper methods
+    override fun clearItems() {
         genres = mutableListOf()
         notifyDataSetChanged()
     }
 
-    fun isEmpty() = genres.isEmpty()
-
-    override fun getItemCount() = genres.size
-
-    fun getDiscoverListAdapterContainer() = homePatchViewHolderContainer
+    override fun isEmpty() = genres.isEmpty()
+    override fun getViewHoldersContainer() = homePatchAdapterViewHolderContainer
+//endregion
 }

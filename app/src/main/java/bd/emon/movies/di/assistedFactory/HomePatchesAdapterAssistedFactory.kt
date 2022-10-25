@@ -6,6 +6,6 @@ import bd.emon.movies.home.HomePatchesAdapter
 import dagger.assisted.AssistedFactory
 
 @AssistedFactory
-interface HomePatchesAdapteFactory {
+interface HomePatchesAdapterAssistedFactory {
     fun create(genres: List<Genre>, callBack: DiscoverListAdapterCallBack): HomePatchesAdapter
 }

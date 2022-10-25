@@ -102,7 +102,7 @@ class HomeViewModelTest {
     fun loadGenres_success_emptyListNoDataMessageEmitted() {
         getGenres_noData()
         homeViewModel.loadGenres(API_KEY, LANG)
-        assertThat(homeViewModel.errorState.value!!.message == NO_DATA_ERR, `is`(true))
+        assertThat(homeViewModel.genreErrorState.value!!.message == NO_DATA_ERR, `is`(true))
     }
 
     @Test
@@ -116,7 +116,7 @@ class HomeViewModelTest {
     fun loadGenres_networkError_errorEmitted() {
         getGenres_networkErr()
         homeViewModel.loadGenres(API_KEY, LANG)
-        assertThat(homeViewModel.errorState.value!!.message, `is`(NETWORK_ERROR_DEFAULT))
+        assertThat(homeViewModel.genreErrorState.value!!.message, `is`(NETWORK_ERROR_DEFAULT))
     }
 
     @Test
@@ -220,7 +220,7 @@ class HomeViewModelTest {
             genres = GENRE
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
+            capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
@@ -236,7 +236,7 @@ class HomeViewModelTest {
             sortBy = SORT_BY
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
+            capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
@@ -254,7 +254,7 @@ class HomeViewModelTest {
             includeAdult = INCLUDE_ADULT
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
+            capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
@@ -274,7 +274,7 @@ class HomeViewModelTest {
             page = PAGE
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
+            capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
@@ -296,7 +296,7 @@ class HomeViewModelTest {
             voteCountGreaterThan = VOTE_COUNT_GREATER_THAN
         )
         verify(movieRepository, times(1)).getDiscoverMovies(
-            capture(mapCaptor),
+            capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
@@ -386,7 +386,29 @@ class HomeViewModelTest {
             genres = GENRE
         )
 
-        assertThat(homeViewModel.errorState.value!!.message == NO_DATA_ERR, `is`(true))
+        assertThat(
+            homeViewModel.discoverMoviesErrorState.value!!.errorMessage == NO_DATA_ERR,
+            `is`(true)
+        )
+    }
+
+    @Test
+    fun loadDiscoverMovies_successEmptyList_correctGrpGenreIdInThrowableEmitted() {
+        getDiscoverMovies_noData()
+        homeViewModel.loadDiscoverMovies(
+            apiKey = API_KEY,
+            lang = LANG,
+            sortBy = SORT_BY,
+            includeAdult = INCLUDE_ADULT,
+            page = PAGE,
+            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
+            genres = GENRE
+        )
+
+        assertThat(
+            homeViewModel.discoverMoviesErrorState.value!!.grp_genre_id == GENRE,
+            `is`(true)
+        )
     }
 
     @Test
@@ -434,7 +456,29 @@ class HomeViewModelTest {
             genres = GENRE
         )
 
-        assertThat(homeViewModel.errorState.value!!.message, `is`(NETWORK_ERROR_DEFAULT))
+        assertThat(
+            homeViewModel.discoverMoviesErrorState.value!!.errorMessage,
+            `is`(NETWORK_ERROR_DEFAULT)
+        )
+    }
+
+    @Test
+    fun loadDiscoverMovies_networkError_networkError_correctGrpGenreIdInThrowableEmitted() {
+        getDiscoverMovies_networkError()
+        homeViewModel.loadDiscoverMovies(
+            apiKey = API_KEY,
+            lang = LANG,
+            sortBy = SORT_BY,
+            includeAdult = INCLUDE_ADULT,
+            page = PAGE,
+            voteCountGreaterThan = VOTE_COUNT_GREATER_THAN,
+            genres = GENRE
+        )
+
+        assertThat(
+            homeViewModel.discoverMoviesErrorState.value!!.grp_genre_id,
+            `is`(GENRE)
+        )
     }
 
     @Test

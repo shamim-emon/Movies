@@ -3,14 +3,20 @@ package bd.emon.movies.home
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
+import bd.emon.movies.common.view.NoContentView
+import bd.emon.movies.common.view.NoInternetView
+import bd.emon.movies.common.view.ViewLoader
+import bd.emon.movies.common.view.ViewLoaderImpl
 import bd.emon.movies.databinding.FragmentHomeBinding
-import bd.emon.movies.di.assistedFactory.HomePatchesAdapteFactory
+import bd.emon.movies.di.assistedFactory.HomePatchesAdapterAssistedFactory
+import bd.emon.movies.di.assistedFactory.NoContentViewAssistedFactory
+import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,30 +27,39 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
-    private var adapter: HomePatchesAdapter? = null
+    private lateinit var adapter: HomePatchesAdapter
     private lateinit var homePatchAdapterViewHolderContainer: HomePatchAdapterViewHolderContainer
     private var genres: List<Genre>? = null
+    private lateinit var noInternetView: NoInternetView
+    private lateinit var noContentView: NoContentView
 
     @Inject
-    lateinit var homePatchesAdapteFactory: HomePatchesAdapteFactory
+    lateinit var homePatchesAdapteFactory: HomePatchesAdapterAssistedFactory
 
     @Inject
+    lateinit var noInternetViewAssistedFactory: NoInternetViewAssistedFactory
+
+    @Inject
+    lateinit var noContentViewAssistedFactory: NoContentViewAssistedFactory
+
     lateinit var homePatchViewHolderHelper: HomePatchViewHolderHelper
 
+    lateinit var viewLoaderImpl: ViewLoader
+
     override fun showLoader() {
-        binding.swipeContainer.isRefreshing = true
+        viewLoaderImpl.showLoader()
     }
 
     override fun hideLoader() {
-        binding.swipeContainer.isRefreshing = false
+        viewLoaderImpl.hideLoader()
     }
 
     override fun showNoInternetView() {
-        binding.noInternetView.root.visibility = VISIBLE
+        noInternetView.layoutAndshowExceptionView()
     }
 
     override fun hideNoInternetView() {
-        binding.noInternetView.root.visibility = GONE
+        noInternetView.hideExceptionView()
     }
 
     override fun onCreateView(
@@ -53,29 +68,46 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        homePatchViewHolderHelper = HomePatchViewHolderHelper()
+        noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
+        noContentView = noContentViewAssistedFactory.create(binding.exceptionView)
+        viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        binding.noInternetView.root.visibility = GONE
         viewModel.loadGenres(apiKey, language)
 
         viewModel.genres.observe(
             viewLifecycleOwner
         ) {
             hideNoInternetView()
+            if (this::adapter.isInitialized) {
+                adapter.clearItems()
+            }
             genres = it.genres
             adapter = homePatchesAdapteFactory.create(genres!!, this)
-            homePatchAdapterViewHolderContainer = adapter!!.getDiscoverListAdapterContainer()
+            homePatchAdapterViewHolderContainer = adapter.getViewHoldersContainer()
             binding.homeContents.adapter = adapter
             binding.homeContents.layoutManager = LinearLayoutManager(context)
         }
 
-        viewModel.errorState.observe(viewLifecycleOwner) {
-            if (adapter == null || adapter!!.isEmpty()) {
-                showNoInternetView()
+        viewModel.genreErrorState.observe(viewLifecycleOwner) {
+            if (this::adapter.isInitialized) {
+                showToast(
+                    requireContext(),
+                    text = resources.getString(R.string.no_internet_secondary_text),
+                    Toast.LENGTH_LONG
+                )
             } else {
-                hideNoInternetView()
+                showNoInternetView()
             }
         }
+
+        viewModel.discoverMoviesErrorState.observe(viewLifecycleOwner) {
+            val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(it.grp_genre_id)
+            homePatchViewHolderHelper.hideLoading(viewHolder)
+            homePatchViewHolderHelper.handleViewHolderError(viewHolder, it)
+        }
+
         viewModel.loadingState.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
@@ -91,20 +123,13 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
             viewLifecycleOwner
         ) {
             val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(it.grp_genre_id)
-            homePatchViewHolderHelper.handleViewHolder(viewHolder, it.results)
+            homePatchViewHolderHelper.hideLoading(viewHolder)
+            homePatchViewHolderHelper.handleViewHolderSuccess(viewHolder, it.results)
         }
 
         binding.swipeContainer.setOnRefreshListener {
-            adapter?.clearItems()
             viewModel.loadGenres(apiKey, language)
         }
-
-        binding.swipeContainer.setColorSchemeResources(
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light
-        )
 
         return binding.root
     }
@@ -116,5 +141,10 @@ class HomeFragment : BaseFragment(), DiscoverListAdapterCallBack {
 
     override fun loadDiscoverItemByGenreId(genreId: Int) {
         viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
+    }
+
+    override fun showLoader(genreId: Int) {
+        val viewHolder = homePatchAdapterViewHolderContainer.getViewHolder(genreId)
+        homePatchViewHolderHelper.showLoading(viewHolder)
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="rounded_corner">
+        <item name="cornerSize">16dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="strokeColor">@color/cardview_dark_background</item>
+        <item name="strokeWidth">5dp</item>
+    </style>
+</resources>

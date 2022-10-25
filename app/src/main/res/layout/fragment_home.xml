@@ -33,11 +33,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/topAppBar" />
 
             <include
-                android:id="@+id/noInternetView"
-                layout="@layout/layout_no_internet"
+                android:id="@+id/exceptionView"
+                layout="@layout/layout_exception"
                 android:visibility="gone"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/default_exception_view_height"
                 app:layout_constraintBottom_toBottomOf="@+id/homeContents"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -21,7 +21,7 @@ object MovieApiDummyDataProvider {
 
     val disocoverMovies = DiscoverMovie(
         page = 1,
-        results = listOf(
+        results = mutableListOf(
             Result(
                 adult = false,
                 backdrop_path = "/5hoS3nEkGGXUfmnu39yw1k52JX5.jpg",
