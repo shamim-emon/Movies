@@ -9,13 +9,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
-import bd.emon.movies.common.view.NoContentView
+import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
 import bd.emon.movies.databinding.FragmentHomeBinding
 import bd.emon.movies.di.assistedFactory.HomePatchAdapterAssistedFactory
-import bd.emon.movies.di.assistedFactory.NoContentViewAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.viewModels.HomeViewModel
@@ -30,13 +29,9 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     private lateinit var adapter: HomePatchesAdapter
     private var genres: List<Genre>? = null
     private lateinit var noInternetView: NoInternetView
-    private lateinit var noContentView: NoContentView
 
     @Inject
     lateinit var noInternetViewAssistedFactory: NoInternetViewAssistedFactory
-
-    @Inject
-    lateinit var noContentViewAssistedFactory: NoContentViewAssistedFactory
 
     @Inject
     lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
@@ -69,11 +64,10 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
-        noContentView = noContentViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        viewModel.loadGenres(apiKey, language)
+        viewModel.loadGenres(apiParams)
 
         viewModel.genres.observe(
             viewLifecycleOwner
@@ -125,7 +119,7 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         }
 
         binding.swipeContainer.setOnRefreshListener {
-            viewModel.loadGenres(apiKey, language)
+            viewModel.loadGenres(apiParams)
         }
 
         return binding.root
@@ -146,7 +140,8 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         } ?: run {
             val holder = homePatchAdapterViewHolderFacade.getViewHolder(genreId)
             homePatchAdapterViewHolderFacade.showLoading(holder)
-            viewModel.loadDiscoverMovies(apiKey = apiKey, lang = language, genres = genreId)
+            apiParams[PARAM_GENRES] = genreId
+            viewModel.loadDiscoverMovies(apiParams)
         }
     }
 }

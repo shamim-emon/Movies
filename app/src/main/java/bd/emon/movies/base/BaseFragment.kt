@@ -3,8 +3,6 @@ package bd.emon.movies.base
 import android.content.Context
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import bd.emon.movies.di.qualifier.ApiKey
-import bd.emon.movies.di.qualifier.AppLanguage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -12,13 +10,7 @@ import javax.inject.Inject
 abstract class BaseFragment : Fragment() {
 
     @Inject
-    @ApiKey
-    protected lateinit var apiKey: String
-
-    @Inject
-    @AppLanguage
-    protected lateinit var language: String
-
+    protected lateinit var apiParams: HashMap<String, Any?>
     abstract fun showLoader()
     abstract fun hideLoader()
     abstract fun showNoInternetView()
