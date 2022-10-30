@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.PARAM_GENRES
+import bd.emon.movies.common.menuItem.MenuItemListener
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
 import bd.emon.movies.databinding.FragmentHomeBinding
+import bd.emon.movies.di.assistedFactory.HomeMenuItemListenerAssistedFactory
 import bd.emon.movies.di.assistedFactory.HomePatchAdapterAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.entity.genre.Genre
@@ -37,9 +39,14 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
 
     @Inject
+    lateinit var homeMenuItemListenerAssistedFactory: HomeMenuItemListenerAssistedFactory
+
+    @Inject
     lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
 
     lateinit var viewLoaderImpl: ViewLoader
+
+    lateinit var menuItemListener: MenuItemListener
 
     override fun showLoader() {
         viewLoaderImpl.showLoader()
@@ -66,6 +73,10 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        menuItemListener = homeMenuItemListenerAssistedFactory.create(
+            viewModel,
+            requireActivity()
+        )
 
         viewModel.loadGenres(apiParams)
 
@@ -120,6 +131,11 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
 
         binding.swipeContainer.setOnRefreshListener {
             viewModel.loadGenres(apiParams)
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener {
+            menuItemListener.handleClick(it)
+            true
         }
 
         return binding.root

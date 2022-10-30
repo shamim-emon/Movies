@@ -8,6 +8,23 @@
     <string name="no_internet_secondary_text">Check your internet and try again</string>4
     <string name="no_result_primary_text">No item available</string>
     <string name="no_result_secondary_text">Nothing available on this criteria</string>
+    <string name="minimum_vote">Minimum Vote:</string>
+    <string name="include_adult_contents">Include Adult Contents</string>
+    <string name="order">Order</string>
+    <string name="order_by">Order By</string>
+    <string name="release_year">Release Year</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="filters">Filters</string>
+
+    <string-array name="movie_sorting_criteria">
+        <item>Popularity</item>
+        <item>Release Date</item>
+        <item>Revenue</item>
+        <item>Movie Title</item>
+        <item>Vote Count</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
