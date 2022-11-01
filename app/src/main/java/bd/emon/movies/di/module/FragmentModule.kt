@@ -1,6 +1,8 @@
 package bd.emon.movies.di.module
 
 import android.app.Activity
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import bd.emon.movies.R
 import bd.emon.movies.home.HomePatchAdapterViewHolderContainer
 import bd.emon.movies.home.HomePatchAdapterViewHolderContainerImpl
@@ -8,6 +10,7 @@ import bd.emon.movies.home.HomePatchAdapterViewHolderOnScreenDataHolder
 import bd.emon.movies.home.HomePatchAdapterViewHolderOnScreenDataHolderImpl
 import bd.emon.movies.home.MovieReleaseYearsProvider
 import bd.emon.movies.home.MovieReleaseYearsProviderImpl
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,4 +43,7 @@ object FragmentModule {
     @Provides
     fun getMovieSortingCriteria(activity: Activity) =
         activity.resources.getStringArray(R.array.movie_sorting_criteria).toList()
+
+    @Provides
+    fun provideDialogBuilder(activity: AppCompatActivity) = MaterialAlertDialogBuilder(activity as Context)
 }

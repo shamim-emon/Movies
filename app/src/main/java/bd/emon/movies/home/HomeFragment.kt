@@ -10,16 +10,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.PARAM_GENRES
+import bd.emon.movies.common.menuItem.HomeMenuItemListener
 import bd.emon.movies.common.menuItem.MenuItemListener
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
 import bd.emon.movies.databinding.FragmentHomeBinding
-import bd.emon.movies.di.assistedFactory.HomeMenuItemListenerAssistedFactory
+import bd.emon.movies.di.assistedFactory.FilterDialogFacadeAssistedFactory
 import bd.emon.movies.di.assistedFactory.HomePatchAdapterAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.viewModels.HomeViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,14 +41,31 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
 
     @Inject
-    lateinit var homeMenuItemListenerAssistedFactory: HomeMenuItemListenerAssistedFactory
+    lateinit var homeMenuItemListenerAssistedFactory: FilterDialogFacadeAssistedFactory
 
     @Inject
     lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
 
+    @Inject
+    lateinit var filterDialogFacadeAssistedFactory: FilterDialogFacadeAssistedFactory
+
+    @Inject
+    lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
+
     lateinit var viewLoaderImpl: ViewLoader
 
     lateinit var menuItemListener: MenuItemListener
+
+    lateinit var filterDialogFacade: FilterDialogFacade
+
+    @Inject
+    lateinit var sortingCriteria: List<String>
+
+    @Inject
+    lateinit var releaseYears: List<Int>
+
+    private lateinit var orderByAdapterProvider: FilterDialogAdaptersProvider<String>
+    private lateinit var yearAdapterProvider: FilterDialogAdaptersProvider<Int>
 
     override fun showLoader() {
         viewLoaderImpl.showLoader()
@@ -73,10 +92,17 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        menuItemListener = homeMenuItemListenerAssistedFactory.create(
+        orderByAdapterProvider = FilterDialogAdaptersProvider(requireContext(), sortingCriteria)
+        yearAdapterProvider = FilterDialogAdaptersProvider(requireContext(), releaseYears)
+        filterDialogFacade = FilterDialogFacade(
+            materialAlertDialogBuilder,
+            apiParams,
+            orderByAdapterProvider,
+            yearAdapterProvider,
             viewModel,
-            requireActivity()
+            requireContext()
         )
+        menuItemListener = HomeMenuItemListener(filterDialogFacade)
 
         viewModel.loadGenres(apiParams)
 

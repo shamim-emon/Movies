@@ -3,7 +3,6 @@ package bd.emon.movies.di.module
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import bd.emon.movies.R
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +19,4 @@ object ActivityModule {
 
     @Provides
     fun provideContainerId() = R.id.fragmentContainer
-
-    @Provides
-    fun provideDialogBuilder(activity: AppCompatActivity) = MaterialAlertDialogBuilder(activity)
 }
