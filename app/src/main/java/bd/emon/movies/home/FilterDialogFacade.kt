@@ -2,34 +2,29 @@ package bd.emon.movies.home
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.databinding.DataBindingUtil
 import bd.emon.movies.R
 import bd.emon.movies.databinding.LayoutDiscoverMovieFilterBinding
 import bd.emon.movies.viewModels.HomeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 
-class FilterDialogFacade @AssistedInject constructor(
+class FilterDialogFacade(
     private val materialAlertDialogBuilder: MaterialAlertDialogBuilder,
-    @Assisted private val apiParams: HashMap<String, Any?>,
-    @Assisted private val orderByAdapterProvider: FilterDialogAdaptersProvider<String>,
-    @Assisted private val yearAdapterProvider: FilterDialogAdaptersProvider<Int>,
-    @Assisted private val homeViewModel: HomeViewModel,
-    @Assisted private val context: Context
+    private val apiParams: HashMap<String, Any?>,
+    private val orderByAdapterProvider: FilterDialogAdaptersProvider<String>,
+    private val yearAdapterProvider: FilterDialogAdaptersProvider<Int>,
+    private val homeViewModel: HomeViewModel,
+    private val context: Context
 ) {
-    private val binding: LayoutDiscoverMovieFilterBinding = DataBindingUtil.inflate(
-        LayoutInflater.from(context),
-        R.layout.layout_discover_movie_filter,
-        null,
-        false
-    )
+    private lateinit var binding: LayoutDiscoverMovieFilterBinding
 
     private val orderByAdapter = orderByAdapterProvider.getAdapter()
     private val yearAdapter = yearAdapterProvider.getAdapter()
-    private var builder: MaterialAlertDialogBuilder
+    private lateinit var builder: MaterialAlertDialogBuilder
 
-    init {
+    fun createAndDisplayDialog() {
+        binding = LayoutDiscoverMovieFilterBinding.inflate(
+            LayoutInflater.from(context)
+        )
         binding.spinnerOrderBy.adapter = orderByAdapter
         binding.spinnerReleaseYear.adapter = yearAdapter
         builder = materialAlertDialogBuilder.setView(binding.root)
@@ -40,9 +35,6 @@ class FilterDialogFacade @AssistedInject constructor(
                 // Respond to positive button press
             }
             .setTitle(R.string.filters)
-    }
-
-    fun show() {
         builder.show()
     }
 }

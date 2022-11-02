@@ -14,6 +14,6 @@ class HomeMenuItemListener(private val filterDialogFacade: FilterDialogFacade) :
     }
 
     private fun showFilterDialog() {
-        filterDialogFacade.show()
+        filterDialogFacade.createAndDisplayDialog()
     }
 }

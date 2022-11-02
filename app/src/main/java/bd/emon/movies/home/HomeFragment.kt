@@ -16,7 +16,6 @@ import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
 import bd.emon.movies.databinding.FragmentHomeBinding
-import bd.emon.movies.di.assistedFactory.FilterDialogFacadeAssistedFactory
 import bd.emon.movies.di.assistedFactory.HomePatchAdapterAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.entity.genre.Genre
@@ -41,13 +40,7 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
 
     @Inject
-    lateinit var homeMenuItemListenerAssistedFactory: FilterDialogFacadeAssistedFactory
-
-    @Inject
     lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
-
-    @Inject
-    lateinit var filterDialogFacadeAssistedFactory: FilterDialogFacadeAssistedFactory
 
     @Inject
     lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
@@ -103,7 +96,6 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
             requireContext()
         )
         menuItemListener = HomeMenuItemListener(filterDialogFacade)
-
         viewModel.loadGenres(apiParams)
 
         viewModel.genres.observe(
