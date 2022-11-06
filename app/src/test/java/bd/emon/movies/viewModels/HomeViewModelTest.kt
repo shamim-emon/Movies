@@ -2,8 +2,11 @@ package bd.emon.movies.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import bd.emon.movies.RxImmediateSchedulerRule
+import bd.emon.movies.any
+import bd.emon.movies.cache.MovieCacheRepository
 import bd.emon.movies.capture
 import bd.emon.movies.common.ASyncTransformer
+import bd.emon.movies.common.DEFAULT_ORDER_BY
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.NO_DATA_ERR
 import bd.emon.movies.common.PARAM_API_KEY
@@ -11,13 +14,17 @@ import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
 import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.PARAM_PAGE
+import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
+import bd.emon.movies.common.SAVE_TO_PREF_ERROR_DEFAULT
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
-import bd.emon.movies.rest.MovieRepository
+import bd.emon.movies.rest.MovieRestRepository
+import bd.emon.movies.usecase.GetCacheDiscoverMovieFilterUseCase
 import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
+import bd.emon.movies.usecase.SaveCacheDiscoverMoviesFiltersUseCase
 import io.reactivex.rxjava3.core.Observable
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.nullValue
@@ -44,7 +51,8 @@ class HomeViewModelTest {
     val rule = InstantTaskExecutorRule()
     val API_KEY = "api_key"
     val LANG = "lang"
-    val SORT_BY = "sort_by"
+    val SORT_BY = "sort_by.desc"
+    val MOVIE_RELEASE_YEAR = "releaseYr"
     val INCLUDE_ADULT = true
     val PAGE = 11
     val VOTE_COUNT_GREATER_THAN = 10000
@@ -53,22 +61,45 @@ class HomeViewModelTest {
     @Captor
     lateinit var mapCaptor: ArgumentCaptor<HashMap<String, Any?>>
 
+    @Captor
+    lateinit var stringCaptor: ArgumentCaptor<String>
+
+    @Captor
+    lateinit var intingCaptor: ArgumentCaptor<Int>
+
+    @Captor
+    lateinit var booleaningCaptor: ArgumentCaptor<Boolean>
+
     @Mock
-    lateinit var movieRepository: MovieRepository
+    lateinit var movieRestRepository: MovieRestRepository
+
+    @Mock
+    lateinit var movieCacheRepository: MovieCacheRepository
     lateinit var getGenresUseCase: GetGenresUseCase
     lateinit var getDiscoverMoviesUseCase: GetDiscoverMoviesUseCase
+    lateinit var saveCacheDiscoverMoviesFiltersUseCase: SaveCacheDiscoverMoviesFiltersUseCase
+    lateinit var getCacheDiscoverMovieFilterUseCase: GetCacheDiscoverMovieFilterUseCase
     lateinit var homeViewModel: HomeViewModel
 
     @Before
     fun setUp() {
-        getGenresUseCase = GetGenresUseCase(ASyncTransformer(), movieRepository)
-        getDiscoverMoviesUseCase = GetDiscoverMoviesUseCase(ASyncTransformer(), movieRepository)
+        getGenresUseCase = GetGenresUseCase(ASyncTransformer(), movieRestRepository)
+        getDiscoverMoviesUseCase = GetDiscoverMoviesUseCase(ASyncTransformer(), movieRestRepository)
+        saveCacheDiscoverMoviesFiltersUseCase =
+            SaveCacheDiscoverMoviesFiltersUseCase(ASyncTransformer(), movieCacheRepository)
+        getCacheDiscoverMovieFilterUseCase =
+            GetCacheDiscoverMovieFilterUseCase(ASyncTransformer(), movieCacheRepository)
         homeViewModel = HomeViewModel(
             getGenresUseCase = getGenresUseCase,
-            getDiscoverMoviesUseCase = getDiscoverMoviesUseCase
+            getDiscoverMoviesUseCase = getDiscoverMoviesUseCase,
+            saveCacheDiscoverMoviesFiltersUseCase = saveCacheDiscoverMoviesFiltersUseCase,
+            getCacheDiscoverMovieFilterUseCase = getCacheDiscoverMovieFilterUseCase,
+            API_KEY,
+            LANG
         )
         getGenres_success()
         getDiscoverMovies_success()
+        saveDiscoverFilters_success()
     }
 
     @Test
@@ -87,7 +118,7 @@ class HomeViewModelTest {
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
         homeViewModel.loadGenres(params)
-        verify(movieRepository, times(1)).getGenres(capture(mapCaptor))
+        verify(movieRestRepository, times(1)).getGenres(capture(mapCaptor))
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
         assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
     }
@@ -250,7 +281,7 @@ class HomeViewModelTest {
         params[PARAM_LANGUAGE] = LANG
         params[PARAM_GENRES] = GENRE
         homeViewModel.loadDiscoverMovies(params)
-        verify(movieRepository, times(1)).getDiscoverMovies(
+        verify(movieRestRepository, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
@@ -266,7 +297,7 @@ class HomeViewModelTest {
         params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
         homeViewModel.loadDiscoverMovies(params)
-        verify(movieRepository, times(1)).getDiscoverMovies(
+        verify(movieRestRepository, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
@@ -284,7 +315,7 @@ class HomeViewModelTest {
         params[PARAM_SORT_BY] = SORT_BY
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         homeViewModel.loadDiscoverMovies(params)
-        verify(movieRepository, times(1)).getDiscoverMovies(
+        verify(movieRestRepository, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
@@ -304,7 +335,7 @@ class HomeViewModelTest {
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         params[PARAM_PAGE] = PAGE
         homeViewModel.loadDiscoverMovies(params)
-        verify(movieRepository, times(1)).getDiscoverMovies(
+        verify(movieRestRepository, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
@@ -326,7 +357,7 @@ class HomeViewModelTest {
         params[PARAM_PAGE] = PAGE
         params[PARAM_VOTE_COUNT_GREATER_THAN] = VOTE_COUNT_GREATER_THAN
         homeViewModel.loadDiscoverMovies(params)
-        verify(movieRepository, times(1)).getDiscoverMovies(
+        verify(movieRestRepository, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
@@ -481,40 +512,212 @@ class HomeViewModelTest {
         assertThat(homeViewModel.loadingState.value, `is`(false))
     }
 
+    @Test
+    fun saveDiscoverMoviesFilter_correctParamsPassedToUseCase() {
+        homeViewModel.saveDiscoverMoviesFilters(
+            minVoteCount = VOTE_COUNT_GREATER_THAN,
+            includeAdultContent = INCLUDE_ADULT,
+            orderBy = SORT_BY,
+            releaseYearStr = MOVIE_RELEASE_YEAR
+        )
+        assertThat(
+            saveCacheDiscoverMoviesFiltersUseCase.minVoteCount,
+            `is`(VOTE_COUNT_GREATER_THAN)
+        )
+        assertThat(saveCacheDiscoverMoviesFiltersUseCase.includeAdultContent, `is`(INCLUDE_ADULT))
+        assertThat(saveCacheDiscoverMoviesFiltersUseCase.orderBy, `is`(SORT_BY))
+        assertThat(saveCacheDiscoverMoviesFiltersUseCase.releaseYearStr, `is`(MOVIE_RELEASE_YEAR))
+    }
+
+    @Test
+    fun saveDiscoverMoviesFilter_correctParamsPassedToRepository() {
+        homeViewModel.saveDiscoverMoviesFilters(
+            minVoteCount = VOTE_COUNT_GREATER_THAN,
+            includeAdultContent = INCLUDE_ADULT,
+            orderBy = SORT_BY,
+            releaseYearStr = MOVIE_RELEASE_YEAR
+        )
+        verify(movieCacheRepository, times(1))
+            .saveDiscoverMovieFilters(
+                capture(intingCaptor),
+                capture(booleaningCaptor),
+                capture(stringCaptor),
+                capture(stringCaptor)
+            )
+        assertThat(intingCaptor.allValues[0], `is`(VOTE_COUNT_GREATER_THAN))
+        assertThat(booleaningCaptor.allValues[0], `is`(INCLUDE_ADULT))
+        assertThat(stringCaptor.allValues[0], `is`(SORT_BY))
+        assertThat(stringCaptor.allValues[1], `is`(MOVIE_RELEASE_YEAR))
+    }
+
+    @Test
+    fun saveDiscoverMoviesFilter_success_mutablePreferenceEmitted() {
+        homeViewModel.saveDiscoverMoviesFilters(
+            minVoteCount = VOTE_COUNT_GREATER_THAN,
+            includeAdultContent = INCLUDE_ADULT,
+            orderBy = SORT_BY,
+            releaseYearStr = MOVIE_RELEASE_YEAR
+        )
+
+        assertThat(
+            homeViewModel.discoverFilters.value,
+            `is`(MovieApiDummyDataProvider.discoverFilters)
+        )
+    }
+
+    @Test
+    fun saveDiscoverMoviesFilter_error_nullEmitted() {
+        saveDiscoverFilters_error()
+        homeViewModel.saveDiscoverMoviesFilters(
+            minVoteCount = VOTE_COUNT_GREATER_THAN,
+            includeAdultContent = INCLUDE_ADULT,
+            orderBy = SORT_BY,
+            releaseYearStr = MOVIE_RELEASE_YEAR
+        )
+
+        assertThat(
+            homeViewModel.discoverFilters.value,
+            `is`(nullValue())
+        )
+    }
+
+    @Test
+    fun saveDiscoverMoviesFilter_error_prefErrorMessageEmitted() {
+        saveDiscoverFilters_error()
+        homeViewModel.saveDiscoverMoviesFilters(
+            minVoteCount = VOTE_COUNT_GREATER_THAN,
+            includeAdultContent = INCLUDE_ADULT,
+            orderBy = SORT_BY,
+            releaseYearStr = MOVIE_RELEASE_YEAR
+        )
+
+        assertThat(
+            homeViewModel.discoverFiltersErrorState.value!!.message,
+            `is`(SAVE_TO_PREF_ERROR_DEFAULT)
+        )
+    }
+
+    @Test
+    fun loadDiscoverMovieFiltersAndHoldInApiParamMap_notCached_emptyPrefEmitted() {
+        getDiscoverMovieFilters_notCached()
+        homeViewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+        assertThat(
+            homeViewModel.discoverFilters.value,
+            `is`(MovieApiDummyDataProvider.discoverDefaultFilters)
+        )
+    }
+
+    @Test
+    fun loadDiscoverMovieFiltersAndHoldInApiParamMap_notCached_defaultValueHoldInApiParamMap() {
+        getDiscoverMovieFilters_notCached()
+        homeViewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+
+        assertThat(homeViewModel.apiParams[PARAM_API_KEY], `is`(API_KEY))
+        assertThat(homeViewModel.apiParams[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(homeViewModel.apiParams[PARAM_SORT_BY], `is`(DEFAULT_ORDER_BY))
+        assertThat(homeViewModel.apiParams[PARAM_VOTE_COUNT_GREATER_THAN], `is`(0))
+        assertThat(homeViewModel.apiParams[PARAM_INCLUDE_ADULT], `is`(false))
+        assertThat(homeViewModel.apiParams[PARAM_RELEASE_YEAR], `is`(nullValue()))
+    }
+
+    @Test
+    fun loadDiscoverMovieFiltersAndHoldInApiParamMap_cached_prefWitchCachedDataEmitted() {
+        getDiscoverMovieFilters_cached()
+        homeViewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+        assertThat(
+            homeViewModel.discoverFilters.value,
+            `is`(MovieApiDummyDataProvider.discoverFilters)
+        )
+    }
+
+    @Test
+    fun loadDiscoverMovieFiltersAndHoldInApiParamMap_cached_defaultValueHoldInApiParamMap() {
+        getDiscoverMovieFilters_cached()
+        homeViewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+
+        assertThat(homeViewModel.apiParams[PARAM_API_KEY], `is`(API_KEY))
+        assertThat(homeViewModel.apiParams[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(homeViewModel.apiParams[PARAM_SORT_BY], `is`(SORT_BY))
+        assertThat(
+            homeViewModel.apiParams[PARAM_VOTE_COUNT_GREATER_THAN],
+            `is`(VOTE_COUNT_GREATER_THAN)
+        )
+        assertThat(homeViewModel.apiParams[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
+        assertThat(homeViewModel.apiParams[PARAM_RELEASE_YEAR], `is`(MOVIE_RELEASE_YEAR))
+    }
+
     //region helper methods
     fun getGenres_success() {
-        `when`(movieRepository.getGenres(anyMap()))
+        `when`(movieRestRepository.getGenres(anyMap()))
             .thenReturn(Observable.just(Optional.of(MovieApiDummyDataProvider.genreList)))
     }
 
     fun getGenres_networkErr() {
-        `when`(movieRepository.getGenres(anyMap()))
+        `when`(movieRestRepository.getGenres(anyMap()))
             .thenThrow(RuntimeException(NETWORK_ERROR_DEFAULT))
     }
 
     fun getGenres_noData() {
-        `when`(movieRepository.getGenres(anyMap()))
+        `when`(movieRestRepository.getGenres(anyMap()))
             .thenReturn(Observable.just(Optional.empty()))
     }
 
     fun getDiscoverMovies_success() {
         `when`(
-            movieRepository.getDiscoverMovies(anyMap())
+            movieRestRepository.getDiscoverMovies(anyMap())
         )
             .thenReturn(Observable.just(Optional.of(MovieApiDummyDataProvider.disocoverMovies)))
     }
 
     fun getDiscoverMovies_noData() {
-        `when`(movieRepository.getDiscoverMovies(anyMap()))
+        `when`(movieRestRepository.getDiscoverMovies(anyMap()))
             .thenReturn(Observable.just(Optional.empty()))
     }
 
     fun getDiscoverMovies_networkError() {
-        `when`(movieRepository.getDiscoverMovies(anyMap())).thenThrow(
+        `when`(movieRestRepository.getDiscoverMovies(anyMap())).thenThrow(
             RuntimeException(
                 NETWORK_ERROR_DEFAULT
             )
         )
+    }
+
+    fun saveDiscoverFilters_success() {
+        `when`(
+            movieCacheRepository.saveDiscoverMovieFilters(
+                any(Int::class.java),
+                any(Boolean::class.java),
+                any(String::class.java),
+                any(String::class.java)
+            )
+        )
+            .thenReturn(Observable.just(Optional.of(MovieApiDummyDataProvider.discoverFilters)))
+    }
+
+    fun saveDiscoverFilters_error() {
+        `when`(
+            movieCacheRepository.saveDiscoverMovieFilters(
+                any(Int::class.java),
+                any(Boolean::class.java),
+                any(String::class.java),
+                any(String::class.java)
+            )
+        )
+            .thenThrow(RuntimeException(SAVE_TO_PREF_ERROR_DEFAULT))
+    }
+
+    fun getDiscoverMovieFilters_notCached() {
+        `when`(
+            movieCacheRepository.getDiscoverMovieFilters()
+        )
+            .thenReturn(Observable.just(Optional.of(null)))
+    }
+
+    fun getDiscoverMovieFilters_cached() {
+        `when`(
+            movieCacheRepository.getDiscoverMovieFilters()
+        )
+            .thenReturn(Observable.just(Optional.of(MovieApiDummyDataProvider.discoverFilters)))
     }
     //endregion
 }

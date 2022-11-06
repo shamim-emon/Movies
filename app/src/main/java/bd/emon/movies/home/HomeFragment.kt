@@ -1,15 +1,19 @@
 package bd.emon.movies.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.PARAM_GENRES
+import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.menuItem.HomeMenuItemListener
 import bd.emon.movies.common.menuItem.MenuItemListener
 import bd.emon.movies.common.view.NoInternetView
@@ -89,14 +93,15 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         yearAdapterProvider = FilterDialogAdaptersProvider(requireContext(), releaseYears)
         filterDialogFacade = FilterDialogFacade(
             materialAlertDialogBuilder,
-            apiParams,
             orderByAdapterProvider,
             yearAdapterProvider,
             viewModel,
-            requireContext()
+            requireContext(),
+            this,
+            viewModel.apiParams
         )
         menuItemListener = HomeMenuItemListener(filterDialogFacade)
-        viewModel.loadGenres(apiParams)
+        viewModel.loadGenres(viewModel.apiParams)
 
         viewModel.genres.observe(
             viewLifecycleOwner
@@ -147,14 +152,27 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
             homePatchAdapterViewHolderFacade.inflateHomePatchViewHolder(it.grp_genre_id, it.results)
         }
 
+        viewModel.discoverFiltersErrorState.observe(viewLifecycleOwner, {
+            showToast(requireContext(), it.message!!, Toast.LENGTH_LONG)
+        })
+
+        viewModel.discoverFilters.observe(viewLifecycleOwner, {
+            val mutablePreferences: MutablePreferences = it.toMutablePreferences()
+            val key = stringPreferencesKey(PARAM_RELEASE_YEAR)
+
+            Log.e("PrefTest", "OP->${mutablePreferences[key]}")
+        })
+
         binding.swipeContainer.setOnRefreshListener {
-            viewModel.loadGenres(apiParams)
+            viewModel.loadGenres(viewModel.apiParams)
         }
 
         binding.topAppBar.setOnMenuItemClickListener {
             menuItemListener.handleClick(it)
             true
         }
+
+        viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
 
         return binding.root
     }
@@ -174,8 +192,9 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         } ?: run {
             val holder = homePatchAdapterViewHolderFacade.getViewHolder(genreId)
             homePatchAdapterViewHolderFacade.showLoading(holder)
-            apiParams[PARAM_GENRES] = genreId
-            viewModel.loadDiscoverMovies(apiParams)
+            viewModel.apiParams
+            viewModel.apiParams[PARAM_GENRES] = genreId
+            viewModel.loadDiscoverMovies(viewModel.apiParams)
         }
     }
 }

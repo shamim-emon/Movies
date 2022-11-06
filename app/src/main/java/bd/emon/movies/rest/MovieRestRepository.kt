@@ -5,7 +5,7 @@ import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
 import io.reactivex.rxjava3.core.Observable
 
-interface MovieRepository {
+interface MovieRestRepository {
     fun getGenres(withParam: Map<String, Any?>): Observable<Optional<Genres>>
     fun getDiscoverMovies(
         withParam: Map<String, Any?>

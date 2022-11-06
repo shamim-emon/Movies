@@ -1,5 +1,14 @@
 package bd.emon.movies.fakeData
 
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.mutablePreferencesOf
+import androidx.datastore.preferences.core.stringPreferencesKey
+import bd.emon.movies.common.PARAM_INCLUDE_ADULT
+import bd.emon.movies.common.PARAM_RELEASE_YEAR
+import bd.emon.movies.common.PARAM_SORT_BY
+import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.discover.Result
 import bd.emon.movies.entity.genre.Genre
@@ -59,4 +68,26 @@ object MovieApiDummyDataProvider {
         total_results = 200,
         grp_genre_id = 28
     )
+
+    val discoverFilters: MutablePreferences
+        get() {
+            val mp = mutablePreferencesOf()
+
+            val PARAM_VOTE_COUNT_GREATER_THAN = intPreferencesKey(PARAM_VOTE_COUNT_GREATER_THAN)
+            val PARAM_INCLUDE_ADULT = booleanPreferencesKey(PARAM_INCLUDE_ADULT)
+            val PARAM_SORT_BY = stringPreferencesKey(PARAM_SORT_BY)
+            val PARAM_RELEASE_YEAR = stringPreferencesKey(PARAM_RELEASE_YEAR)
+
+            mp[PARAM_VOTE_COUNT_GREATER_THAN] = 10000
+            mp[PARAM_INCLUDE_ADULT] = true
+            mp[PARAM_SORT_BY] = "sort_by"
+            mp[PARAM_RELEASE_YEAR] = "releaseYr"
+            return mp
+        }
+
+    /**
+     * Default filter when no param value is cached
+     */
+    val discoverDefaultFilters: MutablePreferences
+        get() = mutablePreferencesOf()
 }

@@ -19,5 +19,5 @@ class RestApiServiceProvider(
     }
 
     private var restAdapter = getRestAdapter(BASE_URL)
-    fun providerTMDBApiService() = restAdapter.create(MovieApiInterface::class.java)
+    fun providerTMDBApiService() = restAdapter.create(MovieRestApiInterface::class.java)
 }

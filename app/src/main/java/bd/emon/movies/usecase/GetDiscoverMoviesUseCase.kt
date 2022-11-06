@@ -10,12 +10,12 @@ import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.common.Transformer
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.discover.DiscoverMovie
-import bd.emon.movies.rest.MovieRepository
+import bd.emon.movies.rest.MovieRestRepository
 import io.reactivex.rxjava3.core.Observable
 
 class GetDiscoverMoviesUseCase(
     transformer: Transformer<Optional<DiscoverMovie>>,
-    private val movieRepository: MovieRepository
+    private val movieRestRepository: MovieRestRepository
 ) : UseCase<Optional<DiscoverMovie>>(transformer) {
     lateinit var params: HashMap<String, Any?>
     override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
@@ -40,7 +40,7 @@ class GetDiscoverMoviesUseCase(
 
         var throwable: Throwable
         try {
-            return movieRepository.getDiscoverMovies(params)
+            return movieRestRepository.getDiscoverMovies(params)
         } catch (t: Throwable) {
             throwable = t
         }

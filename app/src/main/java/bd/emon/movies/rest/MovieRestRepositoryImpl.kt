@@ -13,13 +13,13 @@ import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
 import io.reactivex.rxjava3.core.Observable
 
-class MovieRepositoryImpl(private val movieApiInterface: MovieApiInterface) : MovieRepository {
+class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInterface) : MovieRestRepository {
     override fun getGenres(withParam: Map<String, Any?>): Observable<Optional<Genres>> {
         val params = HashMap<String, String>()
         params[PARAM_API_KEY.toApiParam()] = withParam[PARAM_API_KEY] as String
         params[PARAM_LANGUAGE.toApiParam()] = withParam[PARAM_LANGUAGE] as String
 
-        return movieApiInterface.getGenres(params).map {
+        return movieRestApiInterface.getGenres(params).map {
             Optional.of(it)
         }
     }
@@ -48,7 +48,7 @@ class MovieRepositoryImpl(private val movieApiInterface: MovieApiInterface) : Mo
             params[PARAM_VOTE_COUNT_GREATER_THAN.toApiParam()] = (it as Int).toString()
         }
 
-        return movieApiInterface.getDiscoverMovies(params).map {
+        return movieRestApiInterface.getDiscoverMovies(params).map {
             it.grp_genre_id = withParam[PARAM_GENRES] as Int
             Optional.of(it)
         }

@@ -27,7 +27,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class MovieRepositoryTest {
+class MovieRestRepositoryTest {
 
     val API_KEY = "API_KEY"
     val LANG = "LANGUAGE"
@@ -38,15 +38,15 @@ class MovieRepositoryTest {
     val GENRE = 28
 
     @Mock
-    lateinit var movieApiInterface: MovieApiInterface
-    lateinit var movieRepository: MovieRepositoryImpl
+    lateinit var movieRestApiInterface: MovieRestApiInterface
+    lateinit var movieRestRepository: MovieRestRepository
 
     @Captor
     lateinit var mapCaptor: ArgumentCaptor<Map<String, String>>
 
     @Before
     fun setUp() {
-        movieRepository = MovieRepositoryImpl(movieApiInterface)
+        movieRestRepository = MovieRestRepositoryImpl(movieRestApiInterface)
         getGenresApiResponse()
         getDiscoverMoviesApiResponse()
     }
@@ -56,8 +56,8 @@ class MovieRepositoryTest {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
-        movieRepository.getGenres(params)
-        verify(movieApiInterface, times(1))
+        movieRestRepository.getGenres(params)
+        verify(movieRestApiInterface, times(1))
             .getGenres(
                 capture(mapCaptor)
             )
@@ -70,7 +70,7 @@ class MovieRepositoryTest {
         val params = hashMapOf<String, Any?>()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
-        movieRepository.getGenres(params).subscribe {
+        movieRestRepository.getGenres(params).subscribe {
             assertThat(it, `is`(`is`(Optional.of(MovieApiDummyDataProvider.genreList))))
         }
     }
@@ -81,8 +81,8 @@ class MovieRepositoryTest {
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
         params[PARAM_GENRES] = GENRE
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
+        movieRestRepository.getDiscoverMovies(params)
+        verify(movieRestApiInterface, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
@@ -97,8 +97,8 @@ class MovieRepositoryTest {
         params[PARAM_LANGUAGE] = LANG
         params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
+        movieRestRepository.getDiscoverMovies(params)
+        verify(movieRestApiInterface, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
@@ -115,8 +115,8 @@ class MovieRepositoryTest {
         params[PARAM_GENRES] = GENRE
         params[PARAM_SORT_BY] = SORT_BY
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
+        movieRestRepository.getDiscoverMovies(params)
+        verify(movieRestApiInterface, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
@@ -135,8 +135,8 @@ class MovieRepositoryTest {
         params[PARAM_SORT_BY] = SORT_BY
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         params[PARAM_PAGE] = PAGE
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
+        movieRestRepository.getDiscoverMovies(params)
+        verify(movieRestApiInterface, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
@@ -157,8 +157,8 @@ class MovieRepositoryTest {
         params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
         params[PARAM_PAGE] = PAGE
         params[PARAM_VOTE_COUNT_GREATER_THAN] = VOTE_COUNT_GREATER_THAN
-        movieRepository.getDiscoverMovies(params)
-        verify(movieApiInterface, times(1)).getDiscoverMovies(
+        movieRestRepository.getDiscoverMovies(params)
+        verify(movieRestApiInterface, times(1)).getDiscoverMovies(
             capture(mapCaptor)
         )
         assertThat(mapCaptor.value[PARAM_API_KEY.toApiParam()], `is`(API_KEY))
@@ -171,13 +171,13 @@ class MovieRepositoryTest {
     }
 
     private fun getGenresApiResponse() {
-        Mockito.`when`(movieApiInterface.getGenres(anyMap()))
+        Mockito.`when`(movieRestApiInterface.getGenres(anyMap()))
             .thenReturn(Observable.just((MovieApiDummyDataProvider.genreList)))
     }
 
     private fun getDiscoverMoviesApiResponse() {
         Mockito.`when`(
-            movieApiInterface.getDiscoverMovies(
+            movieRestApiInterface.getDiscoverMovies(
                 anyMap()
             )
         )

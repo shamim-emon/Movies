@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import bd.emon.movies.R
+import bd.emon.movies.home.FilterDialogBindingHelper
+import bd.emon.movies.home.FilterDialogBindingHelperImpl
 import bd.emon.movies.home.HomePatchAdapterViewHolderContainer
 import bd.emon.movies.home.HomePatchAdapterViewHolderContainerImpl
 import bd.emon.movies.home.HomePatchAdapterViewHolderOnScreenDataHolder
@@ -45,5 +47,10 @@ object FragmentModule {
         activity.resources.getStringArray(R.array.movie_sorting_criteria).toList()
 
     @Provides
-    fun provideDialogBuilder(activity: AppCompatActivity) = MaterialAlertDialogBuilder(activity as Context)
+    fun provideDialogBuilder(activity: AppCompatActivity) =
+        MaterialAlertDialogBuilder(activity as Context)
+
+    @Provides
+    fun provideFilterDialogBindingHelper(): FilterDialogBindingHelper =
+        FilterDialogBindingHelperImpl()
 }

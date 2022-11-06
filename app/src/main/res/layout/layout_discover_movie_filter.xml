@@ -56,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divider_one" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchMaterial"
+            android:id="@+id/switchAdultContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -71,53 +71,6 @@
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/includeAdultContentsLabels" />
-
-        <TextView
-            android:id="@+id/orderLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/open_sans_regular"
-            android:text="@string/order"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider_two" />
-
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:checkedButton="@+id/radio_button_1"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/orderLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/orderLabel">
-
-            <RadioButton
-                android:id="@+id/radio_button_1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:text="Aesc" />
-
-            <RadioButton
-                android:id="@+id/radio_button_2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Desc" />
-        </RadioGroup>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_three"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/orderLabel" />
-
         <TextView
             android:id="@+id/orderByLabel"
             android:layout_width="wrap_content"
@@ -127,7 +80,7 @@
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/order_by"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider_three" />
+            app:layout_constraintTop_toBottomOf="@+id/divider_two" />
 
         <Spinner
             android:id="@+id/spinnerOrderBy"

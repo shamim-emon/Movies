@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
-interface MovieApiInterface {
+interface MovieRestApiInterface {
     @GET("genre/movie/list")
     fun getGenres(
         @QueryMap options: Map<String, String>

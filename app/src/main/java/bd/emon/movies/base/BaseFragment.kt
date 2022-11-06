@@ -4,13 +4,10 @@ import android.content.Context
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 abstract class BaseFragment : Fragment() {
 
-    @Inject
-    protected lateinit var apiParams: HashMap<String, Any?>
     abstract fun showLoader()
     abstract fun hideLoader()
     abstract fun showNoInternetView()
