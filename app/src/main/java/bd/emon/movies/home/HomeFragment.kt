@@ -192,7 +192,6 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         } ?: run {
             val holder = homePatchAdapterViewHolderFacade.getViewHolder(genreId)
             homePatchAdapterViewHolderFacade.showLoading(holder)
-            viewModel.apiParams
             viewModel.apiParams[PARAM_GENRES] = genreId
             viewModel.loadDiscoverMovies(viewModel.apiParams)
         }
