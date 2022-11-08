@@ -5,6 +5,7 @@ import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
 import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.PARAM_PAGE
+import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.common.toApiParam
@@ -13,7 +14,8 @@ import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
 import io.reactivex.rxjava3.core.Observable
 
-class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInterface) : MovieRestRepository {
+class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInterface) :
+    MovieRestRepository {
     override fun getGenres(withParam: Map<String, Any?>): Observable<Optional<Genres>> {
         val params = HashMap<String, String>()
         params[PARAM_API_KEY.toApiParam()] = withParam[PARAM_API_KEY] as String
@@ -46,6 +48,10 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
 
         withParam[PARAM_VOTE_COUNT_GREATER_THAN]?.let {
             params[PARAM_VOTE_COUNT_GREATER_THAN.toApiParam()] = (it as Int).toString()
+        }
+
+        withParam[PARAM_RELEASE_YEAR]?.let {
+            params[PARAM_RELEASE_YEAR.toApiParam()] = it as String
         }
 
         return movieRestApiInterface.getDiscoverMovies(params).map {

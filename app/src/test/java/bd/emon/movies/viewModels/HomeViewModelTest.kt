@@ -17,6 +17,7 @@ import bd.emon.movies.common.PARAM_PAGE
 import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
+import bd.emon.movies.common.RELEASE_YEAR
 import bd.emon.movies.common.SAVE_TO_PREF_ERROR_DEFAULT
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
@@ -275,6 +276,34 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_page_voteCountGreaterThan_releaseYear_passedToUseCase() {
+        val params: HashMap<String, Any?> = hashMapOf()
+        params[PARAM_API_KEY] = API_KEY
+        params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
+        params[PARAM_SORT_BY] = SORT_BY
+        params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
+        params[PARAM_PAGE] = PAGE
+        params[PARAM_VOTE_COUNT_GREATER_THAN] = VOTE_COUNT_GREATER_THAN
+        params[PARAM_RELEASE_YEAR] = RELEASE_YEAR
+        homeViewModel.loadDiscoverMovies(params)
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_API_KEY], `is`(API_KEY))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_GENRES], `is`(GENRE))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_SORT_BY], `is`(SORT_BY))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
+        assertThat(getDiscoverMoviesUseCase.params[PARAM_PAGE], `is`(PAGE))
+        assertThat(
+            getDiscoverMoviesUseCase.params[PARAM_VOTE_COUNT_GREATER_THAN],
+            `is`(VOTE_COUNT_GREATER_THAN)
+        )
+        assertThat(
+            getDiscoverMoviesUseCase.params[PARAM_RELEASE_YEAR],
+            `is`(RELEASE_YEAR)
+        )
+    }
+
+    @Test
     fun loadDiscoverMovies_correctParams_apiKey_language_genre_passedToRepository() {
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
@@ -367,6 +396,31 @@ class HomeViewModelTest {
         assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
         assertThat(mapCaptor.value[PARAM_PAGE], `is`(PAGE))
         assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
+    }
+
+    @Test
+    fun loadDiscoverMovies_correctParams_apiKey_language_genre_sortBy_includeAdult_page_voteCountGreaterThan_releaseYear_passedToRepository() {
+        val params: HashMap<String, Any?> = hashMapOf()
+        params[PARAM_API_KEY] = API_KEY
+        params[PARAM_LANGUAGE] = LANG
+        params[PARAM_GENRES] = GENRE
+        params[PARAM_SORT_BY] = SORT_BY
+        params[PARAM_INCLUDE_ADULT] = INCLUDE_ADULT
+        params[PARAM_PAGE] = PAGE
+        params[PARAM_VOTE_COUNT_GREATER_THAN] = VOTE_COUNT_GREATER_THAN
+        params[PARAM_RELEASE_YEAR] = RELEASE_YEAR
+        homeViewModel.loadDiscoverMovies(params)
+        verify(movieRestRepository, times(1)).getDiscoverMovies(
+            capture(mapCaptor)
+        )
+        assertThat(mapCaptor.value[PARAM_API_KEY], `is`(API_KEY))
+        assertThat(mapCaptor.value[PARAM_LANGUAGE], `is`(LANG))
+        assertThat(mapCaptor.value[PARAM_GENRES], `is`(GENRE))
+        assertThat(mapCaptor.value[PARAM_SORT_BY], `is`(SORT_BY))
+        assertThat(mapCaptor.value[PARAM_INCLUDE_ADULT], `is`(INCLUDE_ADULT))
+        assertThat(mapCaptor.value[PARAM_PAGE], `is`(PAGE))
+        assertThat(mapCaptor.value[PARAM_VOTE_COUNT_GREATER_THAN], `is`(VOTE_COUNT_GREATER_THAN))
+        assertThat(mapCaptor.value[PARAM_RELEASE_YEAR], `is`(RELEASE_YEAR))
     }
 
     @Test

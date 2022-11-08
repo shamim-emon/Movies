@@ -5,6 +5,7 @@ import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
 import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.PARAM_PAGE
+import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.common.Transformer
@@ -23,6 +24,7 @@ class GetDiscoverMoviesUseCase(
         params[PARAM_API_KEY] = withParam!![PARAM_API_KEY]
         params[PARAM_LANGUAGE] = withParam[PARAM_LANGUAGE]
         params[PARAM_GENRES] = withParam[PARAM_GENRES]
+
         withParam[PARAM_SORT_BY]?.let {
             params[PARAM_SORT_BY] = withParam[PARAM_SORT_BY]
         }
@@ -36,6 +38,10 @@ class GetDiscoverMoviesUseCase(
 
         withParam[PARAM_VOTE_COUNT_GREATER_THAN]?.let {
             params[PARAM_VOTE_COUNT_GREATER_THAN] = withParam[PARAM_VOTE_COUNT_GREATER_THAN]
+        }
+
+        withParam[PARAM_RELEASE_YEAR]?.let {
+            params[PARAM_RELEASE_YEAR] = it
         }
 
         var throwable: Throwable

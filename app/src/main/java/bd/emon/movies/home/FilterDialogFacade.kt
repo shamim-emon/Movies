@@ -54,7 +54,7 @@ class FilterDialogFacade(
 
                 val map = bindingHelper.updateApiParam(apiParams)
                 homeViewModel.saveDiscoverMoviesFilters(
-                    minVoteCount = (map[PARAM_VOTE_COUNT_GREATER_THAN] as String).toInt(),
+                    minVoteCount = map[PARAM_VOTE_COUNT_GREATER_THAN] as Int,
                     includeAdultContent = map[PARAM_INCLUDE_ADULT] as Boolean,
                     orderBy = map[PARAM_SORT_BY] as String,
                     releaseYearStr = "${map[PARAM_RELEASE_YEAR] as Int}"
