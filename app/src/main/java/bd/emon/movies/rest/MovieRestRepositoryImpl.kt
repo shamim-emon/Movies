@@ -1,6 +1,5 @@
 package bd.emon.movies.rest
 
-import bd.emon.movies.common.DEFAULT_PAGE_NO
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
@@ -46,8 +45,6 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
 
         withParam[PARAM_PAGE]?.let {
             params[PARAM_PAGE.toApiParam()] = (it as Int).toString()
-        } ?: run {
-            params[PARAM_PAGE.toApiParam()] = DEFAULT_PAGE_NO
         }
 
         withParam[PARAM_VOTE_COUNT_GREATER_THAN]?.let {

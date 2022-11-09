@@ -62,6 +62,8 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     private lateinit var orderByAdapterProvider: FilterDialogAdaptersProvider<String>
     private lateinit var yearAdapterProvider: FilterDialogAdaptersProvider<Int>
 
+    private var discoverMovieApiPageNo = 1
+
     override fun showLoader() {
         viewLoaderImpl.showLoader()
     }
@@ -200,7 +202,7 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
             val holder = homePatchAdapterViewHolderFacade.getViewHolder(genreId)
             homePatchAdapterViewHolderFacade.showLoading(holder)
             viewModel.apiParams[PARAM_GENRES] = genreId
-            viewModel.loadDiscoverMovies(viewModel.apiParams)
+            viewModel.loadDiscoverMovies(viewModel.apiParams, discoverMovieApiPageNo)
         }
     }
 }

@@ -19,6 +19,7 @@ class GetDiscoverMoviesUseCase(
     private val movieRestRepository: MovieRestRepository
 ) : UseCase<Optional<DiscoverMovie>>(transformer) {
     lateinit var params: HashMap<String, Any?>
+    var page: Int = 0
     override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
         params = hashMapOf()
         params[PARAM_API_KEY] = withParam!![PARAM_API_KEY]
@@ -54,7 +55,12 @@ class GetDiscoverMoviesUseCase(
         return Observable.error(throwable)
     }
 
-    fun getDiscoverMovies(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
+    fun getDiscoverMovies(
+        withParam: HashMap<String, Any?>?,
+        page: Int
+    ): Observable<Optional<DiscoverMovie>> {
+        this.page = page
+        withParam!![PARAM_PAGE] = this.page
         return observable(withParam)
     }
 }

@@ -87,10 +87,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadDiscoverMovies(
-        params: HashMap<String, Any?>
+        params: HashMap<String, Any?>,
+        page: Int
     ) {
         addDisposable(
-            getDiscoverMoviesUseCase.getDiscoverMovies(params)
+            getDiscoverMoviesUseCase.getDiscoverMovies(params, page)
                 .subscribe(
                     {
                         it.value?.let { data ->
