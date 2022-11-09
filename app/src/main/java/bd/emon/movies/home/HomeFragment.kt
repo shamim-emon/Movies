@@ -1,19 +1,15 @@
 package bd.emon.movies.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.datastore.preferences.core.MutablePreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.PARAM_GENRES
-import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.menuItem.HomeMenuItemListener
 import bd.emon.movies.common.menuItem.MenuItemListener
 import bd.emon.movies.common.view.NoInternetView
@@ -27,6 +23,7 @@ import bd.emon.movies.viewModels.HomeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
@@ -47,13 +44,14 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
 
     @Inject
-    lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
+    lateinit var materialAlertDialogBuilder: Provider<MaterialAlertDialogBuilder>
 
     lateinit var viewLoaderImpl: ViewLoader
 
     lateinit var menuItemListener: MenuItemListener
 
     lateinit var filterDialogFacade: FilterDialogFacade
+    lateinit var clearFilterDialog: ClearFilterDialog
 
     @Inject
     lateinit var sortingCriteria: List<String>
@@ -92,15 +90,19 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         orderByAdapterProvider = FilterDialogAdaptersProvider(requireContext(), sortingCriteria)
         yearAdapterProvider = FilterDialogAdaptersProvider(requireContext(), releaseYears)
         filterDialogFacade = FilterDialogFacade(
-            materialAlertDialogBuilder,
+            materialAlertDialogBuilder.get(),
             orderByAdapterProvider,
             yearAdapterProvider,
             viewModel,
             requireContext(),
-            this,
-            viewModel.apiParams
+            this
         )
-        menuItemListener = HomeMenuItemListener(filterDialogFacade)
+        clearFilterDialog = ClearFilterDialog(
+            homeViewModel = viewModel,
+            requireContext(),
+            materialAlertDialogBuilder.get()
+        )
+        menuItemListener = HomeMenuItemListener(filterDialogFacade, clearFilterDialog)
         viewModel.loadGenres(viewModel.apiParams)
 
         viewModel.genres.observe(
@@ -152,16 +154,21 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
             homePatchAdapterViewHolderFacade.inflateHomePatchViewHolder(it.grp_genre_id, it.results)
         }
 
-        viewModel.discoverFiltersErrorState.observe(viewLifecycleOwner, {
+        viewModel.discoverFiltersErrorState.observe(viewLifecycleOwner) {
             showToast(requireContext(), it.message!!, Toast.LENGTH_LONG)
-        })
+        }
 
-        viewModel.discoverFilters.observe(viewLifecycleOwner, {
-            val mutablePreferences: MutablePreferences = it.toMutablePreferences()
-            val key = stringPreferencesKey(PARAM_RELEASE_YEAR)
+        viewModel.saveDiscoverFilters.observe(viewLifecycleOwner) {
+            viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+        }
 
-            Log.e("PrefTest", "OP->${mutablePreferences[key]}")
-        })
+        viewModel.loadDiscoverFilters.observe(viewLifecycleOwner) {
+            viewModel.loadGenres(viewModel.apiParams)
+        }
+
+        viewModel.clearDiscoverFilters.observe(viewLifecycleOwner) {
+            viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+        }
 
         binding.swipeContainer.setOnRefreshListener {
             viewModel.loadGenres(viewModel.apiParams)

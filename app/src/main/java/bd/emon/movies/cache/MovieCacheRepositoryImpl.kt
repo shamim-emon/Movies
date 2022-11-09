@@ -23,6 +23,12 @@ class MovieCacheRepositoryImpl(private val movieCacheApiInterface: MovieCacheApi
         }.toObservable()
     }
 
+    override fun clearDiscoverFilters(): Observable<Optional<MutablePreferences>> {
+        return movieCacheApiInterface.clearDiscoverMovieFilters().map {
+            Optional.of(it)
+        }.toObservable()
+    }
+
     override fun getDiscoverMovieFilters(): Observable<Optional<MutablePreferences>> {
         return movieCacheApiInterface.getDiscoverMovieFilters().map {
             Optional.of(it)

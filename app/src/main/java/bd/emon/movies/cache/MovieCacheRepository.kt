@@ -15,5 +15,7 @@ interface MovieCacheRepository {
 
     ): Observable<Optional<MutablePreferences>>
 
+    fun clearDiscoverFilters(): Observable<Optional<MutablePreferences>>
+
     fun getDiscoverMovieFilters(): Observable<Optional<MutablePreferences>>
 }

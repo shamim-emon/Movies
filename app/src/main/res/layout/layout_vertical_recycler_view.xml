@@ -25,6 +25,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/seeAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="@string/view_all"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/secondary_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/view_all" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="0dp"

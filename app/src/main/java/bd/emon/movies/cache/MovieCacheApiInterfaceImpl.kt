@@ -40,6 +40,16 @@ class MovieCacheApiInterfaceImpl(
         }
     }
 
+    override fun clearDiscoverMovieFilters(): Single<MutablePreferences> {
+        return store.updateDataAsync { pref ->
+            val mp: MutablePreferences = pref.toMutablePreferences()
+            mp.clear()
+            Single.just(mp)
+        }.map {
+            it.toMutablePreferences()
+        }
+    }
+
     override fun getDiscoverMovieFilters(): Flowable<MutablePreferences> {
         return store.data().map {
             it.toMutablePreferences()

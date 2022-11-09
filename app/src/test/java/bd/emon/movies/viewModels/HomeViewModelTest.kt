@@ -22,6 +22,7 @@ import bd.emon.movies.common.SAVE_TO_PREF_ERROR_DEFAULT
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
 import bd.emon.movies.rest.MovieRestRepository
+import bd.emon.movies.usecase.ClearCacheDiscoverMoviesFiltersUseCase
 import bd.emon.movies.usecase.GetCacheDiscoverMovieFilterUseCase
 import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
@@ -80,6 +81,7 @@ class HomeViewModelTest {
     lateinit var getDiscoverMoviesUseCase: GetDiscoverMoviesUseCase
     lateinit var saveCacheDiscoverMoviesFiltersUseCase: SaveCacheDiscoverMoviesFiltersUseCase
     lateinit var getCacheDiscoverMovieFilterUseCase: GetCacheDiscoverMovieFilterUseCase
+    lateinit var clearCacheDiscoverMovieFilterUseCase: ClearCacheDiscoverMoviesFiltersUseCase
     lateinit var homeViewModel: HomeViewModel
 
     @Before
@@ -90,11 +92,14 @@ class HomeViewModelTest {
             SaveCacheDiscoverMoviesFiltersUseCase(ASyncTransformer(), movieCacheRepository)
         getCacheDiscoverMovieFilterUseCase =
             GetCacheDiscoverMovieFilterUseCase(ASyncTransformer(), movieCacheRepository)
+        clearCacheDiscoverMovieFilterUseCase =
+            ClearCacheDiscoverMoviesFiltersUseCase(ASyncTransformer(), movieCacheRepository)
         homeViewModel = HomeViewModel(
             getGenresUseCase = getGenresUseCase,
             getDiscoverMoviesUseCase = getDiscoverMoviesUseCase,
             saveCacheDiscoverMoviesFiltersUseCase = saveCacheDiscoverMoviesFiltersUseCase,
             getCacheDiscoverMovieFilterUseCase = getCacheDiscoverMovieFilterUseCase,
+            clearCacheDiscoverMovieFilterUseCase = clearCacheDiscoverMovieFilterUseCase,
             API_KEY,
             LANG
         )
@@ -614,7 +619,7 @@ class HomeViewModelTest {
         )
 
         assertThat(
-            homeViewModel.discoverFilters.value,
+            homeViewModel.loadDiscoverFilters.value,
             `is`(MovieApiDummyDataProvider.discoverFilters)
         )
     }
@@ -630,7 +635,7 @@ class HomeViewModelTest {
         )
 
         assertThat(
-            homeViewModel.discoverFilters.value,
+            homeViewModel.loadDiscoverFilters.value,
             `is`(nullValue())
         )
     }
@@ -656,7 +661,7 @@ class HomeViewModelTest {
         getDiscoverMovieFilters_notCached()
         homeViewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
         assertThat(
-            homeViewModel.discoverFilters.value,
+            homeViewModel.loadDiscoverFilters.value,
             `is`(MovieApiDummyDataProvider.discoverDefaultFilters)
         )
     }
@@ -679,7 +684,7 @@ class HomeViewModelTest {
         getDiscoverMovieFilters_cached()
         homeViewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
         assertThat(
-            homeViewModel.discoverFilters.value,
+            homeViewModel.loadDiscoverFilters.value,
             `is`(MovieApiDummyDataProvider.discoverFilters)
         )
     }

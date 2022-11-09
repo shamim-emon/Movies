@@ -15,5 +15,7 @@ interface MovieCacheApiInterface {
 
     ): Single<MutablePreferences>
 
+    fun clearDiscoverMovieFilters(): Single<MutablePreferences>
+
     fun getDiscoverMovieFilters(): Flowable<MutablePreferences>
 }

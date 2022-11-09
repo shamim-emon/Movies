@@ -20,9 +20,8 @@ class FilterDialogFacade(
     private val yearAdapterProvider: FilterDialogAdaptersProvider<Int>,
     private val homeViewModel: HomeViewModel,
     private val context: Context,
-    private val fragment: Fragment,
-    private val apiParams: HashMap<String, Any?>
-) {
+    private val fragment: Fragment
+) : Dialog {
     val hiltEntryPoint = EntryPointAccessors.fromFragment(fragment, FragmentEntryPoint::class.java)
 
     private var bindingHelper: FilterDialogBindingHelper =
@@ -32,9 +31,8 @@ class FilterDialogFacade(
 
     private val orderByAdapter = orderByAdapterProvider.getAdapter()
     private val yearAdapter = yearAdapterProvider.getAdapter()
-    private lateinit var builder: MaterialAlertDialogBuilder
 
-    fun createAndDisplayDialog() {
+    override fun createAndDisplayDialog() {
         binding = LayoutDiscoverMovieFilterBinding.inflate(
             LayoutInflater.from(context)
         )
@@ -46,25 +44,24 @@ class FilterDialogFacade(
             setBinding(binding)
             setMinVoteUpperLimit()
             setMinVoteValueChangeListener()
-            setData(apiParams)
+            setData(homeViewModel.apiParams)
         }
 
-        builder = materialAlertDialogBuilder.setView(binding.root)
+        materialAlertDialogBuilder.setView(binding.root)
             .setPositiveButton(context.getString(R.string.save)) { dialog, which ->
 
-                val map = bindingHelper.updateApiParam(apiParams)
+                val map = bindingHelper.updateApiParam(homeViewModel.apiParams)
                 homeViewModel.saveDiscoverMoviesFilters(
                     minVoteCount = map[PARAM_VOTE_COUNT_GREATER_THAN] as Int,
                     includeAdultContent = map[PARAM_INCLUDE_ADULT] as Boolean,
                     orderBy = map[PARAM_SORT_BY] as String,
                     releaseYearStr = "${map[PARAM_RELEASE_YEAR] as Int}"
                 )
-                homeViewModel.loadGenres(map)
             }
             .setNegativeButton(context.getString(R.string.cancel)) { dialog, which ->
                 // Respond to positive button press
             }
             .setTitle(R.string.filters)
-        builder.show()
+            .show()
     }
 }

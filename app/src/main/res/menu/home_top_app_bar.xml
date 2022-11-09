@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/clearFilter"
+        android:icon="@drawable/ic_clear_filter_24px"
+        app:showAsAction="always"
+        android:title="" />
+
+    <item
         android:id="@+id/filter"
         android:icon="@drawable/ic_filter_list_24px"
         app:showAsAction="always"

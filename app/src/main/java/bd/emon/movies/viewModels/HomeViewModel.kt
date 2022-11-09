@@ -1,14 +1,30 @@
 package bd.emon.movies.viewModels
 
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.mutablePreferencesOf
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.MutableLiveData
 import bd.emon.movies.base.BaseViewModel
-import bd.emon.movies.common.*
+import bd.emon.movies.common.CURRENT_YEAR
+import bd.emon.movies.common.DEFAULT_ORDER_BY
+import bd.emon.movies.common.DESC
+import bd.emon.movies.common.MultipleLiveEvent
+import bd.emon.movies.common.NO_DATA_ERR
+import bd.emon.movies.common.PARAM_API_KEY
+import bd.emon.movies.common.PARAM_GENRES
+import bd.emon.movies.common.PARAM_INCLUDE_ADULT
+import bd.emon.movies.common.PARAM_LANGUAGE
+import bd.emon.movies.common.PARAM_RELEASE_YEAR
+import bd.emon.movies.common.PARAM_SORT_BY
+import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.di.qualifier.ApiKey
 import bd.emon.movies.di.qualifier.AppLanguage
 import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.throwable.DiscverMovieThrowable
+import bd.emon.movies.usecase.ClearCacheDiscoverMoviesFiltersUseCase
 import bd.emon.movies.usecase.GetCacheDiscoverMovieFilterUseCase
 import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
@@ -22,6 +38,7 @@ class HomeViewModel @Inject constructor(
     private val getDiscoverMoviesUseCase: GetDiscoverMoviesUseCase,
     private val saveCacheDiscoverMoviesFiltersUseCase: SaveCacheDiscoverMoviesFiltersUseCase,
     private val getCacheDiscoverMovieFilterUseCase: GetCacheDiscoverMovieFilterUseCase,
+    private val clearCacheDiscoverMovieFilterUseCase: ClearCacheDiscoverMoviesFiltersUseCase,
     @ApiKey private val apiKey: String,
     @AppLanguage private val language: String
 ) :
@@ -33,12 +50,17 @@ class HomeViewModel @Inject constructor(
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
     var genreErrorState: MutableLiveData<Throwable> = MutableLiveData()
     var discoverMoviesErrorState: MutableLiveData<DiscverMovieThrowable> = MutableLiveData()
-    var discoverFilters: MutableLiveData<MutablePreferences> = MutableLiveData()
+    var loadDiscoverFilters: MutableLiveData<MutablePreferences> = MutableLiveData()
+    var saveDiscoverFilters: MutableLiveData<MutablePreferences> = MutableLiveData()
+    var clearDiscoverFilters: MutableLiveData<MutablePreferences> = MutableLiveData()
     var discoverFiltersErrorState: MutableLiveData<Throwable> = MutableLiveData()
 
     init {
         loadingState.postValue(true)
+        initApiParamMap()
+    }
 
+    private fun initApiParamMap() {
         apiParams = hashMapOf()
         apiParams[PARAM_API_KEY] = apiKey
         apiParams[PARAM_LANGUAGE] = language
@@ -107,7 +129,7 @@ class HomeViewModel @Inject constructor(
         ).subscribe(
             {
                 it.value?.let { data ->
-                    discoverFilters.postValue(data)
+                    saveDiscoverFilters.postValue(data)
                 }
             },
             {
@@ -154,7 +176,17 @@ class HomeViewModel @Inject constructor(
                     }
                 }
 
-                discoverFilters.postValue(it.value ?: mutablePreferencesOf())
+                loadDiscoverFilters.postValue(it.value ?: mutablePreferencesOf())
+            }
+    }
+
+    fun clearFilterParams() {
+        clearCacheDiscoverMovieFilterUseCase.clearFilterParams()
+            .subscribe {
+                it.value?.let { data ->
+                    initApiParamMap()
+                    clearDiscoverFilters.postValue(data)
+                }
             }
     }
 }
