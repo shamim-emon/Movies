@@ -59,7 +59,7 @@ class FilterDialogBindingHelperImpl : FilterDialogBindingHelper {
     override fun updateApiParam(map: HashMap<String, Any?>): HashMap<String, Any?> {
         map[PARAM_VOTE_COUNT_GREATER_THAN] = binding.voteCount.text.toString().toInt()
         map[PARAM_INCLUDE_ADULT] = binding.switchAdultContent.isChecked
-        map[PARAM_SORT_BY] = "${binding.spinnerOrderBy.selectedItem}.$DESC"
+        map[PARAM_SORT_BY] = binding.spinnerOrderBy.selectedItem.toString()
         map[PARAM_RELEASE_YEAR] = binding.spinnerReleaseYear.selectedItem
         return map
     }

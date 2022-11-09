@@ -15,7 +15,7 @@ const val PARAM_INCLUDE_ADULT = "param:include_adult"
 const val PARAM_PAGE = "param:page"
 const val PARAM_VOTE_COUNT_GREATER_THAN = "param:vote_count.gte"
 const val PARAM_GENRES = "param:with_genres"
-const val PARAM_RELEASE_YEAR = "param:release_year"
+const val PARAM_RELEASE_YEAR = "param:primary_release_year"
 
 const val DESC = "desc"
 const val CURRENT_YEAR = "current_year"
@@ -25,5 +25,4 @@ const val REVENUE = "revenue"
 const val MOVIE_TITLE = "original_title"
 const val VOTE_COUNT = "vote_count"
 const val DEFAULT_ORDER_BY = "popularity.desc"
-
-fun String.toApiParam() = this.replace("param:", "")
+const val DEFAULT_PAGE_NO = "1"

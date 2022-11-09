@@ -1,5 +1,6 @@
 package bd.emon.movies.rest
 
+import bd.emon.movies.common.DEFAULT_PAGE_NO
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
@@ -9,6 +10,7 @@ import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.common.toApiParam
+import bd.emon.movies.common.toLowerCaseNoSpace
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.discover.DiscoverMovie
 import bd.emon.movies.entity.genre.Genres
@@ -35,7 +37,7 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
         params[PARAM_GENRES.toApiParam()] = (withParam[PARAM_GENRES] as Int).toString()
 
         withParam[PARAM_SORT_BY]?.let {
-            params[PARAM_SORT_BY.toApiParam()] = it as String
+            params[PARAM_SORT_BY.toApiParam()] = (it as String).toLowerCaseNoSpace()
         }
 
         withParam[PARAM_INCLUDE_ADULT]?.let {
@@ -44,6 +46,8 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
 
         withParam[PARAM_PAGE]?.let {
             params[PARAM_PAGE.toApiParam()] = (it as Int).toString()
+        } ?: run {
+            params[PARAM_PAGE.toApiParam()] = DEFAULT_PAGE_NO
         }
 
         withParam[PARAM_VOTE_COUNT_GREATER_THAN]?.let {
@@ -53,7 +57,6 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
         withParam[PARAM_RELEASE_YEAR]?.let {
             params[PARAM_RELEASE_YEAR.toApiParam()] = it as String
         }
-
         return movieRestApiInterface.getDiscoverMovies(params).map {
             it.grp_genre_id = withParam[PARAM_GENRES] as Int
             Optional.of(it)
