@@ -11,7 +11,7 @@ object ImageLoader {
 
     @JvmStatic
     @BindingAdapter("imageUrl")
-    fun loadImage(imageView: ShapeableImageView, imageUrl: String) {
+    fun loadImage(imageView: ShapeableImageView, imageUrl: String?) {
         Glide.with(imageView.context)
             .load(imageUrl)
             .transform(CenterCrop())

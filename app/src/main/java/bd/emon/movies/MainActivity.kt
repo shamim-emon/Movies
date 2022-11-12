@@ -24,6 +24,10 @@ class MainActivity : AppCompatActivity() {
         screensNavigator.goTo(HomeFragment.newInstance())
     }
 
+    override fun onBackPressed() {
+        screensNavigator.back()
+    }
+
     private fun setUpViewListeners() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {

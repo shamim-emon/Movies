@@ -7,7 +7,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 abstract class BaseFragment : Fragment() {
-
     abstract fun showLoader()
     abstract fun hideLoader()
     abstract fun showNoInternetView()

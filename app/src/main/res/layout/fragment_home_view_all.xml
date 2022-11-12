@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="genre"
+            type="String" />
+    </data>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".home.HomeFragment">
+        tools:context=".home.HomeViewAllFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -19,14 +27,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:menu="@menu/home_top_app_bar"
-                app:titleCentered="true"
-                app:title="@{@string/home}" />
+                app:navigationIcon="@drawable/ic_arrow_back_24px"
+                app:title="@{@string/genre_movies(genre)}"
+                app:titleCentered="true" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/homeContents"
+                android:id="@+id/movies"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,10 +45,10 @@
             <include
                 android:id="@+id/exceptionView"
                 layout="@layout/layout_exception"
-                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/default_exception_view_height"
-                app:layout_constraintBottom_toBottomOf="@+id/homeContents"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/movies"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topAppBar">

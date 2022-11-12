@@ -3,6 +3,8 @@ package bd.emon.movies.di.module
 import android.content.Context
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import bd.emon.movies.common.DATA_STORE_NAME
+import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
+import bd.emon.movies.common.view.ViewResizer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,8 +15,17 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
+
     @Singleton
     @Provides
     fun provideDataStore(@ApplicationContext appContext: Context) =
         RxPreferenceDataStoreBuilder(appContext, DATA_STORE_NAME).build()
+
+    @Singleton
+    @Provides
+    fun provideDiscoverMovieMapper() = DiscoverMovieMapper()
+
+    @Singleton
+    @Provides
+    fun provideViewResizer() = ViewResizer()
 }

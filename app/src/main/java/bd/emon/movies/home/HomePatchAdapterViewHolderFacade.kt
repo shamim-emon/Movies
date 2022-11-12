@@ -1,9 +1,13 @@
 package bd.emon.movies.home
 
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.recyclerview.widget.LinearLayoutManager
+import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
 import bd.emon.movies.common.view.NoContentView
 import bd.emon.movies.common.view.NoInternetView
+import bd.emon.movies.common.view.ViewResizer
 import bd.emon.movies.entity.discover.Result
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
@@ -11,7 +15,9 @@ import javax.inject.Inject
 @FragmentScoped
 class HomePatchAdapterViewHolderFacade @Inject constructor(
     private val container: HomePatchAdapterViewHolderContainer,
-    private val onScreenHolder: HomePatchAdapterViewHolderOnScreenDataHolder
+    private val onScreenHolder: HomePatchAdapterViewHolderOnScreenDataHolder,
+    private val mapper: DiscoverMovieMapper,
+    private val viewResizer: ViewResizer
 ) {
     fun handleViewHolderSuccess(
         viewHolder: HomePatchesAdapter.ViewHolder?,
@@ -22,9 +28,12 @@ class HomePatchAdapterViewHolderFacade @Inject constructor(
             val noContentView = NoContentView(viewHolder.binding.exceptionView, context)
             if (movies.size == 0) {
                 noContentView.layoutAndshowExceptionView()
+                vh.binding.seeAll.visibility = GONE
             } else {
                 noContentView.hideExceptionView()
-                vh.binding.list.adapter = DiscoverListAdapter(movies)
+                vh.binding.seeAll.visibility = VISIBLE
+                vh.binding.list.adapter =
+                    MovieListAdapter(mapper.mapFrom(movies), viewResizer, false)
                 vh.binding.list.layoutManager =
                     LinearLayoutManager(
                         vh.binding.list.context,

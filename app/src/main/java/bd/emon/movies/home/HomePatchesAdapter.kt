@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import bd.emon.movies.R
+import bd.emon.movies.common.getGenreFromId
 import bd.emon.movies.databinding.LayoutVerticalRecyclerViewBinding
 import bd.emon.movies.entity.genre.Genre
 import dagger.assisted.Assisted
@@ -20,6 +21,15 @@ class HomePatchesAdapter @AssistedInject constructor(
     inner class ViewHolder(var binding: LayoutVerticalRecyclerViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var tag: Int? = null
+
+        init {
+            binding.seeAll.setOnClickListener {
+                tag?.let { genreId ->
+                    val genre = genres.getGenreFromId(genreId)
+                    callBack.goToViewAll(genreId, genre)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import bd.emon.movies.MainActivity
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
+import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.menuItem.HomeMenuItemListener
 import bd.emon.movies.common.menuItem.MenuItemListener
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
@@ -64,6 +67,8 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
 
     private var discoverMovieApiPageNo = 1
 
+    private lateinit var screensNavigator: ScreensNavigator
+
     override fun showLoader() {
         viewLoaderImpl.showLoader()
     }
@@ -86,6 +91,9 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        screensNavigator = (activity as MainActivity).screensNavigator
+
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
@@ -157,7 +165,7 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
         }
 
         viewModel.discoverFiltersErrorState.observe(viewLifecycleOwner) {
-            showToast(requireContext(), it.message!!, Toast.LENGTH_LONG)
+            showToast(requireContext(), NETWORK_ERROR_DEFAULT, Toast.LENGTH_LONG)
         }
 
         viewModel.saveDiscoverFilters.observe(viewLifecycleOwner) {
@@ -204,5 +212,9 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
             viewModel.apiParams[PARAM_GENRES] = genreId
             viewModel.loadDiscoverMovies(viewModel.apiParams, discoverMovieApiPageNo)
         }
+    }
+
+    override fun goToViewAll(genreId: Int, genre: String) {
+        screensNavigator.goTo(HomeViewAllFragment.newInstance(genreId, genre))
     }
 }

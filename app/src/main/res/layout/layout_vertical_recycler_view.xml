@@ -42,7 +42,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="0dp"
-            android:layout_height="216dp"
+            android:layout_height="wrap_content"
+            android:minHeight="216dp"
             android:layout_marginBottom="16dp"
             android:clipToPadding="false"
             android:paddingLeft="16dp"

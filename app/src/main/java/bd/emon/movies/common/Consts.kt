@@ -25,3 +25,6 @@ const val REVENUE = "revenue"
 const val MOVIE_TITLE = "original_title"
 const val VOTE_COUNT = "vote_count"
 const val DEFAULT_ORDER_BY = "popularity.desc"
+
+const val DEFAULT_VIEW_RESIZE_MARGIN = 24
+const val INVALID_VIEW_HOLDER = "Invalid View type"
