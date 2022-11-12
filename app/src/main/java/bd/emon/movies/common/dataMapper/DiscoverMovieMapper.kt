@@ -3,7 +3,7 @@ package bd.emon.movies.common.dataMapper
 import bd.emon.movies.entity.common.MovieEntity
 import bd.emon.movies.entity.discover.Result
 
-class DiscoverMovieMapper : Mapper<Result, MovieEntity>() {
+open class DiscoverMovieMapper : Mapper<Result, MovieEntity>() {
     override fun mapFrom(from: Result): MovieEntity {
         return MovieEntity(
             id = from.id,
