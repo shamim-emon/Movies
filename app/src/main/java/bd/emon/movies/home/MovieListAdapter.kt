@@ -1,7 +1,6 @@
 package bd.emon.movies.home
 
 import android.view.LayoutInflater
-import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +8,7 @@ import androidx.viewbinding.ViewBinding
 import bd.emon.movies.R
 import bd.emon.movies.common.DEFAULT_VIEW_RESIZE_MARGIN
 import bd.emon.movies.common.INVALID_VIEW_HOLDER
+import bd.emon.movies.common.hide
 import bd.emon.movies.common.paging.PagingHelper
 import bd.emon.movies.common.view.ViewResizer
 import bd.emon.movies.databinding.LayoutLoaderBinding
@@ -75,8 +75,7 @@ class MovieListAdapter(
         }
         holder.loaderBinding?.let {
             if (!pagingHelper!!.hasMoreData()) {
-                it.root.layoutParams.height = 0
-                it.progressBar.visibility = GONE
+                it.hide()
             }
             if (pagingHelper!!.hasMoreData() && position == movies.size) {
                 pagingHelper.loadNextPage()

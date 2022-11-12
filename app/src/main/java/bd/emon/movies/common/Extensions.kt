@@ -2,6 +2,8 @@ package bd.emon.movies.common
 
 import android.content.res.Resources
 import android.util.TypedValue
+import android.view.View
+import bd.emon.movies.databinding.LayoutLoaderBinding
 import bd.emon.movies.entity.genre.Genre
 
 fun String.toApiParam() = this.replace("param:", "")
@@ -17,8 +19,14 @@ fun List<Genre>.getGenreFromId(id: Int): String {
     return genre
 }
 
-val Number.toPx get() = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP,
-    this.toFloat(),
-    Resources.getSystem().displayMetrics
-)
+fun LayoutLoaderBinding.hide() {
+    this.root.layoutParams.height = 0
+    this.progressBar.visibility = View.GONE
+}
+
+val Number.toPx
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    )
