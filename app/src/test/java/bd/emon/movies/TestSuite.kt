@@ -1,8 +1,10 @@
 package bd.emon.movies
 
-import bd.emon.movies.common.dataMapper.DiscoverMovieMapperTest
+import bd.emon.movies.common.dataMapper.DiscoverMoviesMapperTest
+import bd.emon.movies.common.dataMapper.TendingMoviesMapperTest
 import bd.emon.movies.rest.MovieRestRepositoryTest
 import bd.emon.movies.viewModels.HomeViewModelTest
+import bd.emon.movies.viewModels.TrendingViewModelTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -10,6 +12,8 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     HomeViewModelTest::class,
     MovieRestRepositoryTest::class,
-    DiscoverMovieMapperTest::class
+    DiscoverMoviesMapperTest::class,
+    TrendingViewModelTest::class,
+    TendingMoviesMapperTest::class
 )
 class TestSuite

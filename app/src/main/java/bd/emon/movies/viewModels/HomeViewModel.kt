@@ -21,7 +21,7 @@ import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.di.qualifier.ApiKey
 import bd.emon.movies.di.qualifier.AppLanguage
-import bd.emon.movies.entity.discover.DiscoverMovie
+import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.throwable.DiscverMovieThrowable
 import bd.emon.movies.usecase.ClearCacheDiscoverMoviesFiltersUseCase
@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor(
 
     lateinit var apiParams: HashMap<String, Any?>
     var genres: MutableLiveData<Genres> = MutableLiveData()
-    var discoverMovies: MultipleLiveEvent<DiscoverMovie> = MultipleLiveEvent()
+    var discoverMovies: MultipleLiveEvent<DiscoverMovies> = MultipleLiveEvent()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
     var genreErrorState: MutableLiveData<Throwable> = MutableLiveData()
     var discoverMoviesErrorState: MutableLiveData<DiscverMovieThrowable> = MutableLiveData()

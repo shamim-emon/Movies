@@ -23,6 +23,7 @@
     <string name="view_all">View All</string>
     <string name="home">Home</string>
     <string name="genre_movies">%s Movies</string>
+    <string name="trending_today">Trending Today</string>
 
     <string-array name="movie_sorting_criteria">
         <item>Popularity</item>

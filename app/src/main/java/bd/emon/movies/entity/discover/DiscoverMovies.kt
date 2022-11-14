@@ -1,6 +1,6 @@
 package bd.emon.movies.entity.discover
 
-data class DiscoverMovie(
+data class DiscoverMovies(
     val page: Int,
     val results: MutableList<Result>,
     val total_pages: Int,

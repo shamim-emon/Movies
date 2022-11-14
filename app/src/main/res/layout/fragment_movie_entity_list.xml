@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="genre"
+            name="pageTitle"
             type="String" />
     </data>
 
@@ -27,8 +27,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="@drawable/ic_arrow_back_24px"
-                app:title="@{@string/genre_movies(genre)}"
+                app:navigationIconTint="?attr/colorControlNormal"
+                app:title="@{pageTitle}"
                 app:titleCentered="true" />
 
             <androidx.recyclerview.widget.RecyclerView

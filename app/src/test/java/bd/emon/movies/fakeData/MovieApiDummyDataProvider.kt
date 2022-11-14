@@ -9,10 +9,11 @@ import bd.emon.movies.common.PARAM_INCLUDE_ADULT
 import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
-import bd.emon.movies.entity.discover.DiscoverMovie
+import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.discover.Result
 import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.entity.genre.Genres
+import bd.emon.movies.entity.trending.TrendingMovies
 
 object MovieApiDummyDataProvider {
     val genreList = Genres(
@@ -28,7 +29,7 @@ object MovieApiDummyDataProvider {
         )
     )
 
-    val disocoverMovies = DiscoverMovie(
+    val disocoverMovies = DiscoverMovies(
         page = 1,
         results = mutableListOf(
             Result(
@@ -90,4 +91,47 @@ object MovieApiDummyDataProvider {
      */
     val discoverDefaultFilters: MutablePreferences
         get() = mutablePreferencesOf()
+
+    val trendingMovies = TrendingMovies(
+        results = mutableListOf(
+            bd.emon.movies.entity.trending.Result(
+                adult = false,
+                backdrop_path = "/pinPGZW5r9SOFNlSLugpdLwvdyD.jpg",
+                id = 765869,
+                title = "Black Friday",
+                original_language = "en",
+                original_title = "Black Friday",
+                overview = "A group of toy store employees must protect each other from a horde of parasite infected shoppers.",
+                poster_path = "/vf9Ex4EwSPlwbva4ZJdljsQQOML.jpg",
+                media_type = "movie",
+                genre_ids = listOf(27, 35, 878),
+                popularity = 22.169,
+                release_date = "2021-11-19",
+                video = false,
+                vote_average = 4.905,
+                vote_count = 137
+            ),
+            bd.emon.movies.entity.trending.Result(
+                adult = false,
+                backdrop_path = "/sO2VWeJ8qagNtYoznyLRL8TeSkw.jpg",
+                id = 675,
+                title = "Harry Potter and the Order of the Phoenix",
+                original_language = "en",
+                original_title = "Harry Potter and the Order of the Phoenix",
+                overview = "Returning for his fifth year of study at Hogwarts, Harry is stunned to find that his warnings about the return of Lord Voldemort have been ignored. Left with no choice, Harry takes matters into his own hands, training a small group of students to defend themselves against the dark arts.",
+                poster_path = "/5aOyriWkPec0zUDxmHFP9qMmBaj.jpg",
+                media_type = "movie",
+                genre_ids = listOf(12, 14, 9648),
+                popularity = 243.553,
+                release_date = "2021-11-19",
+                video = false,
+                vote_average = 7.691,
+                vote_count = 16929
+            )
+
+        ),
+        page = 1,
+        total_pages = 1,
+        total_results = 2
+    )
 }

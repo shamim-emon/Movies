@@ -10,17 +10,17 @@ import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.common.Transformer
 import bd.emon.movies.entity.Optional
-import bd.emon.movies.entity.discover.DiscoverMovie
+import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.rest.MovieRestRepository
 import io.reactivex.rxjava3.core.Observable
 
 class GetDiscoverMoviesUseCase(
-    transformer: Transformer<Optional<DiscoverMovie>>,
+    transformer: Transformer<Optional<DiscoverMovies>>,
     private val movieRestRepository: MovieRestRepository
-) : UseCase<Optional<DiscoverMovie>>(transformer) {
+) : UseCase<Optional<DiscoverMovies>>(transformer) {
     lateinit var params: HashMap<String, Any?>
     var page: Int = 0
-    override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovie>> {
+    override fun createObservable(withParam: HashMap<String, Any?>?): Observable<Optional<DiscoverMovies>> {
         params = hashMapOf()
         params[PARAM_API_KEY] = withParam!![PARAM_API_KEY]
         params[PARAM_LANGUAGE] = withParam[PARAM_LANGUAGE]
@@ -58,7 +58,7 @@ class GetDiscoverMoviesUseCase(
     fun getDiscoverMovies(
         withParam: HashMap<String, Any?>?,
         page: Int
-    ): Observable<Optional<DiscoverMovie>> {
+    ): Observable<Optional<DiscoverMovies>> {
         this.page = page
         withParam!![PARAM_PAGE] = this.page
         return observable(withParam)

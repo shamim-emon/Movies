@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.ActivityMainBinding
 import bd.emon.movies.home.HomeFragment
+import bd.emon.movies.movieEntity.APICallType
+import bd.emon.movies.movieEntity.MovieEntityListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,9 +34,16 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home_tab -> {
+                    screensNavigator.goTo(HomeFragment.newInstance())
                     true
                 }
                 R.id.trending_tab -> {
+                    screensNavigator.goTo(
+                        MovieEntityListFragment.newInstance(
+                            getString(R.string.trending_today),
+                            APICallType.TRENDING_MOVIES
+                        )
+                    )
                     true
                 }
                 R.id.search_tab -> {

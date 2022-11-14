@@ -148,7 +148,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadGenres_success_emptyListNoDataMessageEmitted() {
+    fun loadGenres_successEmptyResponse_NoDataMessageEmitted() {
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
@@ -158,7 +158,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadGenres_success_emptyListEmitted() {
+    fun loadGenres_successEmptyResponse_nullEmitted() {
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
@@ -168,7 +168,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadGenres_networkError_errorEmitted() {
+    fun loadGenres_networkError_errorMessageEmitted() {
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
@@ -188,7 +188,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadGenres_networkError_emptyListEmitted() {
+    fun loadGenres_networkError_nullEmitted() {
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
         params[PARAM_LANGUAGE] = LANG
@@ -431,7 +431,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadDiscoverMovies_successEmptyList_nullEmitted() {
+    fun loadDiscoverMovies_successEmptyResponse_nullEmitted() {
         getDiscoverMovies_noData()
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
@@ -445,7 +445,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadDiscoverMovies_successEmptyList_noDataErrorMessageEmitted() {
+    fun loadDiscoverMovies_successEmptyResponse_noDataErrorMessageEmitted() {
         getDiscoverMovies_noData()
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
@@ -460,7 +460,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadDiscoverMovies_successEmptyList_correctGrpGenreIdInThrowableEmitted() {
+    fun loadDiscoverMovies_successEmptyResponse_correctGrpGenreIdInThrowableEmitted() {
         getDiscoverMovies_noData()
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
@@ -475,7 +475,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun loadDiscoverMovies_successEmptyList_loadStateFalseEmitted() {
+    fun loadDiscoverMovies_successEmptyResponse_loadStateFalseEmitted() {
         getDiscoverMovies_noData()
         val params: HashMap<String, Any?> = hashMapOf()
         params[PARAM_API_KEY] = API_KEY
