@@ -1,6 +1,7 @@
 package bd.emon.movies
 
 import bd.emon.movies.common.dataMapper.DiscoverMoviesMapperTest
+import bd.emon.movies.common.dataMapper.SearchMovieMapperTest
 import bd.emon.movies.common.dataMapper.TendingMoviesMapperTest
 import bd.emon.movies.rest.MovieRestRepositoryTest
 import bd.emon.movies.viewModels.HomeViewModelTest
@@ -14,6 +15,7 @@ import org.junit.runners.Suite
     MovieRestRepositoryTest::class,
     DiscoverMoviesMapperTest::class,
     TrendingViewModelTest::class,
-    TendingMoviesMapperTest::class
+    TendingMoviesMapperTest::class,
+    SearchMovieMapperTest::class
 )
 class TestSuite

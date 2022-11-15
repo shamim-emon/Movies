@@ -52,13 +52,13 @@ class TendingMoviesMapperTest {
     val movieEntities = mutableListOf(
         MovieEntity(
             id = 765869,
-            poster_path = "/pinPGZW5r9SOFNlSLugpdLwvdyD.jpg",
+            poster_path = "/vf9Ex4EwSPlwbva4ZJdljsQQOML.jpg",
             title = "Black Friday",
             isFav = false
         ),
         MovieEntity(
             id = 675,
-            poster_path = "/sO2VWeJ8qagNtYoznyLRL8TeSkw.jpg",
+            poster_path = "/5aOyriWkPec0zUDxmHFP9qMmBaj.jpg",
             title = "Harry Potter and the Order of the Phoenix",
             isFav = false
         )
