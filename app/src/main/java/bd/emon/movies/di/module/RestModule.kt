@@ -7,6 +7,7 @@ import bd.emon.movies.rest.MovieRestRepositoryImpl
 import bd.emon.movies.rest.RestApiServiceProvider
 import bd.emon.movies.usecase.GetDiscoverMoviesUseCase
 import bd.emon.movies.usecase.GetGenresUseCase
+import bd.emon.movies.usecase.GetSearchResultUseCase
 import bd.emon.movies.usecase.GetTrendingMoviesUseCase
 import dagger.Module
 import dagger.Provides
@@ -49,4 +50,8 @@ object RestModule {
     @Provides
     fun provideGetTrendingMoviesUseCase(movieApisImpl: MovieRestRepository): GetTrendingMoviesUseCase =
         GetTrendingMoviesUseCase(ASyncTransformer(), movieApisImpl)
+
+    @Provides
+    fun provideGetGetSearchResultUseCase(movieApisImpl: MovieRestRepository): GetSearchResultUseCase =
+        GetSearchResultUseCase(ASyncTransformer(), movieApisImpl)
 }

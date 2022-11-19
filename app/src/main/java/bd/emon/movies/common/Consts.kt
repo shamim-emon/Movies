@@ -16,6 +16,7 @@ const val PARAM_PAGE = "param:page"
 const val PARAM_VOTE_COUNT_GREATER_THAN = "param:vote_count.gte"
 const val PARAM_GENRES = "param:with_genres"
 const val PARAM_RELEASE_YEAR = "param:primary_release_year"
+const val PARAM_SEARCH_QUERY = "param:query"
 
 const val DESC = "desc"
 const val CURRENT_YEAR = "current_year"

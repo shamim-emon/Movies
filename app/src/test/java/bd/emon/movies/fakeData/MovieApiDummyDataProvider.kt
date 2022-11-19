@@ -13,6 +13,7 @@ import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.discover.Result
 import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.entity.genre.Genres
+import bd.emon.movies.entity.search.MovieSearch
 import bd.emon.movies.entity.trending.TrendingMovies
 
 object MovieApiDummyDataProvider {
@@ -133,5 +134,45 @@ object MovieApiDummyDataProvider {
         page = 1,
         total_pages = 1,
         total_results = 2
+    )
+
+    val searchResults = MovieSearch(
+        page = 1,
+        total_pages = 1,
+        total_results = 2,
+        results = mutableListOf(
+            bd.emon.movies.entity.search.Result(
+                adult = false,
+                backdrop_path = "/jsoz1HlxczSuTx0mDl2h0lxy36l.jpg",
+                genre_ids = listOf(14, 28, 35),
+                id = 616037,
+                original_language = "en",
+                original_title = "Thor: Love and Thunder",
+                overview = "After his retirement is interrupted by Gorr the God Butcher, a galactic killer who seeks the extinction of the gods, Thor Odinson enlists the help of King Valkyrie, Korg, and ex-girlfriend Jane Foster, who now wields Mjolnir as the Mighty Thor. Together they embark upon a harrowing cosmic adventure to uncover the mystery of the God Butcher’s vengeance and stop him before it’s too late.",
+                popularity = 819.638,
+                poster_path = "/pIkRyD18kl4FhoCNQuWxWu5cBLM.jpg",
+                release_date = "2022-07-06",
+                title = "Thor: Love and Thunder",
+                video = false,
+                vote_average = 6.7,
+                vote_count = 4677
+            ),
+            bd.emon.movies.entity.search.Result(
+                adult = false,
+                backdrop_path = "/lD8dFIk9wDEvOwZw0RB47e346io.jpg",
+                genre_ids = listOf(18, 36),
+                id = 698508,
+                original_language = "en",
+                original_title = "Redeeming Love",
+                overview = "A retelling of the biblical book of Hosea set against the backdrop of the California Gold Rush of 1850.",
+                popularity = 156.74,
+                poster_path = "/pDc2HxQtC0MlKD4QfRvmKREEyhc.jpg",
+                release_date = "2022-01-21",
+                title = "Redeeming Love",
+                video = false,
+                vote_average = 7.9,
+                vote_count = 173
+            )
+        )
     )
 }

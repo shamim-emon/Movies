@@ -13,6 +13,7 @@ import bd.emon.movies.common.toLowerCaseNoSpace
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
+import bd.emon.movies.entity.search.MovieSearch
 import bd.emon.movies.entity.trending.TrendingMovies
 import io.reactivex.rxjava3.core.Observable
 
@@ -68,6 +69,24 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
         page: Int
     ): Observable<Optional<TrendingMovies>> {
         return movieRestApiInterface.getTrendingMovies(apiKey, page).map {
+            Optional.of(it)
+        }
+    }
+
+    override fun getSearchResult(
+        apiKey: String,
+        language: String,
+        page: Int,
+        includeAdult: Boolean,
+        query: String
+    ): Observable<Optional<MovieSearch>> {
+        return movieRestApiInterface.getSearchResult(
+            apiKey,
+            language,
+            page,
+            includeAdult,
+            query
+        ).map {
             Optional.of(it)
         }
     }

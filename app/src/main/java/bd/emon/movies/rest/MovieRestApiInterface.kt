@@ -2,6 +2,7 @@ package bd.emon.movies.rest
 
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
+import bd.emon.movies.entity.search.MovieSearch
 import bd.emon.movies.entity.trending.TrendingMovies
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
@@ -24,4 +25,13 @@ interface MovieRestApiInterface {
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): Observable<TrendingMovies>
+
+    @GET("search/movie")
+    fun getSearchResult(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int,
+        @Query("include_adult") includeAdult: Boolean,
+        @Query("query") query: String
+    ): Observable<MovieSearch>
 }
