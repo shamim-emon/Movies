@@ -1,5 +1,6 @@
 package bd.emon.movies.rest
 
+import bd.emon.movies.any
 import bd.emon.movies.capture
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_GENRES
@@ -14,6 +15,7 @@ import bd.emon.movies.common.toApiParam
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -22,10 +24,10 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.anyMap
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -46,11 +48,23 @@ class MovieRestRepositoryTest {
     @Captor
     lateinit var mapCaptor: ArgumentCaptor<Map<String, String>>
 
+    @Captor
+    lateinit var stringCaptor: ArgumentCaptor<String>
+
+    @Captor
+    lateinit var intCaptor: ArgumentCaptor<Int>
+
+    @Captor
+    lateinit var boolCaptor: ArgumentCaptor<Boolean>
+
     @Before
     fun setUp() {
-        movieRestRepository = MovieRestRepositoryImpl(movieRestApiInterface)
+        movieRestRepository = MovieRestRepositoryImpl(
+            movieRestApiInterface
+        )
         getGenresApiResponse()
         getDiscoverMoviesApiResponse()
+        getSearchResult_default()
     }
 
     @Test
@@ -75,6 +89,9 @@ class MovieRestRepositoryTest {
         movieRestRepository.getGenres(params).subscribe {
             assertThat(it, `is`(`is`(Optional.of(MovieApiDummyDataProvider.genreList))))
         }
+
+        val scheduler = TestScheduler()
+        scheduler.triggerActions()
     }
 
     @Test
@@ -215,17 +232,57 @@ class MovieRestRepositoryTest {
         assertThat(mapCaptor.value[PARAM_RELEASE_YEAR.toApiParam()], `is`(RELEASE_YEAR))
     }
 
+    @Test
+    fun getSearchResult_correctParamsPassedToApi() {
+        val query = "Some query"
+        movieRestRepository.getSearchResult(
+            API_KEY,
+            LANG,
+            PAGE,
+            INCLUDE_ADULT,
+            query
+        )
+            .test().await()
+        verify(movieRestApiInterface, times(1))
+            .getSearchResult(
+                capture(stringCaptor),
+                capture(stringCaptor),
+                capture(intCaptor),
+                capture(boolCaptor),
+                capture(stringCaptor)
+            )
+        assertThat(stringCaptor.allValues[0], `is`(API_KEY))
+        assertThat(stringCaptor.allValues[1], `is`(LANG))
+        assertThat(intCaptor.allValues[0], `is`(PAGE))
+        assertThat(boolCaptor.allValues[0], `is`(INCLUDE_ADULT))
+        assertThat(stringCaptor.allValues[2], `is`(query))
+    }
+
+    //region helper methods
     private fun getGenresApiResponse() {
-        Mockito.`when`(movieRestApiInterface.getGenres(anyMap()))
+        `when`(movieRestApiInterface.getGenres(anyMap()))
             .thenReturn(Observable.just((MovieApiDummyDataProvider.genreList)))
     }
 
     private fun getDiscoverMoviesApiResponse() {
-        Mockito.`when`(
+        `when`(
             movieRestApiInterface.getDiscoverMovies(
                 anyMap()
             )
         )
             .thenReturn(Observable.just(MovieApiDummyDataProvider.disocoverMovies))
     }
+
+    fun getSearchResult_default() {
+        `when`(
+            movieRestApiInterface.getSearchResult(
+                any(String::class.java),
+                any(String::class.java),
+                any(Int::class.java),
+                any(Boolean::class.java),
+                any(String::class.java)
+            )
+        ).thenReturn(Observable.just(MovieApiDummyDataProvider.searchResults))
+    }
+    //endregion
 }

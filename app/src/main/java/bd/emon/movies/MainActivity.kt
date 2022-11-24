@@ -7,6 +7,7 @@ import bd.emon.movies.databinding.ActivityMainBinding
 import bd.emon.movies.home.HomeFragment
 import bd.emon.movies.movieEntity.APICallType
 import bd.emon.movies.movieEntity.MovieEntityListFragment
+import bd.emon.movies.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,6 +48,9 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.search_tab -> {
+                    screensNavigator.goTo(
+                        SearchFragment.newInstance()
+                    )
                     true
                 }
                 R.id.favourite_tab -> {

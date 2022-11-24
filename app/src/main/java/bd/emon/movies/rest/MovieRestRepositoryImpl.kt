@@ -1,5 +1,6 @@
 package bd.emon.movies.rest
 
+import bd.emon.movies.common.DEBOUNCE_DEAULT_DURATION
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
@@ -16,8 +17,11 @@ import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.entity.search.MovieSearch
 import bd.emon.movies.entity.trending.TrendingMovies
 import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.TimeUnit
 
-class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInterface) :
+class MovieRestRepositoryImpl(
+    private val movieRestApiInterface: MovieRestApiInterface
+) :
     MovieRestRepository {
     override fun getGenres(withParam: Map<String, Any?>): Observable<Optional<Genres>> {
         val params = HashMap<String, String>()
@@ -80,14 +84,19 @@ class MovieRestRepositoryImpl(private val movieRestApiInterface: MovieRestApiInt
         includeAdult: Boolean,
         query: String
     ): Observable<Optional<MovieSearch>> {
-        return movieRestApiInterface.getSearchResult(
-            apiKey,
-            language,
-            page,
-            includeAdult,
-            query
-        ).map {
-            Optional.of(it)
-        }
+        return Observable.just(query)
+            .debounce(DEBOUNCE_DEAULT_DURATION, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
+            .switchMap {
+                movieRestApiInterface.getSearchResult(
+                    apiKey,
+                    language,
+                    page,
+                    includeAdult,
+                    it
+                ).map { mov ->
+                    Optional.of(mov)
+                }
+            }
     }
 }

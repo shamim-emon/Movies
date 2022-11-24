@@ -6,6 +6,7 @@ import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
 import bd.emon.movies.R
 import bd.emon.movies.common.DATA_STORE_NAME
 import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
+import bd.emon.movies.common.dataMapper.SearchMovieMapper
 import bd.emon.movies.common.dataMapper.TrendingMovieMapper
 import bd.emon.movies.common.view.ViewResizer
 import bd.emon.movies.di.qualifier.ApiKey
@@ -33,6 +34,10 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun provideTrendingMovieMapper() = TrendingMovieMapper()
+
+    @Singleton
+    @Provides
+    fun provideSearchMovieMapper() = SearchMovieMapper()
 
     @Singleton
     @Provides

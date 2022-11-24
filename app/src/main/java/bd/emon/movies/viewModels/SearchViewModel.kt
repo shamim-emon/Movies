@@ -5,8 +5,10 @@ import bd.emon.movies.base.BaseViewModel
 import bd.emon.movies.common.NO_DATA_ERR
 import bd.emon.movies.entity.search.MovieSearch
 import bd.emon.movies.usecase.GetSearchResultUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getSearchResultUseCase: GetSearchResultUseCase
 ) : BaseViewModel() {
@@ -14,10 +16,6 @@ class SearchViewModel @Inject constructor(
     var errorState: MutableLiveData<Throwable> = MutableLiveData()
     var movieSearch: MutableLiveData<MovieSearch> = MutableLiveData()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
-
-    init {
-        loadingState.postValue(true)
-    }
 
     fun searchMovie(
         apiKey: String,
@@ -29,27 +27,31 @@ class SearchViewModel @Inject constructor(
         if (query.length < 3) {
             return
         }
-        getSearchResultUseCase.getSearchResult(
-            apiKey = apiKey,
-            language = language,
-            page = page,
-            includeAdult = includeAdult,
-            query = query
-        ).subscribe(
-            {
-                it.value?.let { result ->
-                    movieSearch.postValue(result)
-                } ?: run {
-                    errorState.postValue(Throwable(NO_DATA_ERR))
+        loadingState.postValue(true)
+
+        addDisposable(
+            getSearchResultUseCase.getSearchResult(
+                apiKey = apiKey,
+                language = language,
+                page = page,
+                includeAdult = includeAdult,
+                query = query
+            ).subscribe(
+                {
+                    it.value?.let { result ->
+                        movieSearch.postValue(result)
+                    } ?: run {
+                        errorState.postValue(Throwable(NO_DATA_ERR))
+                    }
+
+                    loadingState.postValue(false)
+                },
+                {
+                    errorState.postValue(it)
+                    loadingState.postValue(false)
                 }
 
-                loadingState.postValue(false)
-            },
-            {
-                errorState.postValue(it)
-                loadingState.postValue(false)
-            }
-
+            )
         )
     }
 }

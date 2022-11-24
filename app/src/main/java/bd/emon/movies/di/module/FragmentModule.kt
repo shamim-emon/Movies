@@ -2,6 +2,7 @@ package bd.emon.movies.di.module
 
 import android.app.Activity
 import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import bd.emon.movies.R
 import bd.emon.movies.home.FilterDialogBindingHelper
@@ -53,4 +54,8 @@ object FragmentModule {
     @Provides
     fun provideFilterDialogBindingHelper(): FilterDialogBindingHelper =
         FilterDialogBindingHelperImpl()
+
+    @Provides
+    fun provideInputMethodManager(activity: Activity) =
+        activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
 }

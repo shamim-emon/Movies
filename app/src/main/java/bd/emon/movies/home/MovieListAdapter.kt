@@ -106,4 +106,9 @@ class MovieListAdapter(
     fun hideLoaders() {
         notifyItemRangeChanged(movies.size, 2)
     }
+
+    fun clearItems() {
+        movies = mutableListOf()
+        notifyDataSetChanged()
+    }
 }

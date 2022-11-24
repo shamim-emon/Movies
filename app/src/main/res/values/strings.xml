@@ -5,7 +5,7 @@
     <string name="search_tab">Search</string>
     <string name="favourite_tab">Favourite</string>
     <string name="no_internet_primary_text">Opps! Something went wrong</string>
-    <string name="no_internet_secondary_text">Check your internet and try again</string>4
+    <string name="no_internet_secondary_text">Check your internet and try again</string>
     <string name="no_result_primary_text">No item available</string>
     <string name="no_result_secondary_text">Nothing available on this criteria.Try resetting or clear filter from top menu</string>
     <string name="minimum_vote">Minimum Vote:</string>
@@ -22,8 +22,12 @@
     <string name="prompt_clear_filter">Are you sure, you want to clear all filters?</string>
     <string name="view_all">View All</string>
     <string name="home">Home</string>
+    <string name="search_movies">Search Movies</string>
     <string name="genre_movies">%s Movies</string>
     <string name="trending_today">Trending Today</string>
+
+    <string name="movie_search_primary_text">Search</string>
+    <string name="movie_search_secondary_text">Type movie name</string>
 
     <string-array name="movie_sorting_criteria">
         <item>Popularity</item>
