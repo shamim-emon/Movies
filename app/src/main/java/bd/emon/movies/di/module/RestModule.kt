@@ -1,6 +1,7 @@
 package bd.emon.movies.di.module
 
-import bd.emon.movies.common.ASyncTransformer
+import bd.emon.movies.common.SchedulerProvider
+import bd.emon.movies.common.SchedulerProviderImpl
 import bd.emon.movies.rest.MovieRestApiInterface
 import bd.emon.movies.rest.MovieRestRepository
 import bd.emon.movies.rest.MovieRestRepositoryImpl
@@ -36,22 +37,28 @@ object RestModule {
         restApiServiceProvider.providerTMDBApiService()
 
     @Provides
-    fun provideMovieRepository(tmdbApiInterface: MovieRestApiInterface): MovieRestRepository =
-        MovieRestRepositoryImpl(tmdbApiInterface)
+    fun provideSchedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
+
+    @Provides
+    fun provideMovieRepository(
+        schedulerProvider: SchedulerProvider,
+        tmdbApiInterface: MovieRestApiInterface
+    ): MovieRestRepository =
+        MovieRestRepositoryImpl(tmdbApiInterface, schedulerProvider)
 
     @Provides
     fun provideGetGenresUseCase(movieApisImpl: MovieRestRepository): GetGenresUseCase =
-        GetGenresUseCase(ASyncTransformer(), movieApisImpl)
+        GetGenresUseCase(movieApisImpl)
 
     @Provides
     fun provideGetDiscoverMoviesUseCase(movieApisImpl: MovieRestRepository): GetDiscoverMoviesUseCase =
-        GetDiscoverMoviesUseCase(ASyncTransformer(), movieApisImpl)
+        GetDiscoverMoviesUseCase(movieApisImpl)
 
     @Provides
     fun provideGetTrendingMoviesUseCase(movieApisImpl: MovieRestRepository): GetTrendingMoviesUseCase =
-        GetTrendingMoviesUseCase(ASyncTransformer(), movieApisImpl)
+        GetTrendingMoviesUseCase(movieApisImpl)
 
     @Provides
     fun provideGetGetSearchResultUseCase(movieApisImpl: MovieRestRepository): GetSearchResultUseCase =
-        GetSearchResultUseCase(ASyncTransformer(), movieApisImpl)
+        GetSearchResultUseCase(movieApisImpl)
 }

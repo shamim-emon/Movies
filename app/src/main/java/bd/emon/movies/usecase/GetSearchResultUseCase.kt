@@ -5,16 +5,14 @@ import bd.emon.movies.common.PARAM_INCLUDE_ADULT
 import bd.emon.movies.common.PARAM_LANGUAGE
 import bd.emon.movies.common.PARAM_PAGE
 import bd.emon.movies.common.PARAM_SEARCH_QUERY
-import bd.emon.movies.common.Transformer
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.search.MovieSearch
 import bd.emon.movies.rest.MovieRestRepository
 import io.reactivex.rxjava3.core.Observable
 
 class GetSearchResultUseCase(
-    transformer: Transformer<Optional<MovieSearch>>,
     private val movieRestRepository: MovieRestRepository
-) : UseCase<Optional<MovieSearch>>(transformer) {
+) : UseCase<Optional<MovieSearch>>() {
 
     var params: HashMap<String, Any?>? = null
     lateinit var apiKey: String

@@ -2,14 +2,12 @@ package bd.emon.movies.usecase
 
 import androidx.datastore.preferences.core.MutablePreferences
 import bd.emon.movies.cache.MovieCacheRepository
-import bd.emon.movies.common.Transformer
 import bd.emon.movies.entity.Optional
 import io.reactivex.rxjava3.core.Observable
 
 class SaveCacheDiscoverMoviesFiltersUseCase(
-    transformer: Transformer<Optional<MutablePreferences>>,
     private val movieCacheRepository: MovieCacheRepository
-) : UseCase<Optional<MutablePreferences>>(transformer) {
+) : UseCase<Optional<MutablePreferences>>() {
 
     var minVoteCount: Int = 0
     var includeAdultContent: Boolean = false

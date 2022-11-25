@@ -30,4 +30,4 @@ const val DEFAULT_ORDER_BY = "popularity.desc"
 const val DEFAULT_VIEW_RESIZE_MARGIN = 24
 const val INVALID_VIEW_HOLDER = "Invalid View type"
 const val INVALID_API_CALL_TYPE = "Invalid api call type"
-const val DEBOUNCE_DEAULT_DURATION = 300L
+const val DEBOUNCE_DEAULT_DURATION = 600L

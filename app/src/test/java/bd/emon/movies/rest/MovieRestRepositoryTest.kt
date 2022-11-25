@@ -1,7 +1,9 @@
 package bd.emon.movies.rest
 
+import bd.emon.movies.TestScheduleProvider
 import bd.emon.movies.any
 import bd.emon.movies.capture
+import bd.emon.movies.common.DEBOUNCE_DEAULT_DURATION
 import bd.emon.movies.common.PARAM_API_KEY
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.PARAM_INCLUDE_ADULT
@@ -15,6 +17,7 @@ import bd.emon.movies.common.toApiParam
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -29,6 +32,7 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import java.util.concurrent.TimeUnit
 
 @RunWith(MockitoJUnitRunner::class)
 class MovieRestRepositoryTest {
@@ -57,10 +61,17 @@ class MovieRestRepositoryTest {
     @Captor
     lateinit var boolCaptor: ArgumentCaptor<Boolean>
 
+    lateinit var testScheduler: TestScheduler
+
     @Before
     fun setUp() {
+        testScheduler = TestScheduler()
+        RxJavaPlugins.setComputationSchedulerHandler {
+            testScheduler
+        }
         movieRestRepository = MovieRestRepositoryImpl(
-            movieRestApiInterface
+            movieRestApiInterface,
+            TestScheduleProvider(testScheduler)
         )
         getGenresApiResponse()
         getDiscoverMoviesApiResponse()
@@ -241,8 +252,8 @@ class MovieRestRepositoryTest {
             PAGE,
             INCLUDE_ADULT,
             query
-        )
-            .test().await()
+        ).test()
+        testScheduler.advanceTimeBy(DEBOUNCE_DEAULT_DURATION, TimeUnit.MILLISECONDS)
         verify(movieRestApiInterface, times(1))
             .getSearchResult(
                 capture(stringCaptor),

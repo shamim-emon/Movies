@@ -9,6 +9,7 @@ import bd.emon.movies.common.PARAM_PAGE
 import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
+import bd.emon.movies.common.SchedulerProvider
 import bd.emon.movies.common.toApiParam
 import bd.emon.movies.common.toLowerCaseNoSpace
 import bd.emon.movies.entity.Optional
@@ -20,7 +21,8 @@ import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.TimeUnit
 
 class MovieRestRepositoryImpl(
-    private val movieRestApiInterface: MovieRestApiInterface
+    private val movieRestApiInterface: MovieRestApiInterface,
+    private val schedulerProvider: SchedulerProvider
 ) :
     MovieRestRepository {
     override fun getGenres(withParam: Map<String, Any?>): Observable<Optional<Genres>> {
@@ -28,9 +30,12 @@ class MovieRestRepositoryImpl(
         params[PARAM_API_KEY.toApiParam()] = withParam[PARAM_API_KEY] as String
         params[PARAM_LANGUAGE.toApiParam()] = withParam[PARAM_LANGUAGE] as String
 
-        return movieRestApiInterface.getGenres(params).map {
-            Optional.of(it)
-        }
+        return movieRestApiInterface.getGenres(params)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .map {
+                Optional.of(it)
+            }
     }
 
     override fun getDiscoverMovies(
@@ -62,19 +67,25 @@ class MovieRestRepositoryImpl(
         withParam[PARAM_RELEASE_YEAR]?.let {
             params[PARAM_RELEASE_YEAR.toApiParam()] = it as String
         }
-        return movieRestApiInterface.getDiscoverMovies(params).map {
-            it.grp_genre_id = withParam[PARAM_GENRES] as Int
-            Optional.of(it)
-        }
+        return movieRestApiInterface.getDiscoverMovies(params)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .map {
+                it.grp_genre_id = withParam[PARAM_GENRES] as Int
+                Optional.of(it)
+            }
     }
 
     override fun getTrendingMovies(
         apiKey: String,
         page: Int
     ): Observable<Optional<TrendingMovies>> {
-        return movieRestApiInterface.getTrendingMovies(apiKey, page).map {
-            Optional.of(it)
-        }
+        return movieRestApiInterface.getTrendingMovies(apiKey, page)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .map {
+                Optional.of(it)
+            }
     }
 
     override fun getSearchResult(
@@ -85,6 +96,8 @@ class MovieRestRepositoryImpl(
         query: String
     ): Observable<Optional<MovieSearch>> {
         return Observable.just(query)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
             .debounce(DEBOUNCE_DEAULT_DURATION, TimeUnit.MILLISECONDS)
             .distinctUntilChanged()
             .switchMap {

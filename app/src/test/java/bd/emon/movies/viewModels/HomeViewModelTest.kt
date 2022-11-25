@@ -1,11 +1,9 @@
 package bd.emon.movies.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import bd.emon.movies.RxImmediateSchedulerRule
 import bd.emon.movies.any
 import bd.emon.movies.cache.MovieCacheRepository
 import bd.emon.movies.capture
-import bd.emon.movies.common.ASyncTransformer
 import bd.emon.movies.common.DEFAULT_ORDER_BY
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.NO_DATA_ERR
@@ -46,8 +44,6 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelTest {
-    @get:Rule
-    val schedulers = RxImmediateSchedulerRule()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -86,14 +82,14 @@ class HomeViewModelTest {
 
     @Before
     fun setUp() {
-        getGenresUseCase = GetGenresUseCase(ASyncTransformer(), movieRestRepository)
-        getDiscoverMoviesUseCase = GetDiscoverMoviesUseCase(ASyncTransformer(), movieRestRepository)
+        getGenresUseCase = GetGenresUseCase(movieRestRepository)
+        getDiscoverMoviesUseCase = GetDiscoverMoviesUseCase(movieRestRepository)
         saveCacheDiscoverMoviesFiltersUseCase =
-            SaveCacheDiscoverMoviesFiltersUseCase(ASyncTransformer(), movieCacheRepository)
+            SaveCacheDiscoverMoviesFiltersUseCase(movieCacheRepository)
         getCacheDiscoverMovieFilterUseCase =
-            GetCacheDiscoverMovieFilterUseCase(ASyncTransformer(), movieCacheRepository)
+            GetCacheDiscoverMovieFilterUseCase(movieCacheRepository)
         clearCacheDiscoverMovieFilterUseCase =
-            ClearCacheDiscoverMoviesFiltersUseCase(ASyncTransformer(), movieCacheRepository)
+            ClearCacheDiscoverMoviesFiltersUseCase(movieCacheRepository)
         homeViewModel = HomeViewModel(
             getGenresUseCase = getGenresUseCase,
             getDiscoverMoviesUseCase = getDiscoverMoviesUseCase,

@@ -1,10 +1,8 @@
 package bd.emon.movies.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import bd.emon.movies.RxImmediateSchedulerRule
 import bd.emon.movies.any
 import bd.emon.movies.capture
-import bd.emon.movies.common.ASyncTransformer
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.NO_DATA_ERR
 import bd.emon.movies.entity.Optional
@@ -30,8 +28,6 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchViewModelTest {
-    @get:Rule
-    val schedulers = RxImmediateSchedulerRule()
 
     @Mock
     lateinit var movieRestRepository: MovieRestRepository
@@ -57,7 +53,7 @@ class SearchViewModelTest {
 
     @Before
     fun setUp() {
-        getSearchResultUseCase = GetSearchResultUseCase(ASyncTransformer(), movieRestRepository)
+        getSearchResultUseCase = GetSearchResultUseCase(movieRestRepository)
         searchViewModel = SearchViewModel(getSearchResultUseCase)
         getSearchResult_success()
     }

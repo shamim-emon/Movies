@@ -1,10 +1,14 @@
 package bd.emon.movies.cache
 
 import androidx.datastore.preferences.core.MutablePreferences
+import bd.emon.movies.common.SchedulerProvider
 import bd.emon.movies.entity.Optional
 import io.reactivex.rxjava3.core.Observable
 
-class MovieCacheRepositoryImpl(private val movieCacheApiInterface: MovieCacheApiInterface) :
+class MovieCacheRepositoryImpl(
+    private val schedulerProvider: SchedulerProvider,
+    private val movieCacheApiInterface: MovieCacheApiInterface
+) :
     MovieCacheRepository {
 
     override fun saveDiscoverMovieFilters(
@@ -18,9 +22,12 @@ class MovieCacheRepositoryImpl(private val movieCacheApiInterface: MovieCacheApi
             includeAdultContent,
             orderBy,
             releaseYearStr
-        ).map {
-            Optional.of(it)
-        }.toObservable()
+        )
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .map {
+                Optional.of(it)
+            }.toObservable()
     }
 
     override fun clearDiscoverFilters(): Observable<Optional<MutablePreferences>> {
