@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.MainActivity
 import bd.emon.movies.R
@@ -23,7 +24,6 @@ import bd.emon.movies.di.assistedFactory.HomePatchAdapterAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.entity.genre.Genre
 import bd.emon.movies.movieEntity.APICallType
-import bd.emon.movies.movieEntity.MovieEntityListFragment
 import bd.emon.movies.viewModels.HomeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -218,12 +218,18 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
 
     override fun goToMovieEntityList(genreId: Int, genre: String) {
         val pageTitle = getString(R.string.genre_movies, genre)
-        screensNavigator.goTo(
-            MovieEntityListFragment.newInstance(
-                genreId,
-                pageTitle,
-                APICallType.DISCOVER_PAGING
-            )
+        val action = HomeFragmentDirections.actionHomeFragmentToSeeMoreListFragment(
+            genreId,
+            pageTitle,
+            APICallType.DISCOVER_PAGING
         )
+        findNavController().navigate(action)
+//        screensNavigator.goTo(
+//            MovieEntityListFragment.newInstance(
+//                genreId,
+//                pageTitle,
+//                APICallType.DISCOVER_PAGING
+//            )
+//        )
     }
 }

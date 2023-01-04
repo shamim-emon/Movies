@@ -1,6 +1,5 @@
 package bd.emon.movies.common.navigation
 
-import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import bd.emon.movies.home.HomeFragment
@@ -9,8 +8,8 @@ import javax.inject.Inject
 
 class ScreensNavigator @Inject constructor(
     private val fragmentManager: FragmentManager,
-    @IdRes
-    private val containerId: Int,
+//    @IdRes
+//    private val containerId: Int,
     private val stackManager: FragmentStackManager
 
 ) : Serializable {
@@ -29,7 +28,7 @@ class ScreensNavigator @Inject constructor(
     private fun showFragment(fragment: Fragment) {
         fragmentManager
             .beginTransaction()
-            .replace(containerId, fragment)
+            // .replace(containerId, fragment)
             .disallowAddToBackStack()
             .commit()
     }

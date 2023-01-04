@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="bd.emon.movies.home.HomeFragment"
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_SeeMoreListFragment"
+            app:destination="@id/SeeMoreListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SeeMoreListFragment"
+        android:name="bd.emon.movies.movieEntity.MovieEntityListFragment"
+        android:label="MovieEntityListFragment">
+        <argument
+            android:name="genreId"
+            app:argType="integer" />
+        <argument
+            android:name="pageTitle"
+            app:argType="string" />
+        <argument
+            android:name="apiCallType"
+            android:defaultValue="TRENDING_MOVIES"
+            app:argType="bd.emon.movies.movieEntity.APICallType" />
+    </fragment>
+</navigation>

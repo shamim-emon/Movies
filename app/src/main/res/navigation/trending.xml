@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/trending"
+    app:startDestination="@id/movieEntityListFragment">
+
+    <fragment
+        android:id="@+id/movieEntityListFragment"
+        android:name="bd.emon.movies.movieEntity.MovieEntityListFragment"
+        android:label="MovieEntityListFragment" >
+        <argument
+            android:name="genreId"
+            app:argType="integer" />
+        <argument
+            android:name="pageTitle"
+            app:argType="string" />
+        <argument
+            android:name="apiCallType"
+            app:argType="bd.emon.movies.movieEntity.APICallType"
+            android:defaultValue="TRENDING_MOVIES"/>
+    </fragment>
+    <argument
+        android:name="genreId"
+        android:defaultValue="-100" />
+    <argument
+        android:name="pageTitle"
+        android:defaultValue="Trending Today" />
+    <argument
+        android:name="apiCallType" />
+</navigation>

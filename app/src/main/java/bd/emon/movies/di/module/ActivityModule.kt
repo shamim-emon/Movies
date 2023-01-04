@@ -2,7 +2,6 @@ package bd.emon.movies.di.module
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
-import bd.emon.movies.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +15,4 @@ object ActivityModule {
 
     @Provides
     fun provideFragmentManager(activity: AppCompatActivity) = activity.supportFragmentManager
-
-    @Provides
-    fun provideContainerId() = R.id.fragmentContainer
 }

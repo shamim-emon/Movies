@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import bd.emon.movies.MainActivity
 import bd.emon.movies.R
@@ -37,6 +39,7 @@ private const val ARG_API_CALL_TYPE = "apiCallType"
 
 @AndroidEntryPoint
 class MovieEntityListFragment : BaseFragment(), PagingHelper {
+    private val args: MovieEntityListFragmentArgs by navArgs()
     private var genreId: Int? = null
     private var pageTitle: String? = null
     private lateinit var binding: FragmentMovieEntityListBinding
@@ -86,9 +89,9 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            genreId = it.getInt(ARG_GENRE_ID)
-            pageTitle = it.getString(ARG_PAGE_TITLE)
-            apiCallType = it.getSerializable(ARG_API_CALL_TYPE) as APICallType
+            genreId = args.genreId // it.getInt(ARG_GENRE_ID)
+            pageTitle = args.pageTitle // it.getString(ARG_PAGE_TITLE)
+            apiCallType = args.apiCallType // it.getSerializable(ARG_API_CALL_TYPE) as APICallType
         }
     }
 
@@ -105,7 +108,7 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         binding.pageTitle = pageTitle
         binding.topAppBar.setNavigationOnClickListener {
-            screensNavigator.back()
+            findNavController().navigateUp()
         }
 
         setNavIconByApiCalType(apiCallType)
@@ -234,7 +237,8 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
     private fun setNavIconByApiCalType(apiCallType: APICallType) {
         when (apiCallType) {
             APICallType.DISCOVER_PAGING ->
-                binding.topAppBar.navigationIcon = resources.getDrawable(R.drawable.ic_arrow_back_24px)
+                binding.topAppBar.navigationIcon =
+                    resources.getDrawable(R.drawable.ic_arrow_back_24px)
 
             APICallType.TRENDING_MOVIES ->
                 binding.topAppBar.navigationIcon = null
