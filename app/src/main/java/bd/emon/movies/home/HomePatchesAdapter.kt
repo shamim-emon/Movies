@@ -26,7 +26,7 @@ class HomePatchesAdapter @AssistedInject constructor(
             binding.seeAll.setOnClickListener {
                 tag?.let { genreId ->
                     val genre = genres.getGenreFromId(genreId)
-                    callBack.goToMovieEntityList(genreId, genre)
+                    callBack.seeMore(genreId, genre)
                 }
             }
         }

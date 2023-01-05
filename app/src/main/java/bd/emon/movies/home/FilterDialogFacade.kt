@@ -22,10 +22,11 @@ class FilterDialogFacade(
     private val context: Context,
     private val fragment: Fragment
 ) : Dialog {
-    val hiltEntryPoint = EntryPointAccessors.fromFragment(fragment, FragmentEntryPoint::class.java)
+    private val fragmentEntryPoint =
+        EntryPointAccessors.fromFragment(fragment, FragmentEntryPoint::class.java)
 
     private var bindingHelper: FilterDialogBindingHelper =
-        hiltEntryPoint.filterDialogBindingHelper()
+        fragmentEntryPoint.filterDialogBindingHelper()
 
     private lateinit var binding: LayoutDiscoverMovieFilterBinding
 

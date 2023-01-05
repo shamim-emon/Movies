@@ -1,44 +1,42 @@
 package bd.emon.movies.common.navigation
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import bd.emon.movies.home.HomeFragment
+import androidx.navigation.NavController
+import androidx.navigation.ui.setupWithNavController
+import bd.emon.movies.MainActivity
+import bd.emon.movies.di.entryPoint.ActivityEntryPoint
+import bd.emon.movies.home.HomeFragmentDirections
+import bd.emon.movies.movieEntity.APICallType
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.EntryPointAccessors
 import java.io.Serializable
-import javax.inject.Inject
 
-class ScreensNavigator @Inject constructor(
-    private val fragmentManager: FragmentManager,
-//    @IdRes
-//    private val containerId: Int,
-    private val stackManager: FragmentStackManager
+class ScreensNavigator(
+    activity: MainActivity
+) :
+    Serializable {
+    private var navController: NavController
+    private var activityEntryPoint: ActivityEntryPoint
 
-) : Serializable {
-
-    private lateinit var homeFragment: HomeFragment
-
-    fun goTo(fragment: Fragment) {
-        if (fragment is HomeFragment) {
-            homeFragment = fragment
-        } else {
-            stackManager.addToStack(fragment)
-        }
-        showFragment(fragment)
+    init {
+        activityEntryPoint =
+            EntryPointAccessors.fromActivity(activity, ActivityEntryPoint::class.java)
+        navController = activityEntryPoint.navController()
     }
 
-    private fun showFragment(fragment: Fragment) {
-        fragmentManager
-            .beginTransaction()
-            // .replace(containerId, fragment)
-            .disallowAddToBackStack()
-            .commit()
+    fun setUpWithNavController(bottomNavigationView: BottomNavigationView) {
+        bottomNavigationView.setupWithNavController(navController)
     }
 
-    fun back() {
-        stackManager.pop()
-        if (stackManager.currentStackSize() == 0) {
-            showFragment(homeFragment)
-        } else {
-            showFragment(stackManager.peek())
-        }
+    fun navigateUp() {
+        navController.navigateUp()
+    }
+
+    fun navigateToSeeMoreList(pageTitle: String, genreId: Int, genre: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToSeeMoreListFragment(
+            genreId,
+            pageTitle,
+            APICallType.DISCOVER_PAGING
+        )
+        navController.navigate(action)
     }
 }
