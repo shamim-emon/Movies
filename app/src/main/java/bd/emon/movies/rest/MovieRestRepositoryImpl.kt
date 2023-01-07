@@ -13,6 +13,7 @@ import bd.emon.movies.common.SchedulerProvider
 import bd.emon.movies.common.toApiParam
 import bd.emon.movies.common.toLowerCaseNoSpace
 import bd.emon.movies.entity.Optional
+import bd.emon.movies.entity.details.MovieDetails
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.entity.search.MovieSearch
@@ -111,5 +112,13 @@ class MovieRestRepositoryImpl(
                     Optional.of(mov)
                 }
             }
+    }
+
+    override fun getMovieDetails(
+        apiKey: String,
+        language: String,
+        movieId: String
+    ): Observable<Optional<MovieDetails>> {
+        TODO()
     }
 }

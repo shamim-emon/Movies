@@ -4,6 +4,7 @@ import bd.emon.movies.common.dataMapper.DiscoverMoviesMapperTest
 import bd.emon.movies.common.dataMapper.SearchMovieMapperTest
 import bd.emon.movies.common.dataMapper.TendingMoviesMapperTest
 import bd.emon.movies.rest.MovieRestRepositoryTest
+import bd.emon.movies.viewModels.DetailsViewModel
 import bd.emon.movies.viewModels.HomeViewModelTest
 import bd.emon.movies.viewModels.SearchViewModelTest
 import bd.emon.movies.viewModels.TrendingViewModelTest
@@ -18,6 +19,7 @@ import org.junit.runners.Suite
     TrendingViewModelTest::class,
     TendingMoviesMapperTest::class,
     SearchMovieMapperTest::class,
-    SearchViewModelTest::class
+    SearchViewModelTest::class,
+    DetailsViewModel::class
 )
 class TestSuite

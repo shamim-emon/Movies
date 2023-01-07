@@ -9,6 +9,11 @@ import bd.emon.movies.common.PARAM_INCLUDE_ADULT
 import bd.emon.movies.common.PARAM_RELEASE_YEAR
 import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
+import bd.emon.movies.entity.details.BelongsToCollection
+import bd.emon.movies.entity.details.MovieDetails
+import bd.emon.movies.entity.details.ProductionCompany
+import bd.emon.movies.entity.details.ProductionCountry
+import bd.emon.movies.entity.details.SpokenLanguage
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.discover.Result
 import bd.emon.movies.entity.genre.Genre
@@ -174,5 +179,81 @@ object MovieApiDummyDataProvider {
                 vote_count = 173
             )
         )
+    )
+
+    val movieDetails = MovieDetails(
+        adult = false,
+        backdrop_path = "/3Au8rkDVsRK2AT4jq9dg6jH6buy.jpg",
+        belongs_to_collection = BelongsToCollection(
+            id = 295,
+            name = "Pirates of the Caribbean Collection",
+            poster_path = "/p9fXIvNppK21fCHAEkznSZb8hnv.jpg",
+            backdrop_path = "/wxgD3fB5lQ2sGJLog0rvXW049Pf.jpg"
+        ),
+        budget = 300000000,
+        genres = listOf(
+            bd.emon.movies.entity.details.Genre(
+                id = 12,
+                name = "Adventure"
+            ),
+            bd.emon.movies.entity.details.Genre(
+                id = 14,
+                name = "Fantasy"
+            ),
+            bd.emon.movies.entity.details.Genre(
+                id = 28,
+                name = "Action"
+            )
+        ),
+        homepage = "https://movies.disney.com/pirates-of-the-caribbean-at-worlds-end",
+        id = 285,
+        imdb_id = "tt0449088",
+        original_language = "en",
+        original_title = "Pirates of the Caribbean: At World's End",
+        overview = "Captain Barbossa, long believed to be dead, has come back to life and is headed to the edge of the Earth with Will Turner and Elizabeth Swann. But nothing is quite as it seems.",
+        popularity = 111.664,
+        poster_path = "/2YMnBRh8F6fDGCCEIPk9Hb0cEyB.jpg",
+        production_companies = listOf(
+            ProductionCompany(
+                id = 2,
+                logo_path = "/wdrCwmRnLFJhEoH8GSfymY85KHT.png",
+                name = "Walt Disney Pictures",
+                origin_country = "US"
+            ),
+            ProductionCompany(
+                id = 130,
+                logo_path = "/c9dVHPOL3cqCr2593Ahk0nEKTEM.png",
+                name = "Jerry Bruckheimer Films",
+                origin_country = "US"
+            ),
+            ProductionCompany(
+                id = 19936,
+                logo_path = null,
+                name = "Second Mate Productions",
+                origin_country = "US"
+            )
+        ),
+        production_countries = listOf(
+            ProductionCountry(
+                iso_3166_1 = "US",
+                name = "United States of America"
+            )
+        ),
+        release_date = "2007-05-19",
+        revenue = 961000000,
+        runtime = 168,
+        spoken_languages = listOf(
+            SpokenLanguage(
+                english_name = "English",
+                iso_639_1 = "en",
+                name = "English"
+            )
+        ),
+        status = "Released",
+        tagline = "At the end of the world, the adventure begins.",
+        title = "Pirates of the Caribbean: At World's End",
+        video = false,
+        vote_average = 7.233,
+        vote_count = 12666
     )
 }

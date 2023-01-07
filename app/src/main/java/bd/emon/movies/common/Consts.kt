@@ -9,6 +9,7 @@ const val NETWORK_ERROR_DEFAULT = "No Internet"
 const val SAVE_TO_PREF_ERROR_DEFAULT = "unable to cache data"
 
 const val PARAM_API_KEY = "param:api_key"
+const val PARAM_MOVIE_ID = "param:movie_id"
 const val PARAM_LANGUAGE = "param:language"
 const val PARAM_SORT_BY = "param:sort_by"
 const val PARAM_INCLUDE_ADULT = "param:include_adult"
