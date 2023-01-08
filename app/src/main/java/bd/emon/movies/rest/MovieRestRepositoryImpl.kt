@@ -119,6 +119,12 @@ class MovieRestRepositoryImpl(
         language: String,
         movieId: String
     ): Observable<Optional<MovieDetails>> {
-        TODO()
+        return movieRestApiInterface.getMovieDetails(
+            movieId,
+            apiKey,
+            language
+        ).map { details ->
+            Optional.of(details)
+        }
     }
 }

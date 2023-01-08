@@ -10,4 +10,7 @@ data class MovieEntity(
 ) {
     val imageUrl: String
         get() = IMAGE_BASE_URL + poster_path
+
+    val idString: String
+        get() = id.toString()
 }

@@ -48,7 +48,6 @@ class DetailsViewModelTest {
         getMovieDetails_success()
     }
 
-    // getMovieDetails_correctparams_passed_to_usecase
     @Test
     fun getMovieDetails_correctparams_passed_to_useCase() {
         detailsViewModel.getMovieDetails(
@@ -61,7 +60,6 @@ class DetailsViewModelTest {
         assertThat(getMovieDetailsUseCase.movieId, `is`(MOVIE_ID))
     }
 
-    // getMovieDetails_correctparams_passed_to_repository
     @Test
     fun getMovieDetails_correctparams_passed_to_repository() {
         detailsViewModel.getMovieDetails(
@@ -81,7 +79,6 @@ class DetailsViewModelTest {
         assertThat(stringCaptor.allValues[2], `is`(MOVIE_ID))
     }
 
-    // getMovieDetails_success_movieDetailsEmitted
     @Test
     fun getMovieDetail_success_movieDetailsEmitted() {
         detailsViewModel.getMovieDetails(
@@ -95,7 +92,6 @@ class DetailsViewModelTest {
         )
     }
 
-    // getMovieDetails_success_loadStateFalseEmitted
     @Test
     fun getMovieDetail_success_loadStateFalseEmitted() {
         detailsViewModel.getMovieDetails(

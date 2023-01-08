@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit
 @RunWith(MockitoJUnitRunner::class)
 class MovieRestRepositoryTest {
 
+    val MOVIE_ID = "movie_id"
     val API_KEY = "API_KEY"
     val LANG = "LANGUAGE"
     val SORT_BY = "sort_by"
@@ -76,6 +77,7 @@ class MovieRestRepositoryTest {
         getGenresApiResponse()
         getDiscoverMoviesApiResponse()
         getSearchResult_default()
+        getMovieDetails_success()
     }
 
     @Test
@@ -269,6 +271,23 @@ class MovieRestRepositoryTest {
         assertThat(stringCaptor.allValues[2], `is`(query))
     }
 
+    @Test
+    fun getMovieDetails_correctParamsPassedToApi() {
+        movieRestRepository.getMovieDetails(API_KEY, LANG, MOVIE_ID)
+        verify(
+            movieRestApiInterface,
+            times(1)
+        ).getMovieDetails(
+            capture(stringCaptor),
+            capture(stringCaptor),
+            capture(stringCaptor)
+        )
+
+        assertThat(stringCaptor.allValues[0], `is`(MOVIE_ID))
+        assertThat(stringCaptor.allValues[1], `is`(API_KEY))
+        assertThat(stringCaptor.allValues[2], `is`(LANG))
+    }
+
     //region helper methods
     private fun getGenresApiResponse() {
         `when`(movieRestApiInterface.getGenres(anyMap()))
@@ -284,7 +303,7 @@ class MovieRestRepositoryTest {
             .thenReturn(Observable.just(MovieApiDummyDataProvider.disocoverMovies))
     }
 
-    fun getSearchResult_default() {
+    private fun getSearchResult_default() {
         `when`(
             movieRestApiInterface.getSearchResult(
                 any(String::class.java),
@@ -294,6 +313,20 @@ class MovieRestRepositoryTest {
                 any(String::class.java)
             )
         ).thenReturn(Observable.just(MovieApiDummyDataProvider.searchResults))
+    }
+
+    private fun getMovieDetails_success() {
+        `when`(
+            movieRestApiInterface.getMovieDetails(
+                any(String::class.java),
+                any(String::class.java),
+                any(String::class.java)
+            )
+        ).thenReturn(
+            Observable.just(
+                MovieApiDummyDataProvider.movieDetails
+            )
+        )
     }
     //endregion
 }

@@ -4,6 +4,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.recyclerview.widget.LinearLayoutManager
+import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
 import bd.emon.movies.common.view.NoContentView
 import bd.emon.movies.common.view.NoInternetView
@@ -19,6 +20,12 @@ class HomePatchAdapterViewHolderFacade @Inject constructor(
     private val mapper: DiscoverMovieMapper,
     private val viewResizer: ViewResizer
 ) {
+    private var movieDetailsNavigator: MovieDetailsNavigator? = null
+
+    fun attachMovieDetailsNavigator(movieDetailsNavigator: MovieDetailsNavigator) {
+        this.movieDetailsNavigator = movieDetailsNavigator
+    }
+
     fun handleViewHolderSuccess(
         viewHolder: HomePatchesAdapter.ViewHolder?,
         movies: MutableList<Result>
@@ -33,7 +40,7 @@ class HomePatchAdapterViewHolderFacade @Inject constructor(
                 noContentView.hideExceptionView()
                 vh.binding.seeAll.visibility = VISIBLE
                 vh.binding.list.adapter =
-                    MovieListAdapter(mapper.mapFrom(movies), viewResizer, false)
+                    MovieListAdapter(movies = mapper.mapFrom(movies), viewResizer = viewResizer, movieDetailsNavigator = this.movieDetailsNavigator)
                 vh.binding.list.layoutManager =
                     LinearLayoutManager(
                         vh.binding.list.context,

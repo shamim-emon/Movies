@@ -8,6 +8,7 @@ import androidx.viewbinding.ViewBinding
 import bd.emon.movies.R
 import bd.emon.movies.common.DEFAULT_VIEW_RESIZE_MARGIN
 import bd.emon.movies.common.INVALID_VIEW_HOLDER
+import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.hide
 import bd.emon.movies.common.paging.PagingHelper
 import bd.emon.movies.common.view.ViewResizer
@@ -20,7 +21,8 @@ class MovieListAdapter(
     private val viewResizer: ViewResizer,
     private val shouldResize: Boolean = false,
     private val pagingEnabled: Boolean = false,
-    private val pagingHelper: PagingHelper? = null
+    private val pagingHelper: PagingHelper? = null,
+    private val movieDetailsNavigator: MovieDetailsNavigator? = null
 ) :
     RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
 
@@ -36,6 +38,11 @@ class MovieListAdapter(
             movieBinding = binding
             if (shouldResize) {
                 viewResizer.makeViewHalfScreenWidth(binding.thumbnail, DEFAULT_VIEW_RESIZE_MARGIN)
+            }
+            movieBinding?.root?.setOnClickListener {
+                if (adapterPosition != -1) {
+                    movieDetailsNavigator?.navigateToDetails(movies[adapterPosition].idString)
+                }
             }
         }
 

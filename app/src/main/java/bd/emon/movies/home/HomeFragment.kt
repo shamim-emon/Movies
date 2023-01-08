@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.MainActivity
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
+import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.menuItem.HomeMenuItemListener
@@ -29,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
+class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack, MovieDetailsNavigator {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
@@ -41,10 +42,10 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
     lateinit var noInternetViewAssistedFactory: NoInternetViewAssistedFactory
 
     @Inject
-    lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
+    lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
 
     @Inject
-    lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
+    lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
 
     @Inject
     lateinit var materialAlertDialogBuilder: Provider<MaterialAlertDialogBuilder>
@@ -96,6 +97,7 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
 
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
+        homePatchAdapterViewHolderFacade.attachMovieDetailsNavigator(this)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         orderByAdapterProvider = FilterDialogAdaptersProvider(requireContext(), sortingCriteria)
         yearAdapterProvider = FilterDialogAdaptersProvider(requireContext(), releaseYears)
@@ -216,6 +218,10 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack {
 
     override fun seeMore(genreId: Int, genre: String) {
         val pageTitle = getString(R.string.genre_movies, genre)
-        screensNavigator.navigateToSeeMoreList(pageTitle, genreId, genre)
+        screensNavigator.navigateToSeeMoreList(pageTitle, genreId)
+    }
+
+    override fun navigateToDetails(id: String) {
+        screensNavigator.navigateToMovieDetails(id)
     }
 }

@@ -31,12 +31,17 @@ class ScreensNavigator(
         navController.navigateUp()
     }
 
-    fun navigateToSeeMoreList(pageTitle: String, genreId: Int, genre: String) {
+    fun navigateToSeeMoreList(pageTitle: String, genreId: Int) {
         val action = HomeFragmentDirections.actionHomeFragmentToSeeMoreListFragment(
             genreId,
             pageTitle,
             APICallType.DISCOVER_PAGING
         )
+        navController.navigate(action)
+    }
+
+    fun navigateToMovieDetails(id: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToHomeMovieDetailsFragment(id)
         navController.navigate(action)
     }
 }

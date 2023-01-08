@@ -13,6 +13,7 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/thumbnail"
             android:elevation="8dp"
+            android:clickable="false"
             imageUrl="@{movie.imageUrl}"
             android:background="@null"
             android:layout_width="120dp"
@@ -29,6 +30,7 @@
 
         <TextView
             android:id="@+id/title"
+            android:clickable="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
