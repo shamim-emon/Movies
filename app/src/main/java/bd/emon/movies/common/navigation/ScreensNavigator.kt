@@ -41,7 +41,7 @@ class ScreensNavigator(
     }
 
     fun navigateToMovieDetails(id: String) {
-        val action = HomeFragmentDirections.actionHomeFragmentToHomeMovieDetailsFragment(id)
+        val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailsActivity(id)
         navController.navigate(action)
     }
 }

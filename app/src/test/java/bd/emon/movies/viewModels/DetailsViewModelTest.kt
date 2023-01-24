@@ -8,6 +8,7 @@ import bd.emon.movies.entity.Optional
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
 import bd.emon.movies.rest.MovieRestRepository
 import bd.emon.movies.usecase.GetMovieDetailsUseCase
+import bd.emon.movies.usecase.GetMovieVideosUseCase
 import io.reactivex.rxjava3.core.Observable
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.nullValue
@@ -40,12 +41,15 @@ class DetailsViewModelTest {
     lateinit var movieRestRepository: MovieRestRepository
     lateinit var detailsViewModel: DetailsViewModel
     lateinit var getMovieDetailsUseCase: GetMovieDetailsUseCase
+    lateinit var getMovieVideosUseCase: GetMovieVideosUseCase
 
     @Before
     fun setUp() {
         getMovieDetailsUseCase = GetMovieDetailsUseCase(movieRestRepository)
-        detailsViewModel = DetailsViewModel(getMovieDetailsUseCase)
+        getMovieVideosUseCase = GetMovieVideosUseCase(movieRestRepository)
+        detailsViewModel = DetailsViewModel(getMovieDetailsUseCase, getMovieVideosUseCase)
         getMovieDetails_success()
+        getMovieVideos_success()
     }
 
     @Test
@@ -135,6 +139,60 @@ class DetailsViewModelTest {
         assertThat(detailsViewModel.loadingState.value, `is`(false))
     }
 
+    @Test
+    fun getMovieVideos_correctParam_passedToUseCase() {
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        assertThat(getMovieVideosUseCase.apiKey, `is`(API_KEY))
+        assertThat(getMovieVideosUseCase.movieId, `is`(MOVIE_ID))
+    }
+
+    // getMovieVideos - correct param passed to repository
+    @Test
+    fun getMovieVideos_correctParam_passedToRepository() {
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        verify(movieRestRepository, times(1))
+            .getMovieVideos(
+                capture(stringCaptor),
+                capture(stringCaptor)
+            )
+
+        assertThat(stringCaptor.allValues[0], `is`(API_KEY))
+        assertThat(stringCaptor.allValues[1], `is`(MOVIE_ID))
+    }
+
+    @Test
+    fun getMovieVideos_success_movieVideosEmitted() {
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        assertThat(detailsViewModel.movieVideos.value, `is`(MovieApiDummyDataProvider.movieVideos))
+    }
+
+    @Test
+    fun getMovieVideos_success_loadStateFalseEmitted() {
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        assertThat(detailsViewModel.loadingState.value, `is`(false))
+    }
+
+    @Test
+    fun getMovieVideos_networkError_nullEmitted() {
+        getMovieVideos_networkError()
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        assertThat(detailsViewModel.movieVideos.value, `is`(nullValue()))
+    }
+
+    @Test
+    fun getMovieVideos_networkError_networkErrorMessageEmitted() {
+        getMovieVideos_networkError()
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        assertThat(detailsViewModel.errorState.value!!.message, `is`(NETWORK_ERROR_DEFAULT))
+    }
+
+    @Test
+    fun getMovieVideos_networkError_loadStateFalseEmitted() {
+        getMovieVideos_networkError()
+        detailsViewModel.getMovieVideos(apiKey = API_KEY, movieId = MOVIE_ID)
+        assertThat(detailsViewModel.loadingState.value!!, `is`(false))
+    }
+
     //region helper methods
     fun getMovieDetails_success() {
         `when`(
@@ -152,6 +210,30 @@ class DetailsViewModelTest {
         `when`(
             movieRestRepository.getMovieDetails(
                 any(String::class.java),
+                any(String::class.java),
+                any(String::class.java)
+            )
+        ).thenThrow(
+            RuntimeException(
+                NETWORK_ERROR_DEFAULT
+            )
+        )
+    }
+
+    fun getMovieVideos_success() {
+        `when`(
+            movieRestRepository.getMovieVideos(
+                any(String::class.java),
+                any(String::class.java)
+            )
+        ).thenReturn(
+            Observable.just(Optional.of(MovieApiDummyDataProvider.movieVideos))
+        )
+    }
+
+    fun getMovieVideos_networkError() {
+        `when`(
+            movieRestRepository.getMovieVideos(
                 any(String::class.java),
                 any(String::class.java)
             )

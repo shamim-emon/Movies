@@ -78,6 +78,7 @@ class MovieRestRepositoryTest {
         getDiscoverMoviesApiResponse()
         getSearchResult_default()
         getMovieDetails_success()
+        getMovieVideos_success()
     }
 
     @Test
@@ -288,6 +289,21 @@ class MovieRestRepositoryTest {
         assertThat(stringCaptor.allValues[2], `is`(LANG))
     }
 
+    @Test
+    fun getMovieVideos_correctParamsPassedToApi() {
+        movieRestRepository.getMovieVideos(MOVIE_ID, API_KEY)
+        verify(
+            movieRestApiInterface,
+            times(1)
+        ).getMovieVideos(
+            capture(stringCaptor),
+            capture(stringCaptor)
+        )
+
+        assertThat(stringCaptor.allValues[0], `is`(MOVIE_ID))
+        assertThat(stringCaptor.allValues[1], `is`(API_KEY))
+    }
+
     //region helper methods
     private fun getGenresApiResponse() {
         `when`(movieRestApiInterface.getGenres(anyMap()))
@@ -299,8 +315,7 @@ class MovieRestRepositoryTest {
             movieRestApiInterface.getDiscoverMovies(
                 anyMap()
             )
-        )
-            .thenReturn(Observable.just(MovieApiDummyDataProvider.disocoverMovies))
+        ).thenReturn(Observable.just(MovieApiDummyDataProvider.disocoverMovies))
     }
 
     private fun getSearchResult_default() {
@@ -325,6 +340,19 @@ class MovieRestRepositoryTest {
         ).thenReturn(
             Observable.just(
                 MovieApiDummyDataProvider.movieDetails
+            )
+        )
+    }
+
+    private fun getMovieVideos_success() {
+        `when`(
+            movieRestApiInterface.getMovieVideos(
+                any(String::class.java),
+                any(String::class.java)
+            )
+        ).thenReturn(
+            Observable.just(
+                MovieApiDummyDataProvider.movieVideos
             )
         )
     }

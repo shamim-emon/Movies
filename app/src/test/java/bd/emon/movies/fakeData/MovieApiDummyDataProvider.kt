@@ -11,6 +11,7 @@ import bd.emon.movies.common.PARAM_SORT_BY
 import bd.emon.movies.common.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.movies.entity.details.BelongsToCollection
 import bd.emon.movies.entity.details.MovieDetails
+import bd.emon.movies.entity.details.MovieVideos
 import bd.emon.movies.entity.details.ProductionCompany
 import bd.emon.movies.entity.details.ProductionCountry
 import bd.emon.movies.entity.details.SpokenLanguage
@@ -255,5 +256,23 @@ object MovieApiDummyDataProvider {
         video = false,
         vote_average = 7.233,
         vote_count = 12666
+    )
+
+    val movieVideos = MovieVideos(
+        id = 616037,
+        results = listOf(
+            bd.emon.movies.entity.details.Result(
+                id = "634e619e1089ba007d54910f",
+                iso_639_1 = "en",
+                iso_3166_1 = "US",
+                key = "Gf4AXNthfVg",
+                name = "Q&A Featurette",
+                official = true,
+                published_at = "2022-10-15T19:00:11.000Z",
+                site = "YouTube",
+                size = 1080,
+                type = "Featurette"
+            )
+        )
     )
 }

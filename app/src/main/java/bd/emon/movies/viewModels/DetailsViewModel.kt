@@ -3,17 +3,21 @@ package bd.emon.movies.viewModels
 import androidx.lifecycle.MutableLiveData
 import bd.emon.movies.base.BaseViewModel
 import bd.emon.movies.entity.details.MovieDetails
+import bd.emon.movies.entity.details.MovieVideos
 import bd.emon.movies.usecase.GetMovieDetailsUseCase
+import bd.emon.movies.usecase.GetMovieVideosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val getMovieDetailsUseCase: GetMovieDetailsUseCase
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
+    private val getMovieVideosUseCase: GetMovieVideosUseCase
 ) : BaseViewModel() {
     var movieDetails: MutableLiveData<MovieDetails> = MutableLiveData()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
     var errorState: MutableLiveData<Throwable> = MutableLiveData()
+    var movieVideos: MutableLiveData<MovieVideos> = MutableLiveData()
 
     init {
         loadingState = MutableLiveData(true)
@@ -26,6 +30,22 @@ class DetailsViewModel @Inject constructor(
                 .subscribe(
                     {
                         movieDetails.postValue(it.value!!)
+                        loadingState.postValue(false)
+                    },
+                    {
+                        errorState.postValue(it)
+                        loadingState.postValue(false)
+                    }
+                )
+        )
+    }
+
+    fun getMovieVideos(apiKey: String, movieId: String) {
+        addDisposable(
+            getMovieVideosUseCase.getMovieVideos(apiKey, movieId)
+                .subscribe(
+                    {
+                        movieVideos.postValue(it.value!!)
                         loadingState.postValue(false)
                     },
                     {

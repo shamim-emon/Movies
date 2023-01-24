@@ -2,6 +2,7 @@ package bd.emon.movies.rest
 
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.details.MovieDetails
+import bd.emon.movies.entity.details.MovieVideos
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.entity.search.MovieSearch
@@ -32,4 +33,9 @@ interface MovieRestRepository {
         language: String,
         movieId: String
     ): Observable<Optional<MovieDetails>>
+
+    fun getMovieVideos(
+        movieId: String,
+        apiKey: String
+    ): Observable<Optional<MovieVideos>>
 }

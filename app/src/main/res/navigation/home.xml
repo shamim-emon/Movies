@@ -12,8 +12,8 @@
             android:id="@+id/action_homeFragment_to_SeeMoreListFragment"
             app:destination="@id/SeeMoreListFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_home_movieDetailsFragment"
-            app:destination="@id/home_movieDetailsFragment" />
+            android:id="@+id/action_homeFragment_to_movieDetailsActivity"
+            app:destination="@id/movieDetailsActivity" />
     </fragment>
     <fragment
         android:id="@+id/SeeMoreListFragment"
@@ -30,8 +30,8 @@
             android:defaultValue="TRENDING_MOVIES"
             app:argType="bd.emon.movies.movieEntity.APICallType" />
         <action
-            android:id="@+id/action_SeeMoreListFragment_to_home_movieDetailsFragment"
-            app:destination="@id/home_movieDetailsFragment" />
+            android:id="@+id/action_SeeMoreListFragment_to_movieDetailsActivity"
+            app:destination="@id/movieDetailsActivity" />
     </fragment>
     <fragment
         android:id="@+id/home_movieDetailsFragment"
@@ -42,4 +42,13 @@
             android:name="movieId"
             app:argType="string" />
     </fragment>
+    <activity
+        android:id="@+id/movieDetailsActivity"
+        android:name="bd.emon.movies.details.MovieDetailsActivity"
+        android:label="activity_movie_details"
+        tools:layout="@layout/activity_movie_details" >
+        <argument
+            android:name="movieId"
+            app:argType="string" />
+    </activity>
 </navigation>

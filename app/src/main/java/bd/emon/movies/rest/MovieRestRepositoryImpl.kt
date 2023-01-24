@@ -14,6 +14,7 @@ import bd.emon.movies.common.toApiParam
 import bd.emon.movies.common.toLowerCaseNoSpace
 import bd.emon.movies.entity.Optional
 import bd.emon.movies.entity.details.MovieDetails
+import bd.emon.movies.entity.details.MovieVideos
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.entity.search.MovieSearch
@@ -125,6 +126,15 @@ class MovieRestRepositoryImpl(
             language
         ).map { details ->
             Optional.of(details)
+        }
+    }
+
+    override fun getMovieVideos(
+        movieId: String,
+        apiKey: String
+    ): Observable<Optional<MovieVideos>> {
+        return movieRestApiInterface.getMovieVideos(movieId, apiKey).map { videos ->
+            Optional.of(videos)
         }
     }
 }

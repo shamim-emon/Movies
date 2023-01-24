@@ -25,6 +25,7 @@
     <string name="search_movies">Search Movies</string>
     <string name="genre_movies">%s Movies</string>
     <string name="trending_today">Trending Today</string>
+    <string name="overview">Overview</string>
 
     <string name="movie_search_primary_text">Search</string>
     <string name="movie_search_secondary_text">Type movie name</string>

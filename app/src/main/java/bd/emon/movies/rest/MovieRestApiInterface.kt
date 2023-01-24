@@ -1,6 +1,7 @@
 package bd.emon.movies.rest
 
 import bd.emon.movies.entity.details.MovieDetails
+import bd.emon.movies.entity.details.MovieVideos
 import bd.emon.movies.entity.discover.DiscoverMovies
 import bd.emon.movies.entity.genre.Genres
 import bd.emon.movies.entity.search.MovieSearch
@@ -43,4 +44,10 @@ interface MovieRestApiInterface {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): Observable<MovieDetails>
+
+    @GET("movie/{movie_id}/videos")
+    fun getMovieVideos(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Observable<MovieVideos>
 }
