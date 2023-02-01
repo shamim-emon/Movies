@@ -1,12 +1,12 @@
 package bd.emon.movies.details
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
 import bd.emon.movies.databinding.ActivityMovieDetailsBinding
 import bd.emon.movies.di.qualifier.ApiKey
@@ -49,7 +49,9 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
 
         viewModel.movieVideos.observe(this) {
-            Log.e("Videos__", "$it")
+            binding.trailerList.adapter = TrailersAdapter(it.results)
+            binding.trailerList.layoutManager = LinearLayoutManager(this)
+            binding.trailerList.isNestedScrollingEnabled = false
         }
 
 //        binding.detailsAppbar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {

@@ -185,10 +185,11 @@
 
                     <ImageView
                         android:id="@+id/bookmark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_marginTop="16dp"
                         android:background="@null"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/ic_bookmark"
                         app:layout_constraintStart_toStartOf="@+id/thumbnailContainer"
                         app:layout_constraintTop_toBottomOf="@+id/thumbnailContainer"
@@ -197,22 +198,21 @@
                     <TextView
                         android:id="@+id/movieOverview"
                         android:layout_width="0dp"
-                        android:textSize="@dimen/secondary_title"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
                         android:fontFamily="@font/open_sans_regular"
                         android:text="@{details.overview}"
                         android:textColor="@color/white"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textSize="@dimen/secondary_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/bookmark"
                         tools:text="bllalllsllssllslssslslssssssssss" />
 
                     <TextView
+                        android:id="@+id/overView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -222,6 +222,42 @@
                         app:layout_constraintBottom_toBottomOf="@+id/bookmark"
                         app:layout_constraintStart_toEndOf="@+id/bookmark"
                         app:layout_constraintTop_toTopOf="@+id/bookmark" />
+
+                    <ImageView
+                        android:id="@+id/cam"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@null"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_trailer_48px"
+                        app:layout_constraintEnd_toEndOf="@+id/bookmark"
+                        app:layout_constraintStart_toStartOf="@+id/bookmark"
+                        app:layout_constraintTop_toBottomOf="@+id/movieOverview"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/trailer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/open_sans_bold"
+                        android:text="@string/trailers"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/cam"
+                        app:layout_constraintStart_toEndOf="@+id/cam"
+                        app:layout_constraintTop_toTopOf="@+id/cam" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/trailerList"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cam" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
