@@ -11,14 +11,14 @@ import bd.emon.movies.common.INVALID_VIEW_HOLDER
 import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.hide
 import bd.emon.movies.common.paging.PagingHelper
-import bd.emon.movies.common.view.ViewResizer
+import bd.emon.movies.common.view.ViewSizeHelper
 import bd.emon.movies.databinding.LayoutLoaderBinding
 import bd.emon.movies.databinding.LayoutMovieEntityBinding
 import bd.emon.movies.entity.common.MovieEntity
 
 class MovieListAdapter(
     private var movies: MutableList<MovieEntity>,
-    private val viewResizer: ViewResizer,
+    private val viewResizer: ViewSizeHelper,
     private val shouldResize: Boolean = false,
     private val pagingEnabled: Boolean = false,
     private val pagingHelper: PagingHelper? = null,

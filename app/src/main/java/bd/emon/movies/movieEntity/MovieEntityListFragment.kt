@@ -22,7 +22,7 @@ import bd.emon.movies.common.paging.PagingHelper
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
-import bd.emon.movies.common.view.ViewResizer
+import bd.emon.movies.common.view.ViewSizeHelper
 import bd.emon.movies.databinding.FragmentMovieEntityListBinding
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.di.qualifier.ApiKey
@@ -61,7 +61,7 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
     lateinit var trendingMovieMapper: TrendingMovieMapper
 
     @Inject
-    lateinit var viewResizer: ViewResizer
+    lateinit var viewResizer: ViewSizeHelper
 
     @Inject
     @ApiKey

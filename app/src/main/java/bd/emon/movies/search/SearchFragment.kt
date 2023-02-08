@@ -18,7 +18,7 @@ import bd.emon.movies.common.view.NoContentView
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
 import bd.emon.movies.common.view.ViewLoaderImpl
-import bd.emon.movies.common.view.ViewResizer
+import bd.emon.movies.common.view.ViewSizeHelper
 import bd.emon.movies.databinding.FragmentSearchBinding
 import bd.emon.movies.di.assistedFactory.NoContentViewAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
@@ -39,7 +39,7 @@ class SearchFragment : BaseFragment(), PagingHelper {
     private lateinit var noContentView: NoContentView
 
     @Inject
-    lateinit var viewResizer: ViewResizer
+    lateinit var viewResizer: ViewSizeHelper
     private lateinit var adapter: MovieListAdapter
 
     @Inject

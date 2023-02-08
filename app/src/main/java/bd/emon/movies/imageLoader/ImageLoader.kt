@@ -1,5 +1,6 @@
 package bd.emon.movies.imageLoader
 
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import bd.emon.movies.R
 import com.bumptech.glide.Glide
@@ -16,6 +17,17 @@ object ImageLoader {
             .load(imageUrl)
             .transform(CenterCrop())
             .transition(DrawableTransitionOptions.withCrossFade(1000))
+            .placeholder(R.drawable.place_holder_w240_h360)
+            .error(R.drawable.error_w240_h360)
+            .into(imageView)
+    }
+
+    @JvmStatic
+    @BindingAdapter("imageUrl")
+    fun loadImage(imageView: ImageView, imageUrl: String?) {
+        Glide.with(imageView.context)
+            .load(imageUrl)
+            .transform(CenterCrop())
             .placeholder(R.drawable.place_holder_w240_h360)
             .error(R.drawable.error_w240_h360)
             .into(imageView)

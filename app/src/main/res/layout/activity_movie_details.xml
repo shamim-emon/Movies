@@ -8,6 +8,7 @@
             type="bd.emon.movies.entity.details.MovieDetails" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
@@ -28,12 +29,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.google.android.material.imageview.ShapeableImageView
+                    <ImageView
                         android:id="@+id/detailsBackdrop"
                         imageUrl="@{details.backDropUrl}"
+                        android:scaleType="centerCrop"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:scaleType="centerCrop"
                         app:layout_constraintDimensionRatio="w,1:1.778"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

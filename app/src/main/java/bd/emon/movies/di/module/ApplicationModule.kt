@@ -8,7 +8,7 @@ import bd.emon.movies.common.DATA_STORE_NAME
 import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
 import bd.emon.movies.common.dataMapper.SearchMovieMapper
 import bd.emon.movies.common.dataMapper.TrendingMovieMapper
-import bd.emon.movies.common.view.ViewResizer
+import bd.emon.movies.common.view.ViewSizeHelper
 import bd.emon.movies.di.qualifier.ApiKey
 import bd.emon.movies.di.qualifier.AppLanguage
 import dagger.Module
@@ -41,7 +41,7 @@ object ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideViewResizer() = ViewResizer()
+    fun provideViewSizeHelper() = ViewSizeHelper()
 
     @ApiKey
     @Provides

@@ -8,7 +8,7 @@ import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
 import bd.emon.movies.common.view.NoContentView
 import bd.emon.movies.common.view.NoInternetView
-import bd.emon.movies.common.view.ViewResizer
+import bd.emon.movies.common.view.ViewSizeHelper
 import bd.emon.movies.entity.discover.Result
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class HomePatchAdapterViewHolderFacade @Inject constructor(
     private val container: HomePatchAdapterViewHolderContainer,
     private val onScreenHolder: HomePatchAdapterViewHolderOnScreenDataHolder,
     private val mapper: DiscoverMovieMapper,
-    private val viewResizer: ViewResizer
+    private val viewResizer: ViewSizeHelper
 ) {
     private var movieDetailsNavigator: MovieDetailsNavigator? = null
 

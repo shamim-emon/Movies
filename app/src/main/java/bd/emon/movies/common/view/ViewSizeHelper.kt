@@ -3,7 +3,7 @@ package bd.emon.movies.common.view
 import android.content.res.Resources
 import android.view.View
 
-class ViewResizer {
+class ViewSizeHelper {
 
     private val width = Resources.getSystem().displayMetrics.widthPixels
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import bd.emon.movies.R
@@ -53,20 +52,5 @@ class MovieDetailsActivity : AppCompatActivity() {
             binding.trailerList.layoutManager = LinearLayoutManager(this)
             binding.trailerList.isNestedScrollingEnabled = false
         }
-
-//        binding.detailsAppbar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
-//            override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
-//                when (state) {
-//                    State.COLLAPSED -> {
-//                        binding.thumbnail.visibility = INVISIBLE
-//                        binding.detailsBackdrop.visibility = INVISIBLE
-//                    }
-//                    else -> {
-//                        binding.thumbnail.visibility = VISIBLE
-//                        binding.detailsBackdrop.visibility = VISIBLE
-//                    }
-//                }
-//            }
-//        })
     }
 }
