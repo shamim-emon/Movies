@@ -10,7 +10,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
-
     lateinit var screensNavigator: ScreensNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {

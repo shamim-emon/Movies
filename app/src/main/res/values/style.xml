@@ -6,5 +6,4 @@
         <item name="strokeColor">@color/cardview_dark_background</item>
         <item name="strokeWidth">5dp</item>
     </style>
-
 </resources>

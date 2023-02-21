@@ -4,6 +4,8 @@
     android:id="@+id/trending"
     app:startDestination="@id/movieEntityListFragment">
 
+
+
     <fragment
         android:id="@+id/movieEntityListFragment"
         android:name="bd.emon.movies.movieEntity.MovieEntityListFragment"
@@ -18,6 +20,9 @@
             android:name="apiCallType"
             app:argType="bd.emon.movies.movieEntity.APICallType"
             android:defaultValue="TRENDING_MOVIES"/>
+        <action
+            android:id="@+id/action_movieEntityListFragment_to_movieDetailsActivity2"
+            app:destination="@id/movieDetailsActivity2" />
     </fragment>
     <argument
         android:name="genreId"
@@ -27,4 +32,12 @@
         android:defaultValue="Trending Today" />
     <argument
         android:name="apiCallType" />
+    <activity
+        android:id="@+id/movieDetailsActivity2"
+        android:name="bd.emon.movies.details.MovieDetailsActivity"
+        android:label="MovieDetailsActivity" >
+        <argument
+            android:name="movieId"
+            app:argType="string" />
+    </activity>
 </navigation>

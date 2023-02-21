@@ -15,6 +15,7 @@ import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.menuItem.HomeMenuItemListener
 import bd.emon.movies.common.menuItem.MenuItemListener
+import bd.emon.movies.common.navigation.NavDirectionLabel
 import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.common.view.NoInternetView
 import bd.emon.movies.common.view.ViewLoader
@@ -30,42 +31,69 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack, MovieDetailsNavigator {
+class HomeFragment :
+    BaseFragment(),
+    HomeFragmentAdaptersCallBack,
+    MovieDetailsNavigator {
 
+    @Transient
     private lateinit var viewModel: HomeViewModel
+
+    @Transient
     private lateinit var binding: FragmentHomeBinding
+
+    @Transient
     private lateinit var adapter: HomePatchesAdapter
+
+    @Transient
     private var genres: List<Genre>? = null
+
+    @Transient
     private lateinit var noInternetView: NoInternetView
 
+    @Transient
     @Inject
     lateinit var noInternetViewAssistedFactory: NoInternetViewAssistedFactory
 
+    @Transient
     @Inject
     lateinit var homePatchAdapterAssistedFactory: HomePatchAdapterAssistedFactory
 
+    @Transient
     @Inject
     lateinit var homePatchAdapterViewHolderFacade: HomePatchAdapterViewHolderFacade
 
+    @Transient
     @Inject
     lateinit var materialAlertDialogBuilder: Provider<MaterialAlertDialogBuilder>
 
+    @Transient
     lateinit var viewLoaderImpl: ViewLoader
 
+    @Transient
     lateinit var menuItemListener: MenuItemListener
 
+    @Transient
     lateinit var filterDialogFacade: FilterDialogFacade
+
+    @Transient
     lateinit var clearFilterDialog: ClearFilterDialog
 
+    @Transient
     @Inject
     lateinit var sortingCriteria: List<String>
 
+    @Transient
     @Inject
     lateinit var releaseYears: List<Int>
 
+    @Transient
     private lateinit var orderByAdapterProvider: FilterDialogAdaptersProvider<String>
+
+    @Transient
     private lateinit var yearAdapterProvider: FilterDialogAdaptersProvider<Int>
 
+    @Transient
     private var discoverMovieApiPageNo = 1
 
     private lateinit var screensNavigator: ScreensNavigator
@@ -222,6 +250,6 @@ class HomeFragment : BaseFragment(), HomeFragmentAdaptersCallBack, MovieDetailsN
     }
 
     override fun navigateToDetails(id: String) {
-        screensNavigator.navigateToMovieDetails(id)
+        screensNavigator.navigateToMovieDetails(id, NavDirectionLabel.HomeFragment)
     }
 }

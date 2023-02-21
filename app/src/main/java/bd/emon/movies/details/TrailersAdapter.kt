@@ -8,7 +8,10 @@ import bd.emon.movies.R
 import bd.emon.movies.databinding.LayoutTrailerBinding
 import bd.emon.movies.entity.details.Result
 
-class TrailersAdapter(val results: List<Result>? = listOf()) :
+class TrailersAdapter(
+    private val results: List<Result>? = listOf(),
+    private val action: (String) -> Unit
+) :
     RecyclerView.Adapter<TrailersAdapter.ViewHolder>() {
 
     inner class ViewHolder : RecyclerView.ViewHolder {
@@ -16,6 +19,11 @@ class TrailersAdapter(val results: List<Result>? = listOf()) :
 
         constructor(binding: LayoutTrailerBinding) : super(binding.root) {
             this.binding = binding
+            this.binding.root.setOnClickListener {
+                if (adapterPosition != -1) {
+                    action(results!![adapterPosition].url)
+                }
+            }
         }
     }
 

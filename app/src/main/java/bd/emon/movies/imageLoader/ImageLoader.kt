@@ -1,6 +1,5 @@
 package bd.emon.movies.imageLoader
 
-import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import bd.emon.movies.R
 import com.bumptech.glide.Glide
@@ -11,23 +10,25 @@ import com.google.android.material.imageview.ShapeableImageView
 object ImageLoader {
 
     @JvmStatic
-    @BindingAdapter("imageUrl")
-    fun loadImage(imageView: ShapeableImageView, imageUrl: String?) {
+    @BindingAdapter(value = ["imageUrl", "hasTransition"], requireAll = false)
+    fun loadImage(
+        imageView: ShapeableImageView,
+        imageUrl: String?,
+        hasTransition: Boolean? = true
+    ) {
         Glide.with(imageView.context)
             .load(imageUrl)
             .transform(CenterCrop())
-            .transition(DrawableTransitionOptions.withCrossFade(1000))
-            .placeholder(R.drawable.place_holder_w240_h360)
-            .error(R.drawable.error_w240_h360)
-            .into(imageView)
-    }
-
-    @JvmStatic
-    @BindingAdapter("imageUrl")
-    fun loadImage(imageView: ImageView, imageUrl: String?) {
-        Glide.with(imageView.context)
-            .load(imageUrl)
-            .transform(CenterCrop())
+            .let {
+                hasTransition?.let { value ->
+                    when (value) {
+                        true -> it.transition(DrawableTransitionOptions.withCrossFade(1000))
+                        else -> it
+                    }
+                } ?: run {
+                    it.transition(DrawableTransitionOptions.withCrossFade(1000))
+                }
+            }
             .placeholder(R.drawable.place_holder_w240_h360)
             .error(R.drawable.error_w240_h360)
             .into(imageView)

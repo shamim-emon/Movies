@@ -13,6 +13,7 @@ import bd.emon.movies.home.HomePatchAdapterViewHolderOnScreenDataHolder
 import bd.emon.movies.home.HomePatchAdapterViewHolderOnScreenDataHolderImpl
 import bd.emon.movies.home.MovieReleaseYearsProvider
 import bd.emon.movies.home.MovieReleaseYearsProviderImpl
+import bd.emon.movies.movieEntity.MovieEntityNavDirectionLabelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Module
 import dagger.Provides
@@ -58,4 +59,7 @@ object FragmentModule {
     @Provides
     fun provideInputMethodManager(activity: Activity) =
         activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    @Provides
+    fun provideMovieEntityNavDirectionLabelProvider() = MovieEntityNavDirectionLabelProvider()
 }

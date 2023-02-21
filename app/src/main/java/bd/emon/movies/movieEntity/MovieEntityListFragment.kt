@@ -13,6 +13,7 @@ import bd.emon.movies.MainActivity
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.INVALID_API_CALL_TYPE
+import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.PARAM_GENRES
 import bd.emon.movies.common.dataMapper.DiscoverMovieMapper
@@ -37,7 +38,7 @@ private const val ARG_PAGE_TITLE = "title"
 private const val ARG_API_CALL_TYPE = "apiCallType"
 
 @AndroidEntryPoint
-class MovieEntityListFragment : BaseFragment(), PagingHelper {
+class MovieEntityListFragment : BaseFragment(), PagingHelper, MovieDetailsNavigator {
     private val args: MovieEntityListFragmentArgs by navArgs()
     private var genreId: Int? = null
     private var pageTitle: String? = null
@@ -66,6 +67,9 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
     @Inject
     @ApiKey
     lateinit var apiKey: String
+
+    @Inject
+    lateinit var navDirectionLabelProvider: MovieEntityNavDirectionLabelProvider
 
     lateinit var apiCallType: APICallType
 
@@ -153,6 +157,7 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
                         viewResizer,
                         true,
                         true,
+                        this,
                         this
                     )
                 binding.movies.adapter = adapter
@@ -180,6 +185,7 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
                             viewResizer,
                             true,
                             true,
+                            this,
                             this
                         )
                     binding.movies.adapter = adapter
@@ -272,5 +278,10 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper {
 
     override fun hasMoreData(): Boolean {
         return hasMoreData
+    }
+
+    override fun navigateToDetails(id: String) {
+        val navDirectionLabel = navDirectionLabelProvider.getNavDirectionLabel(apiCallType)
+        screensNavigator.navigateToMovieDetails(id, navDirectionLabel)
     }
 }

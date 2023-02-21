@@ -10,9 +10,13 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import bd.emon.movies.MainActivity
 import bd.emon.movies.base.BaseFragment
+import bd.emon.movies.common.MovieDetailsNavigator
 import bd.emon.movies.common.NETWORK_ERROR_DEFAULT
 import bd.emon.movies.common.dataMapper.SearchMovieMapper
+import bd.emon.movies.common.navigation.NavDirectionLabel
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.common.paging.PagingHelper
 import bd.emon.movies.common.view.NoContentView
 import bd.emon.movies.common.view.NoInternetView
@@ -30,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment(), PagingHelper {
+class SearchFragment : BaseFragment(), PagingHelper, MovieDetailsNavigator {
 
     private lateinit var binding: FragmentSearchBinding
     private lateinit var viewModel: SearchViewModel
@@ -50,6 +54,8 @@ class SearchFragment : BaseFragment(), PagingHelper {
 
     @Inject
     lateinit var searchMovieMapper: SearchMovieMapper
+
+    lateinit var screensNavigator: ScreensNavigator
 
     @Inject
     @ApiKey
@@ -105,6 +111,7 @@ class SearchFragment : BaseFragment(), PagingHelper {
     ): View? {
         viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
         binding = FragmentSearchBinding.inflate(inflater, container, false)
+        screensNavigator = (activity as MainActivity).screensNavigator
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
         noInternetView = noInternetViewAssistedFactory.create(binding.noInternetView)
         noContentView = noContentViewAssistedFactory.create(binding.noContentView)
@@ -141,6 +148,7 @@ class SearchFragment : BaseFragment(), PagingHelper {
                             viewResizer,
                             true,
                             true,
+                            this,
                             this
                         )
                     binding.searchedContents.adapter = adapter
@@ -209,5 +217,9 @@ class SearchFragment : BaseFragment(), PagingHelper {
         }
         hideNoContentView()
         hideNoInternetView()
+    }
+
+    override fun navigateToDetails(id: String) {
+        screensNavigator.navigateToMovieDetails(id, NavDirectionLabel.SearchFragment)
     }
 }

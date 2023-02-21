@@ -7,5 +7,17 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="bd.emon.movies.search.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_movieDetailsActivity3"
+            app:destination="@id/movieDetailsActivity3" />
+    </fragment>
+    <activity
+        android:id="@+id/movieDetailsActivity3"
+        android:name="bd.emon.movies.details.MovieDetailsActivity"
+        android:label="MovieDetailsActivity" >
+        <argument
+            android:name="movieId"
+            app:argType="string" />
+    </activity>
 </navigation>

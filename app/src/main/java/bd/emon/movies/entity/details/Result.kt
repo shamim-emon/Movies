@@ -11,4 +11,9 @@ data class Result(
     val site: String,
     val size: Int,
     val type: String
-)
+) {
+    val url: String
+        get() {
+            return "https://www.youtube.com/watch?v=$key"
+        }
+}
