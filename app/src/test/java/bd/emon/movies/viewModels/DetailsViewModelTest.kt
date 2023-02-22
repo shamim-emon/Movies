@@ -156,8 +156,8 @@ class DetailsViewModelTest {
                 capture(stringCaptor)
             )
 
-        assertThat(stringCaptor.allValues[0], `is`(API_KEY))
-        assertThat(stringCaptor.allValues[1], `is`(MOVIE_ID))
+        assertThat(stringCaptor.allValues[0], `is`(MOVIE_ID))
+        assertThat(stringCaptor.allValues[1], `is`(API_KEY))
     }
 
     @Test
