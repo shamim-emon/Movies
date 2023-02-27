@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favourite"
+    app:startDestination="@id/favouriteFragment">
+
+    <activity
+        android:id="@+id/movieDetailsActivity4"
+        android:name="bd.emon.movies.details.MovieDetailsActivity"
+        android:label="MovieDetailsActivity" >
+        <argument
+            android:name="movieId"
+            app:argType="string" />
+    </activity>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="bd.emon.movies.favourite.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_movieDetailsActivity4"
+            app:destination="@id/movieDetailsActivity4" />
+    </fragment>
+</navigation>

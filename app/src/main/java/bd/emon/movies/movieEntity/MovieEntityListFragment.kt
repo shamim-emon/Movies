@@ -43,13 +43,13 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper, MovieDetailsNaviga
     private var genreId: Int? = null
     private var pageTitle: String? = null
     private lateinit var binding: FragmentMovieEntityListBinding
-    private lateinit var screensNavigator: ScreensNavigator
 
     @Inject
     lateinit var noInternetViewAssistedFactory: NoInternetViewAssistedFactory
     private lateinit var noInternetView: NoInternetView
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var trendingViewModel: TrendingViewModel
+
     lateinit var viewLoaderImpl: ViewLoader
     private var apiPageNo = 1
     private var hasMoreData = true
@@ -70,6 +70,8 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper, MovieDetailsNaviga
 
     @Inject
     lateinit var navDirectionLabelProvider: MovieEntityNavDirectionLabelProvider
+
+    lateinit var screensNavigator: ScreensNavigator
 
     lateinit var apiCallType: APICallType
 
@@ -92,9 +94,9 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper, MovieDetailsNaviga
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            genreId = args.genreId // it.getInt(ARG_GENRE_ID)
-            pageTitle = args.pageTitle // it.getString(ARG_PAGE_TITLE)
-            apiCallType = args.apiCallType // it.getSerializable(ARG_API_CALL_TYPE) as APICallType
+            genreId = args.genreId
+            pageTitle = args.pageTitle
+            apiCallType = args.apiCallType
         }
     }
 
@@ -106,6 +108,7 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper, MovieDetailsNaviga
         binding = FragmentMovieEntityListBinding.inflate(inflater, container, false)
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         trendingViewModel = ViewModelProvider(this)[TrendingViewModel::class.java]
+
         screensNavigator = (activity as MainActivity).screensNavigator
         noInternetView = noInternetViewAssistedFactory.create(binding.exceptionView)
         viewLoaderImpl = ViewLoaderImpl(binding.swipeContainer)
@@ -245,9 +248,7 @@ class MovieEntityListFragment : BaseFragment(), PagingHelper, MovieDetailsNaviga
                 binding.topAppBar.navigationIcon =
                     resources.getDrawable(R.drawable.ic_arrow_back_24px)
 
-            APICallType.TRENDING_MOVIES ->
-                binding.topAppBar.navigationIcon = null
-            else -> throw IllegalStateException(INVALID_API_CALL_TYPE)
+            else -> binding.topAppBar.navigationIcon = null
         }
     }
 

@@ -10,10 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import bd.emon.movies.R
 import bd.emon.movies.databinding.ActivityMovieDetailsBinding
 import bd.emon.movies.di.qualifier.ApiKey
 import bd.emon.movies.di.qualifier.AppLanguage
+import bd.emon.movies.entity.common.MovieEntity
+import bd.emon.movies.favourite.FavouriteStatusChangeListener
 import bd.emon.movies.viewModels.DetailsViewModel
+import bd.emon.movies.viewModels.FavouriteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,9 +25,11 @@ import javax.inject.Inject
 class MovieDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMovieDetailsBinding
-    private lateinit var viewModel: DetailsViewModel
+    private lateinit var detailsViewModel: DetailsViewModel
+    private lateinit var favouriteViewModel: FavouriteViewModel
     private val args: MovieDetailsActivityArgs by navArgs()
     private lateinit var movieId: String
+    private var isFav = false
 
     @Inject
     @ApiKey
@@ -44,7 +50,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         movieId = args.movieId
 
-        viewModel = ViewModelProvider(this)[DetailsViewModel::class.java]
+        detailsViewModel = ViewModelProvider(this)[DetailsViewModel::class.java]
+        favouriteViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
         showLoader()
         makeApiCalls()
 
@@ -56,7 +63,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel.movieDetails.observe(this) {
+        detailsViewModel.movieDetails.observe(this) {
             binding.details = it
             binding.hasTransition = false
             hideLoader()
@@ -64,13 +71,13 @@ class MovieDetailsActivity : AppCompatActivity() {
             hideNoInternetView()
         }
 
-        viewModel.errorState.observe(this) {
+        detailsViewModel.errorState.observe(this) {
             hideContentView()
             showNoInternetView()
             hideLoader()
         }
 
-        viewModel.movieVideos.observe(this) {
+        detailsViewModel.movieVideos.observe(this) {
             when (it.results.isNotEmpty()) {
                 true -> {
                     binding.cam.visibility = VISIBLE
@@ -86,11 +93,56 @@ class MovieDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+
+        favouriteViewModel.getFavouriteMovieByIdState.observe(this) {
+            it?.let {
+                binding.fab.setImageResource(R.drawable.ic_fav_filled_48px)
+                isFav = true
+            } ?: run {
+                binding.fab.setImageResource(R.drawable.ic_fav_48px)
+                isFav = false
+            }
+        }
+
+        favouriteViewModel.addToFavouriteState.observe(this) {
+            binding.fab.setImageResource(R.drawable.ic_fav_filled_48px)
+            isFav = true
+            FavouriteStatusChangeListener.onChange()
+        }
+
+        favouriteViewModel.removeFromFavouriteState.observe(this) {
+            binding.fab.setImageResource(R.drawable.ic_fav_48px)
+            isFav = false
+            FavouriteStatusChangeListener.onChange()
+        }
+
+        binding.fab.setOnClickListener {
+            val entity = MovieEntity(
+                id = movieId.toInt(),
+                title = binding.details!!.title,
+                poster_path = binding.details!!.poster_path
+            )
+
+            when (isFav) {
+                true -> {
+                    favouriteViewModel.removeFromFavourite(entity)
+                }
+                else -> {
+                    favouriteViewModel.addToFavourite(entity)
+                }
+            }
+            favouriteViewModel.getFavMovieById(movieId.toInt())
+        }
+
+        favouriteViewModel.errorState.observe(this) {
+            hideLoader()
+        }
     }
 
     fun makeApiCalls() {
-        viewModel.getMovieDetails(apiKey = apiKey, language = language, movieId = movieId)
-        viewModel.getMovieVideos(apiKey = apiKey, movieId = movieId)
+        detailsViewModel.getMovieDetails(apiKey = apiKey, language = language, movieId = movieId)
+        detailsViewModel.getMovieVideos(apiKey = apiKey, movieId = movieId)
+        favouriteViewModel.getFavMovieById(movieId.toInt())
     }
 
     fun showNoInternetView() {

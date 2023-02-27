@@ -51,14 +51,12 @@ class SearchMovieMapperTest {
         MovieEntity(
             id = 616037,
             poster_path = "/pIkRyD18kl4FhoCNQuWxWu5cBLM.jpg",
-            title = "Thor: Love and Thunder",
-            isFav = false
+            title = "Thor: Love and Thunder"
         ),
         MovieEntity(
             id = 698508,
             poster_path = "/pDc2HxQtC0MlKD4QfRvmKREEyhc.jpg",
-            title = "Redeeming Love",
-            isFav = false
+            title = "Redeeming Love"
         )
     )
 
@@ -66,7 +64,6 @@ class SearchMovieMapperTest {
     fun mapFromSingleItem_success_MovieEntityReturned() {
         val movieEntity = mapper.mapFrom(searchMovieItems[0])
         MatcherAssert.assertThat(movieEntity.id, CoreMatchers.`is`(searchMovieItems[0].id))
-        MatcherAssert.assertThat(movieEntity.isFav, CoreMatchers.`is`(false))
         MatcherAssert.assertThat(movieEntity.title, CoreMatchers.`is`(searchMovieItems[0].title))
         MatcherAssert.assertThat(
             movieEntity.poster_path,

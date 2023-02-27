@@ -8,5 +8,6 @@
     <include app:graph="@navigation/home"/>
     <include app:graph="@navigation/trending"/>
     <include app:graph="@navigation/search"/>
+    <include app:graph="@navigation/favourite"/>
 
 </navigation>

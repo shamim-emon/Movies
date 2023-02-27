@@ -16,15 +16,19 @@ open class MultipleLiveEvent<T> : MutableLiveData<T>() {
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         if (hasActiveObservers()) {
-            Log.w(this::class.java.name, "Multiple observers registered but only one will be notified of changes.")
+            Log.w(
+                this::class.java.name,
+                "Multiple observers registered but only one will be notified of changes."
+            )
         }
         // Observe the internal MutableLiveData
         super.observe(owner) { t: T ->
             if (mPending.compareAndSet(true, false)) {
                 observer.onChanged(t)
                 // call next value processing if have such
-                if (values.isNotEmpty())
+                if (values.isNotEmpty()) {
                     pollValue()
+                }
             }
         }
     }

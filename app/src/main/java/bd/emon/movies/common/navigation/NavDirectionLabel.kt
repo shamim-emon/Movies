@@ -4,5 +4,5 @@ enum class NavDirectionLabel {
     HomeFragment,
     TrendingFragment,
     SearchFragment,
-    SeeMoreFragment
+    FavouriteFragment
 }

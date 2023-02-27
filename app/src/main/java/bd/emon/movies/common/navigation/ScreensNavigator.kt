@@ -5,10 +5,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.ui.setupWithNavController
 import bd.emon.movies.di.entryPoint.ActivityEntryPoint
+import bd.emon.movies.favourite.FavouriteFragmentDirections
 import bd.emon.movies.home.HomeFragmentDirections
 import bd.emon.movies.movieEntity.APICallType
 import bd.emon.movies.movieEntity.MovieEntityListFragmentDirections
-import bd.emon.movies.search.SearchFragment
 import bd.emon.movies.search.SearchFragmentDirections
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.EntryPointAccessors
@@ -65,6 +65,10 @@ class ScreensNavigator(
             }
             NavDirectionLabel.SearchFragment -> {
                 SearchFragmentDirections.actionSearchFragmentToMovieDetailsActivity3(id)
+            }
+
+            NavDirectionLabel.FavouriteFragment -> {
+                FavouriteFragmentDirections.actionFavouriteFragmentToMovieDetailsActivity4(id)
             }
             else -> throw RuntimeException("Invalid Fragment")
         }

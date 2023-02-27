@@ -51,14 +51,12 @@ class DiscoverMoviesMapperTest {
         MovieEntity(
             id = 960704,
             poster_path = "/AeyiuQUUs78bPkz18FY3AzNFF8b.jpg",
-            title = "Fullmetal Alchemist: The Final Alchemy",
-            isFav = false
+            title = "Fullmetal Alchemist: The Final Alchemy"
         ),
         MovieEntity(
             id = 791155,
             poster_path = "/8PsHogUfvjWPGdWAI5uslDhHDx7.jpg",
-            title = "Secret Headquarters",
-            isFav = false
+            title = "Secret Headquarters"
         )
     )
 
@@ -66,7 +64,6 @@ class DiscoverMoviesMapperTest {
     fun mapFromSingleItem_success_MovieEntityReturned() {
         val movieEntity = mapper.mapFrom(discoverMovieItems[0])
         assertThat(movieEntity.id, `is`(discoverMovieItems[0].id))
-        assertThat(movieEntity.isFav, `is`(false))
         assertThat(movieEntity.title, `is`(discoverMovieItems[0].title))
         assertThat(movieEntity.poster_path, `is`(discoverMovieItems[0].poster_path))
     }

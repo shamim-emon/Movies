@@ -53,14 +53,12 @@ class TendingMoviesMapperTest {
         MovieEntity(
             id = 765869,
             poster_path = "/vf9Ex4EwSPlwbva4ZJdljsQQOML.jpg",
-            title = "Black Friday",
-            isFav = false
+            title = "Black Friday"
         ),
         MovieEntity(
             id = 675,
             poster_path = "/5aOyriWkPec0zUDxmHFP9qMmBaj.jpg",
-            title = "Harry Potter and the Order of the Phoenix",
-            isFav = false
+            title = "Harry Potter and the Order of the Phoenix"
         )
     )
 
@@ -68,7 +66,6 @@ class TendingMoviesMapperTest {
     fun mapFromSingleItem_success_MovieEntityReturned() {
         val movieEntity = mapper.mapFrom(TrendingMovieItems[0])
         assertThat(movieEntity.id, `is`(TrendingMovieItems[0].id))
-        assertThat(movieEntity.isFav, `is`(false))
         assertThat(movieEntity.title, `is`(TrendingMovieItems[0].title))
         assertThat(movieEntity.poster_path, `is`(TrendingMovieItems[0].poster_path))
     }
