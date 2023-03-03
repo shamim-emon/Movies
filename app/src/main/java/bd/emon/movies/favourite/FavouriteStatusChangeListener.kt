@@ -11,6 +11,6 @@ object FavouriteStatusChangeListener {
     }
 
     fun onChange() {
-        subscriber?.reloadFavourites()
+        this.subscriber?.reloadFavourites()
     }
 }

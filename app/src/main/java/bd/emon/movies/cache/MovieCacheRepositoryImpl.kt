@@ -19,7 +19,6 @@ class MovieCacheRepositoryImpl(
     ): Observable<Optional<MutablePreferences>> {
         return movieCacheApiInterface.saveDiscoverMovieFilters(
             minVoteCount,
-            includeAdultContent,
             orderBy,
             releaseYearStr
         )

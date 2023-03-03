@@ -117,21 +117,23 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener {
-            val entity = MovieEntity(
-                id = movieId.toInt(),
-                title = binding.details!!.title,
-                poster_path = binding.details!!.poster_path
-            )
+            binding.details?.let { details ->
+                val entity = MovieEntity(
+                    id = details.id,
+                    title = details.title,
+                    poster_path = details.poster_path
+                )
 
-            when (isFav) {
-                true -> {
-                    favouriteViewModel.removeFromFavourite(entity)
+                when (isFav) {
+                    true -> {
+                        favouriteViewModel.removeFromFavourite(entity)
+                    }
+                    else -> {
+                        favouriteViewModel.addToFavourite(entity)
+                    }
                 }
-                else -> {
-                    favouriteViewModel.addToFavourite(entity)
-                }
+                favouriteViewModel.getFavMovieById(movieId.toInt())
             }
-            favouriteViewModel.getFavMovieById(movieId.toInt())
         }
 
         favouriteViewModel.errorState.observe(this) {

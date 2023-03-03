@@ -22,7 +22,6 @@
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black"
             android:clipToPadding="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -65,6 +64,7 @@
                         android:layout_marginTop="32dp"
                         android:background="@drawable/circle"
                         android:padding="3dp"
+                        app:tint="@color/white"
                         android:src="@drawable/ic_arrow_back_24px"
                         app:layout_collapseMode="pin" />
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -84,8 +84,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/black">
+                        android:layout_height="wrap_content">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/thumbnailContainer"
@@ -120,9 +119,9 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
                             android:fontFamily="@font/open_sans_regular"
-                            android:text="@{details.original_title}"
+                            android:text="@{details.title}"
                             android:textAlignment="textStart"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/secondary_header_title"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/thumbnailContainer"
@@ -140,7 +139,7 @@
                             android:maxLines="1"
                             android:text="@{details.releaseYearPlusRunTime}"
                             android:textAlignment="textStart"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/secondary_title"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/thumbnailContainer"
@@ -171,7 +170,7 @@
                             android:maxLines="1"
                             android:text="@{details.voteAvgString}"
                             android:textAlignment="textStart"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/smaller_title"
                             app:layout_constraintBottom_toBottomOf="@+id/voteAvgIcon"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -188,7 +187,7 @@
                             android:fontFamily="@font/open_sans_regular"
                             android:text="@{details.genreLabels}"
                             android:textAlignment="textStart"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/secondary_title"
                             android:textStyle="italic"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -205,8 +204,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_bookmark"
                             app:layout_constraintStart_toStartOf="@+id/thumbnailContainer"
-                            app:layout_constraintTop_toBottomOf="@+id/thumbnailContainer"
-                            app:tint="@color/white" />
+                            app:layout_constraintTop_toBottomOf="@+id/thumbnailContainer" />
 
                         <TextView
                             android:id="@+id/movieOverview"
@@ -217,7 +215,7 @@
                             android:layout_marginEnd="16dp"
                             android:fontFamily="@font/open_sans_regular"
                             android:text="@{details.overview}"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/secondary_title"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -231,7 +229,7 @@
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/open_sans_bold"
                             android:text="@string/overview"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             app:layout_constraintBottom_toBottomOf="@+id/bookmark"
                             app:layout_constraintStart_toEndOf="@+id/bookmark"
                             app:layout_constraintTop_toTopOf="@+id/bookmark" />
@@ -248,8 +246,7 @@
                             android:src="@drawable/ic_trailer_48px"
                             app:layout_constraintEnd_toEndOf="@+id/bookmark"
                             app:layout_constraintStart_toStartOf="@+id/bookmark"
-                            app:layout_constraintTop_toBottomOf="@+id/movieOverview"
-                            app:tint="@color/white" />
+                            app:layout_constraintTop_toBottomOf="@+id/movieOverview" />
 
                         <TextView
                             android:id="@+id/trailer"
@@ -259,7 +256,7 @@
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/open_sans_bold"
                             android:text="@string/trailers"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             app:layout_constraintBottom_toBottomOf="@+id/cam"
                             app:layout_constraintStart_toEndOf="@+id/cam"
                             app:layout_constraintTop_toTopOf="@+id/cam" />

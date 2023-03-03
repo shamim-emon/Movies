@@ -9,7 +9,6 @@ import io.reactivex.rxjava3.core.Single
 interface MovieCacheApiInterface {
     fun saveDiscoverMovieFilters(
         minVoteCount: Int = 0,
-        includeAdultContent: Boolean = false,
         orderBy: String = POPULARITY,
         releaseYearStr: String = CURRENT_YEAR
 

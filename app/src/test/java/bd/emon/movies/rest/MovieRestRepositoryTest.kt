@@ -41,7 +41,7 @@ class MovieRestRepositoryTest {
     val API_KEY = "API_KEY"
     val LANG = "LANGUAGE"
     val SORT_BY = "sort_by"
-    val INCLUDE_ADULT = true
+    val INCLUDE_ADULT = false
     val PAGE = 11
     val VOTE_COUNT_GREATER_THAN = 10000
     val GENRE = 28

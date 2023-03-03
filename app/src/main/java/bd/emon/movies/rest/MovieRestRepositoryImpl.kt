@@ -52,11 +52,7 @@ class MovieRestRepositoryImpl(
             params[PARAM_SORT_BY.toApiParam()] = (it as String).toLowerCaseNoSpace()
         }
 
-        withParam[PARAM_INCLUDE_ADULT]?.let {
-            params[PARAM_INCLUDE_ADULT.toApiParam()] = (it as Boolean).toString()
-        } ?: run {
-            params[PARAM_INCLUDE_ADULT.toApiParam()] = false.toString()
-        }
+        params[PARAM_INCLUDE_ADULT.toApiParam()] = false.toString()
 
         withParam[PARAM_PAGE]?.let {
             params[PARAM_PAGE.toApiParam()] = (it as Int).toString()

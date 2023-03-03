@@ -13,11 +13,4 @@
         app:showAsAction="always"
         android:title="" />
 
-    <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_settings_24px"
-        app:showAsAction="always"
-        android:title="" />
-
-
 </menu>

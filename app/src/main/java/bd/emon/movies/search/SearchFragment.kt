@@ -203,7 +203,7 @@ class SearchFragment : BaseFragment(), PagingHelper, MovieDetailsNavigator {
             apiKey = apiKey,
             language = language,
             page = pageNo,
-            includeAdult = true,
+            includeAdult = false,
             query = binding.searchView.query.toString() ?: ""
         )
     }

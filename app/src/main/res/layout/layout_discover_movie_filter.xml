@@ -45,33 +45,6 @@
             app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
         <TextView
-            android:id="@+id/includeAdultContentsLabels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/open_sans_regular"
-            android:text="@string/include_adult_contents"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider_one" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchAdultContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/includeAdultContentsLabels"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/includeAdultContentsLabels" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_two"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/includeAdultContentsLabels" />
-        <TextView
             android:id="@+id/orderByLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,7 +53,7 @@
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/order_by"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider_two" />
+            app:layout_constraintTop_toBottomOf="@+id/divider_one" />
 
         <Spinner
             android:id="@+id/spinnerOrderBy"
@@ -95,7 +68,7 @@
             app:layout_constraintTop_toTopOf="@+id/orderByLabel" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_four"
+            android:id="@+id/divider_two"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -113,7 +86,7 @@
             android:text="@string/release_year"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider_four" />
+            app:layout_constraintTop_toBottomOf="@+id/divider_two" />
 
 
         <Spinner
