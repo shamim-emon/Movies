@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import bd.emon.movies.MainActivity
 import bd.emon.movies.common.DB_TRANSACTION_ERROR
 import bd.emon.movies.common.MovieDetailsNavigator
-import bd.emon.movies.common.NO_FAV
 import bd.emon.movies.common.navigation.NavDirectionLabel
 import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.common.view.ViewSizeHelper
@@ -67,6 +66,7 @@ class FavouriteFragment : Fragment(), MovieDetailsNavigator, FavouriteStatusChan
         ) {
             when (it.isNotEmpty()) {
                 true -> {
+                    binding.exceptionView.root.visibility = GONE
                     adapter =
                         MovieListAdapter(
                             it.toMutableList(),
@@ -80,7 +80,7 @@ class FavouriteFragment : Fragment(), MovieDetailsNavigator, FavouriteStatusChan
                     binding.movies.layoutManager = GridLayoutManager(requireContext(), 2)
                 }
                 false -> {
-                    showToast(requireContext(), NO_FAV, Toast.LENGTH_LONG)
+                    binding.exceptionView.root.visibility = VISIBLE
                 }
             }
 

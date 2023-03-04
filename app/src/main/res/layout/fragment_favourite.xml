@@ -31,7 +31,7 @@
 
         <include
             android:id="@+id/exceptionView"
-            layout="@layout/layout_exception"
+            layout="@layout/layout_no_favourite"
             android:layout_width="0dp"
             android:layout_height="@dimen/default_exception_view_height"
             android:visibility="gone"

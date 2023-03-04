@@ -4,6 +4,7 @@
     <string name="trending_tab">Trending</string>
     <string name="search_tab">Search</string>
     <string name="favourite_tab">Favourite</string>
+    <string name="no_fvourite_text">No Favourite Yet!</string>
     <string name="no_internet_primary_text">Opps! Something went wrong</string>
     <string name="no_internet_secondary_text">Check your internet and try again</string>
     <string name="no_result_primary_text">No item available</string>
