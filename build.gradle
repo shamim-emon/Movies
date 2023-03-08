@@ -32,6 +32,7 @@ subprojects {
     // Optionally configure plugin
     ktlint {
         debug = true
+        disabledRules = ["final-newline"]
     }
 }
 

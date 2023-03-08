@@ -1,8 +1,8 @@
 package bd.emon.movies
 
-import bd.emon.domain.dataMapper.DiscoverMoviesMapperTest
 import bd.emon.domain.dataMapper.SearchMovieMapperTest
 import bd.emon.domain.dataMapper.TendingMoviesMapperTest
+import bd.emon.movies.common.dataMapper.DiscoverMoviesMapperTest
 import bd.emon.movies.rest.MovieRestRepositoryTest
 import bd.emon.movies.viewModels.DetailsViewModelTest
 import bd.emon.movies.viewModels.FavouriteViewModelTest

@@ -5,7 +5,8 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import java.util.*
+import java.util.LinkedList
+import java.util.Queue
 import java.util.concurrent.atomic.AtomicBoolean
 
 open class MultipleLiveEvent<T> : MutableLiveData<T>() {

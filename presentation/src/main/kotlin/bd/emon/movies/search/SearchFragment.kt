@@ -13,12 +13,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import bd.emon.data.dataMapper.SearchMovieMapper
 import bd.emon.domain.NETWORK_ERROR_DEFAULT
 import bd.emon.domain.navigation.NavDirectionLabel
-import bd.emon.domain.navigation.ScreensNavigator
 import bd.emon.domain.paging.PagingHelper
-import bd.emon.domain.view.*
+import bd.emon.domain.view.NoContentView
+import bd.emon.domain.view.NoInternetView
+import bd.emon.domain.view.ViewLoader
+import bd.emon.domain.view.ViewLoaderImpl
+import bd.emon.domain.view.ViewSizeHelper
 import bd.emon.movies.MainActivity
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.MovieDetailsNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.FragmentSearchBinding
 import bd.emon.movies.di.assistedFactory.NoContentViewAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
@@ -112,7 +116,8 @@ class SearchFragment : BaseFragment(), PagingHelper, MovieDetailsNavigator {
         noInternetView = noInternetViewAssistedFactory.create(binding.noInternetView)
         noContentView = noContentViewAssistedFactory.create(binding.noContentView)
 
-        binding.searchView?.setOnQueryTextListener(object :
+        binding.searchView?.setOnQueryTextListener(
+            object :
                 SearchView.OnQueryTextListener,
                 androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -138,15 +143,9 @@ class SearchFragment : BaseFragment(), PagingHelper, MovieDetailsNavigator {
             hideLoader()
             if (pageNo == 1) {
                 if (it.results.size > 0) {
-                    adapter =
-                        MovieListAdapter(
-                            searchMovieMapper.mapFrom(it.results),
-                            viewResizer,
-                            true,
-                            true,
-                            this,
-                            this
-                        )
+                    adapter = MovieListAdapter(
+                        searchMovieMapper.mapFrom(it.results), viewResizer, true, true, this, this
+                    )
                     binding.searchedContents.adapter = adapter
                     binding.searchedContents.layoutManager = GridLayoutManager(requireContext(), 2)
                 } else {
@@ -183,9 +182,7 @@ class SearchFragment : BaseFragment(), PagingHelper, MovieDetailsNavigator {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            SearchFragment().apply {
-            }
+        fun newInstance() = SearchFragment().apply {}
     }
 
     override fun loadNextPage() {

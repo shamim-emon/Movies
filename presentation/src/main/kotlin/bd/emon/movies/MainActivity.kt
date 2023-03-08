@@ -2,7 +2,7 @@ package bd.emon.movies
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import bd.emon.domain.navigation.ScreensNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 

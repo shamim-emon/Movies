@@ -14,7 +14,7 @@ import bd.emon.data.dataMapper.TrendingMovieMapper
 import bd.emon.domain.INVALID_API_CALL_TYPE
 import bd.emon.domain.NETWORK_ERROR_DEFAULT
 import bd.emon.domain.PARAM_GENRES
-import bd.emon.domain.navigation.ScreensNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.domain.paging.PagingHelper
 import bd.emon.domain.view.NoInternetView
 import bd.emon.domain.view.ViewLoader

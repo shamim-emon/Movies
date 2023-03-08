@@ -1,9 +1,10 @@
-package bd.emon.domain.navigation
+package bd.emon.movies.common.navigation
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.ui.setupWithNavController
+import bd.emon.domain.navigation.NavDirectionLabel
 import bd.emon.movies.di.entryPoint.ActivityEntryPoint
 import bd.emon.movies.favourite.FavouriteFragmentDirections
 import bd.emon.movies.home.HomeFragmentDirections

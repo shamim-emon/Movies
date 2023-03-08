@@ -13,7 +13,7 @@ import bd.emon.domain.entity.genre.Genre
 import bd.emon.domain.menuItem.HomeMenuItemListener
 import bd.emon.domain.menuItem.MenuItemListener
 import bd.emon.domain.navigation.NavDirectionLabel
-import bd.emon.domain.navigation.ScreensNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.domain.view.NoInternetView
 import bd.emon.domain.view.ViewLoader
 import bd.emon.domain.view.ViewLoaderImpl

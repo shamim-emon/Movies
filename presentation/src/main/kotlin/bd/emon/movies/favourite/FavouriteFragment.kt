@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import bd.emon.domain.DB_TRANSACTION_ERROR
 import bd.emon.domain.navigation.NavDirectionLabel
-import bd.emon.domain.navigation.ScreensNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.domain.view.ViewSizeHelper
 import bd.emon.movies.MainActivity
 import bd.emon.movies.common.MovieDetailsNavigator
