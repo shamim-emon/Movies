@@ -40,7 +40,7 @@ task installGitHook(type: Copy) {
     into { new File(rootProject.rootDir, '.git/hooks') }
     fileMode 0777
 }
-tasks.getByPath(':app:preBuild').dependsOn installGitHook
+tasks.getByPath(':presentation:preBuild').dependsOn installGitHook
 
 
 task clean(type: Delete) {
