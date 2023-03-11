@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import bd.emon.domain.DB_TRANSACTION_ERROR
 import bd.emon.domain.navigation.NavDirectionLabel
-import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.domain.view.ViewSizeHelper
 import bd.emon.movies.MainActivity
 import bd.emon.movies.common.MovieDetailsNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.FragmentFavouriteBinding
 import bd.emon.movies.home.MovieListAdapter
 import bd.emon.movies.viewModels.FavouriteViewModel
@@ -67,15 +67,9 @@ class FavouriteFragment : Fragment(), MovieDetailsNavigator, FavouriteStatusChan
             when (it.isNotEmpty()) {
                 true -> {
                     binding.exceptionView.root.visibility = GONE
-                    adapter =
-                        MovieListAdapter(
-                            it.toMutableList(),
-                            viewResizer,
-                            true,
-                            false,
-                            null,
-                            this
-                        )
+                    adapter = MovieListAdapter(
+                        it.toMutableList(), viewResizer, true, false, null, this
+                    )
                     binding.movies.adapter = adapter
                     binding.movies.layoutManager = GridLayoutManager(requireContext(), 2)
                 }

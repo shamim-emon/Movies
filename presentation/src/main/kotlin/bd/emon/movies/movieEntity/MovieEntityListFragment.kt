@@ -14,7 +14,6 @@ import bd.emon.data.dataMapper.TrendingMovieMapper
 import bd.emon.domain.INVALID_API_CALL_TYPE
 import bd.emon.domain.NETWORK_ERROR_DEFAULT
 import bd.emon.domain.PARAM_GENRES
-import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.domain.paging.PagingHelper
 import bd.emon.domain.view.NoInternetView
 import bd.emon.domain.view.ViewLoader
@@ -24,6 +23,7 @@ import bd.emon.movies.MainActivity
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.MovieDetailsNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.FragmentMovieEntityListBinding
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
 import bd.emon.movies.di.qualifier.ApiKey

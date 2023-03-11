@@ -13,7 +13,6 @@ import bd.emon.domain.entity.genre.Genre
 import bd.emon.domain.menuItem.HomeMenuItemListener
 import bd.emon.domain.menuItem.MenuItemListener
 import bd.emon.domain.navigation.NavDirectionLabel
-import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.domain.view.NoInternetView
 import bd.emon.domain.view.ViewLoader
 import bd.emon.domain.view.ViewLoaderImpl
@@ -21,6 +20,7 @@ import bd.emon.movies.MainActivity
 import bd.emon.movies.R
 import bd.emon.movies.base.BaseFragment
 import bd.emon.movies.common.MovieDetailsNavigator
+import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.FragmentHomeBinding
 import bd.emon.movies.di.assistedFactory.HomePatchAdapterAssistedFactory
 import bd.emon.movies.di.assistedFactory.NoInternetViewAssistedFactory
