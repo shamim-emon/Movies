@@ -1,4 +1,4 @@
-package bd.emon.movies.common.dataMapper
+package common.dataMapper
 
 import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.domain.entity.common.MovieEntity

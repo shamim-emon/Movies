@@ -8,7 +8,7 @@ import bd.emon.data.dataMapper.SearchMovieMapper
 import bd.emon.data.dataMapper.TrendingMovieMapper
 import bd.emon.domain.DATA_STORE_NAME
 import bd.emon.domain.view.ViewSizeHelper
-import bd.emon.movies.R
+import bd.emon.movies.BuildConfig
 import bd.emon.movies.di.qualifier.ApiKey
 import bd.emon.movies.di.qualifier.AppLanguage
 import dagger.Module
@@ -45,7 +45,7 @@ object ApplicationModule {
 
     @ApiKey
     @Provides
-    fun provideApiKey(application: Application) = application.resources.getString(R.string.api_key)
+    fun provideApiKey(application: Application) = BuildConfig.API_KEY
 
     @AppLanguage
     @Provides

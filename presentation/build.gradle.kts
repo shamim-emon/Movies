@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,6 +20,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_KEY", "\"" + getApiKey() + "\"")
     }
 
     buildTypes {
@@ -108,4 +111,8 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+}
+
+fun getApiKey(): String {
+    return gradleLocalProperties(rootDir).getProperty("api_key")
 }

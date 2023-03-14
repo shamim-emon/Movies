@@ -34,6 +34,10 @@ android {
     sourceSets.getByName("main") {
         java.srcDir("src/main/kotlin")
     }
+
+    sourceSets.getByName("test") {
+        java.srcDir("src/test/kotlin")
+    }
 }
 
 dependencies {
@@ -44,6 +48,9 @@ dependencies {
     val retrofit_version = "2.9.0"
     val gson_version = "2.9.1"
     val androidx_datastore_version = "1.0.0"
+    val junit_version = "4.13.2"
+    val androidx_arch_core_testing_version = "2.1.0"
+    val mockito_version = "2.23.4"
 
     implementation("androidx.datastore:datastore-preferences-core:$androidx_datastore_version")
     implementation("androidx.datastore:datastore-preferences-rxjava3:$androidx_datastore_version")
@@ -60,7 +67,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation(project(":domain"))
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("junit:junit:$junit_version")
+    testImplementation("androidx.arch.core:core-testing:$androidx_arch_core_testing_version")
+    testImplementation("org.mockito:mockito-core:$mockito_version")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

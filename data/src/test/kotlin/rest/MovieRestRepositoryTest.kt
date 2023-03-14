@@ -1,5 +1,7 @@
-package bd.emon.movies.rest
+package rest
 
+import TestScheduleProvider
+import any
 import bd.emon.data.rest.MovieRestApiInterface
 import bd.emon.data.rest.MovieRestRepositoryImpl
 import bd.emon.data.toApiParam
@@ -15,10 +17,8 @@ import bd.emon.domain.PARAM_SORT_BY
 import bd.emon.domain.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.domain.RELEASE_YEAR
 import bd.emon.domain.entity.Optional
-import bd.emon.movies.TestScheduleProvider
-import bd.emon.movies.any
-import bd.emon.movies.capture
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
+import capture
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.TestScheduler
