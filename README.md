@@ -13,7 +13,7 @@
 <br/>
 <img src="/previews/preview.gif" align="right" width="250"/>
 
-<h3 align="left">Tech stack & Open-source libraries</h3>
+## Tech stack & Open-source libraries
 - Minimum SDK level 21
 - [Kotlin](https://kotlinlang.org/)
 - <b>Lifecycle</b>: Observe Android lifecycles and handle UI states upon the lifecycle changes.
@@ -32,24 +32,24 @@
 
 <br/>
 
-<h3 align="left">Testing</h3>
+## Testing
 Local Tests are done using `Junit` & `Mockito`.
 
 <br/>
 
-<h3 align="left">How To Run The App</h3>
+## How To Run The App
 Add your [TMDB](https://www.themoviedb.org/) API key in the `local.properties` file:
 
 ``` api_key = YOUR_API_KEY ```
 
 <br/>
 
-<h3 align="left">How To Contribute</h3>
+## How To Contribute
  At the moment this repo only have unit/local tests.Contribution in `androidTest`/ `UITest` is welcome.
 
 <br/>
 
-<h3 align="left">License</h3>
+## License
 ```xml
 Designed and developed by 2023 shamim-emon (Shamim Shahrier Emon)
 
