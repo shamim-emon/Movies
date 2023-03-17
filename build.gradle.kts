@@ -28,6 +28,9 @@ plugins {
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     ktlint {
+        filter {
+            exclude("**/*.md")
+        }
         debug.set(true)
         disabledRules.set(setOf("final-newline"))
     }
