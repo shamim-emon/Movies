@@ -1,6 +1,6 @@
 <h1 align="center">Movies</h1>
 <p align="center">  
- Movies demonstrates modern Android development with Hilt, RxJava3, Jetpack (Room, ViewModel,LiveData), and Material Design based on MVVM clean architecture.
+ Movies demonstrates modern Android development with Hilt, RxJava3, Jetpack (Room, ViewModel,LiveData etc.), and Material Design based on MVVM clean architecture.
 </p>
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/></a>
