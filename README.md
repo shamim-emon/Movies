@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-<img src="/previews/preview.gif" />
+<img src="/previews/preview.gif" align="right" width="320" />
 </p>
 
 ## Tech stack & Open-source libraries
