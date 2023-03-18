@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/></a>
   <a href="https://android-arsenal.com/api?level=21"><img alt="API" src="https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat"/></a></p>
-<br>
+<br/>
 
 <p align="center">
 <img src="/previews/screenshots.png"/>
@@ -31,6 +31,14 @@
 - [Rxjava3](https://github.com/ReactiveX/RxJava): A library for composing asynchronous and event-based programs by using observable sequences.
 - <b>Junit</b>(Unit Test) : A simple framework to write repeatable tests.
 - <b>Mockito</b>(Unit Test) : A mocking framework that lets you write beautiful tests with a clean & simple API.
+
+<br/>
+
+## Architecture
+This app uses MVVM clean Architecture.
+<p align="center">
+<img src="/previews/architecture.png"/>
+</p>
 
 <br/>
 
