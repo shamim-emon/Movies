@@ -10,8 +10,10 @@
 <p align="center">
 <img src="/previews/screenshots.png"/>
 </p>
-<br/>
-<img src="/previews/preview.gif" align="right" width="250"/>
+
+<p align="center">
+<img src="/previews/preview.gif" />
+</p>
 
 ## Tech stack & Open-source libraries
 - Minimum SDK level 21
@@ -40,7 +42,9 @@ Local Tests are done using `Junit` & `Mockito`.
 ## How To Run The App
 Add your [TMDB](https://www.themoviedb.org/) API key in the `local.properties` file:
 
-``` api_key = YOUR_API_KEY ```
+```xml
+ api_key = YOUR_API_KEY 
+ ```
 
 <br/>
 
