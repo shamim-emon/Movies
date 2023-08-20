@@ -10,12 +10,13 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
 
+    namespace = "bd.emon.movies"
     defaultConfig {
         applicationId = "bd.emon.movies"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
