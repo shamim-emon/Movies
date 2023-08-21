@@ -13,6 +13,10 @@ android {
     compileSdk = 34
 
     namespace = "bd.emon.movies"
+
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "bd.emon.movies"
         minSdk = 21
@@ -22,8 +26,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", "\"" + getApiKey() + "\"")
+
     }
 
+    buildFeatures{
+        compose = true
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -39,11 +47,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets.getByName("main") {
@@ -67,6 +76,7 @@ dependencies {
     val androidx_appcompat_version = "1.5.1"
     val constraint_layout_version = "2.1.4"
     val androidx_navigation_version = "2.5.3"
+    val androidx_navigation_compose_version = "2.7.0"
     val junit_version = "4.13.2"
     val junit_androidx_version = "1.1.3"
     val androidx_arch_core_testing_version = "2.1.0"
@@ -76,6 +86,14 @@ dependencies {
     val rxjava_version = "3.1.6"
     val rxandroid_version = "3.0.2"
     val room_version = "2.5.0"
+
+    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation("androidx.compose.compiler:compiler:1.5.1")
+    implementation("androidx.compose.ui:ui-tooling:1.5.0")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+    implementation ("androidx.navigation:navigation-compose:$androidx_navigation_compose_version")
 
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
