@@ -1,6 +1,5 @@
 package bd.emon.movies
 
-import android.graphics.drawable.VectorDrawable
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -14,21 +13,16 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -87,22 +81,21 @@ fun MainScreen() {
                 }
             )
         },
-        bottomBar = { MovieBottomBar(nc = nc )}
+        bottomBar = { MovieBottomBar(nc = nc) }
     ) { padding ->
         NavHost(navController = nc, Screen.Home.route, modifier = Modifier.padding(padding)) {
             composable(Screen.Home.route) {
-                //HomeScreen()
+                // HomeScreen()
             }
             composable(Screen.Trending.route) {
-                //HomeScreen()
+                // HomeScreen()
             }
             composable(Screen.Search.route) {
-                //HomeScreen()
+                // HomeScreen()
             }
             composable(Screen.Favourite.route) {
-                //HomeScreen()
+                // HomeScreen()
             }
-
         }
     }
 }
@@ -137,35 +130,33 @@ val screens = listOf(
     Screen.Search,
     Screen.Favourite
 )
+
 sealed class Screen(
-    val route:String,
+    val route: String,
     val icon: ImageVector,
-    val title:String
-){
-    object Home:Screen(
+    val title: String
+) {
+    object Home : Screen(
         route = "Home",
         icon = Icons.Filled.Home,
         title = "Home"
     )
 
-    object Trending:Screen(
+    object Trending : Screen(
         route = "Trending",
         icon = Icons.Filled.TrendingUp,
         title = "Trending"
     )
 
-    object Search:Screen(
+    object Search : Screen(
         route = "Search",
         icon = Icons.Filled.Search,
         title = "Search"
     )
 
-    object Favourite:Screen(
+    object Favourite : Screen(
         route = "Favourite",
         icon = Icons.Filled.Star,
         title = "Favourite"
     )
-
-
 }
-
