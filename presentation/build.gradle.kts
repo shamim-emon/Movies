@@ -16,6 +16,8 @@ android {
 
     buildFeatures {
         buildConfig = true
+        dataBinding = true
+        compose = true
     }
     defaultConfig {
         applicationId = "bd.emon.movies"
@@ -28,9 +30,6 @@ android {
         buildConfigField("String", "API_KEY", "\"" + getApiKey() + "\"")
     }
 
-    buildFeatures {
-        compose = true
-    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -39,10 +38,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-
-    buildFeatures {
-        dataBinding = true
     }
 
     compileOptions {
@@ -87,13 +82,15 @@ dependencies {
     val room_version = "2.5.0"
 
     val compose_version = "1.5.0"
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material-icons-extended:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
-    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
+    implementation("androidx.compose.ui:ui-tooling:$compose_version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.navigation:navigation-compose:2.7.0")

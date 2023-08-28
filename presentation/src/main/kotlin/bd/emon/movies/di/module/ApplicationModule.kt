@@ -2,7 +2,10 @@ package bd.emon.movies.di.module
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.data.dataMapper.SearchMovieMapper
 import bd.emon.data.dataMapper.TrendingMovieMapper
