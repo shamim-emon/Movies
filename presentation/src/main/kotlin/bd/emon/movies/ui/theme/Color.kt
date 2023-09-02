@@ -21,6 +21,22 @@ val pink500 = Color(0xffff0266)
 val pink600 = Color(0xffd8004d)
 val pinkDarkPrimary = Color(0xff24191c)
 
+val teal_200 = Color(0xFF03DAC5)
+val teal_700 = Color(0xFF018786)
+val teal_800 = Color(0xFF00695C)
+
+val Colors.teal200 :Color
+    @Composable
+    get() = teal_200
+
+val Colors.teal700 :Color
+    @Composable
+    get() = teal_700
+
+val Colors.teal800 :Color
+    @Composable
+    get() = teal_800
+
 /**
  * Return the fully opaque color that results from compositing [onSurface] atop [surface] with the
  * given [alpha]. Useful for situations where semi-transparent colors are undesirable.
