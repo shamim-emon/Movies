@@ -36,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,8 @@ fun HomeScreen() {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.home_tab)
+                        text = stringResource(id = R.string.home_tab),
+                        style = MaterialTheme.typography.h5
                     )
                 },
                 backgroundColor = MaterialTheme.colors.surface,
@@ -92,7 +94,7 @@ fun HomeScreen() {
                         Text(text = "See All",modifier = Modifier
                             .padding(end = 16.dp)
                             .align(Alignment.TopEnd),
-                            style = MaterialTheme.typography.h6,
+                            style = MaterialTheme.typography.subtitle1,
                             color = MaterialTheme.colors.teal800
                         )
                     }
@@ -123,7 +125,11 @@ fun HomePreview() {
 
 @Composable
 fun MovieThumb() {
-    Column(Modifier.width(240.dp)) {
+    Column(
+        modifier = Modifier
+            .width(240.dp)
+            .width(370.dp)
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -139,10 +145,11 @@ fun MovieThumb() {
           )
         }
         Text(
-            text = "Movie Title",
+            text = "Movie Title Movie Title Movie Title",
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.h5,
-            color = MaterialTheme.colors.teal700
+            style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Normal),
+            color = MaterialTheme.colors.teal700,
+            modifier = Modifier.padding(all=8.dp)
         )
     }
 }

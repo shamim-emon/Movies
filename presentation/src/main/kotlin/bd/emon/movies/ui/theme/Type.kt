@@ -1,5 +1,6 @@
 package bd.emon.movies.ui.theme
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -39,7 +40,7 @@ val Typography = typographyFromDefaults(
     ),
     h6 = TextStyle(
         fontFamily = fonts,
-        fontWeight = FontWeight.W500,
+        fontWeight = FontWeight.Bold,
         lineHeight = 28.sp
     ),
     subtitle1 = TextStyle(
@@ -72,7 +73,6 @@ val Typography = typographyFromDefaults(
         letterSpacing = 0.08.em
     )
 )
-
 fun typographyFromDefaults(
     h1: TextStyle?,
     h2: TextStyle?,
