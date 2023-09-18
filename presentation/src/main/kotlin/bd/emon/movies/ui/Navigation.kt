@@ -1,23 +1,23 @@
 package bd.emon.movies.ui
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,13 +27,17 @@ import bd.emon.movies.R
 import bd.emon.movies.ui.home.HomeRoute
 
 @Composable
-fun MovieNavHost(navHostController: NavHostController = rememberNavController()) {
+fun MovieNavHost(
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController = rememberNavController()
+) {
     Scaffold(
+        modifier = modifier,
         bottomBar = { MovieBottomBar(navHostController = navHostController) }
     ) { padding ->
         NavHost(
             navController = navHostController,
-            Screen.Home.route,
+            startDestination = Screen.Home.route,
             modifier = Modifier.padding(padding)
         ) {
             composable(Screen.Home.route) {
@@ -53,38 +57,40 @@ fun MovieNavHost(navHostController: NavHostController = rememberNavController())
 }
 
 @Composable
-fun MovieBottomBar(navHostController: NavHostController) {
+fun MovieBottomBar(
+    modifier: Modifier = Modifier,
+    navHostController: NavHostController
+) {
     val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
-    BottomNavigation {
+    NavigationBar(modifier = modifier) {
         for (screen in screens) {
-            BottomNavigationItem(
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = {
-                    navHostController.navigate(screen.route) {
-                        popUpTo(navHostController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
+            NavigationBarItem(
                 icon = { Icon(screen.icon, stringResource(id = screen.title)) },
-                label = { Text(text = stringResource(id = screen.title)) }
+                label = {
+                    Text(
+                        text = stringResource(id = screen.title),
+                        style = MaterialTheme.typography.titleSmall
+
+                    )
+                },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = {}
             )
         }
+
     }
 }
 
 
-val screens = listOf(
+private val screens = listOf(
     Screen.Home,
     Screen.Trending,
     Screen.Search,
     Screen.Favourite
 )
 
-sealed class Screen(
+private sealed class Screen(
     val route: String,
     val icon: ImageVector,
     val title: Int

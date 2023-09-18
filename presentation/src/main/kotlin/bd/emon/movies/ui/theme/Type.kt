@@ -1,107 +1,96 @@
 package bd.emon.movies.ui.theme
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Typography
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.em
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import bd.emon.movies.R
 
-private val fonts = FontFamily(
+private val Montserrat = FontFamily(
     Font(R.font.montserrat_regular),
-    Font(R.font.montserrat_medium, FontWeight.Medium),
-    Font(R.font.montserrat_semibold, FontWeight.SemiBold)
+    Font(R.font.montserrat_medium, FontWeight.W500)
 )
 
-val Typography = typographyFromDefaults(
-    h1 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold
+
+private val defaultTextStyle = TextStyle(
+    fontFamily = Montserrat,
+    platformStyle = PlatformTextStyle(
+        includeFontPadding = false
     ),
-    h2 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold
-    ),
-    h3 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold
-    ),
-    h4 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold,
-        lineHeight = 40.sp
-    ),
-    h5 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold
-    ),
-    h6 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold,
-        lineHeight = 28.sp
-    ),
-    subtitle1 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.W500,
-        lineHeight = 22.sp
-    ),
-    subtitle2 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.W500
-    ),
-    body1 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 28.sp
-    ),
-    body2 = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 16.sp
-    ),
-    button = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold
-    ),
-    caption = TextStyle(
-        fontFamily = fonts
-    ),
-    overline = TextStyle(
-        letterSpacing = 0.08.em
+    lineHeightStyle = LineHeightStyle(
+        alignment = LineHeightStyle.Alignment.Center,
+        trim = LineHeightStyle.Trim.None
     )
 )
-fun typographyFromDefaults(
-    h1: TextStyle?,
-    h2: TextStyle?,
-    h3: TextStyle?,
-    h4: TextStyle?,
-    h5: TextStyle?,
-    h6: TextStyle?,
-    subtitle1: TextStyle?,
-    subtitle2: TextStyle?,
-    body1: TextStyle?,
-    body2: TextStyle?,
-    button: TextStyle?,
-    caption: TextStyle?,
-    overline: TextStyle?
-): Typography {
-    val defaults = Typography()
-    return Typography(
-        h1 = defaults.h1.merge(h1),
-        h2 = defaults.h2.merge(h2),
-        h3 = defaults.h3.merge(h3),
-        h4 = defaults.h4.merge(h4),
-        h5 = defaults.h5.merge(h5),
-        h6 = defaults.h6.merge(h6),
-        subtitle1 = defaults.subtitle1.merge(subtitle1),
-        subtitle2 = defaults.subtitle2.merge(subtitle2),
-        body1 = defaults.body1.merge(body1),
-        body2 = defaults.body2.merge(body2),
-        button = defaults.button.merge(button),
-        caption = defaults.caption.merge(caption),
-        overline = defaults.overline.merge(overline)
-    )
-}
+
+val Typography = Typography(
+    displayLarge = defaultTextStyle.copy(
+        fontSize = 57.sp, lineHeight = 64.sp, letterSpacing = (-0.25).sp
+    ),
+    displayMedium = defaultTextStyle.copy(
+        fontSize = 45.sp, lineHeight = 52.sp, letterSpacing = 0.sp
+    ),
+    displaySmall = defaultTextStyle.copy(
+        fontSize = 36.sp, lineHeight = 44.sp, letterSpacing = 0.sp
+    ),
+    headlineLarge = defaultTextStyle.copy(
+        fontSize = 32.sp, lineHeight = 40.sp, letterSpacing = 0.sp, lineBreak = LineBreak.Heading
+    ),
+    headlineMedium = defaultTextStyle.copy(
+        fontSize = 28.sp, lineHeight = 36.sp, letterSpacing = 0.sp, lineBreak = LineBreak.Heading
+    ),
+    headlineSmall = defaultTextStyle.copy(
+        fontSize = 24.sp, lineHeight = 32.sp, letterSpacing = 0.sp, lineBreak = LineBreak.Heading
+    ),
+    titleLarge = defaultTextStyle.copy(
+        fontSize = 22.sp, lineHeight = 28.sp, letterSpacing = 0.sp, lineBreak = LineBreak.Heading
+    ),
+    titleMedium = defaultTextStyle.copy(
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.15.sp,
+        fontWeight = FontWeight.Medium,
+        lineBreak = LineBreak.Heading
+    ),
+    titleSmall = defaultTextStyle.copy(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.1.sp,
+        fontWeight = FontWeight.Medium,
+        lineBreak = LineBreak.Heading
+    ),
+    labelLarge = defaultTextStyle.copy(
+        fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp, fontWeight = FontWeight.Medium
+    ),
+    labelMedium = defaultTextStyle.copy(
+        fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp, fontWeight = FontWeight.Medium
+    ),
+    labelSmall = defaultTextStyle.copy(
+        fontSize = 11.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp, fontWeight = FontWeight.Medium
+    ),
+    bodyLarge = defaultTextStyle.copy(
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp,
+        lineBreak = LineBreak.Paragraph
+    ),
+    bodyMedium = defaultTextStyle.copy(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.25.sp,
+        lineBreak = LineBreak.Paragraph
+    ),
+    bodySmall = defaultTextStyle.copy(
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.4.sp,
+        lineBreak = LineBreak.Paragraph
+    ),
+)

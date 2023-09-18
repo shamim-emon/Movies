@@ -1,47 +1,68 @@
 package bd.emon.movies.ui.theme
 
-
-import androidx.compose.material.Colors
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 
-val yellow200 = Color(0xffffeb46)
-val yellow400 = Color(0xffffc000)
-val yellow500 = Color(0xffffde03)
-val yellowDarkPrimary = Color(0xff242316)
+val md_theme_light_primary = Color(0xFF626200)
+val md_theme_light_onPrimary = Color(0xFFFFFFFF)
+val md_theme_light_primaryContainer = Color(0xFFEAEA00)
+val md_theme_light_onPrimaryContainer = Color(0xFF1D1D00)
+val md_theme_light_secondary = Color(0xFF855400)
+val md_theme_light_onSecondary = Color(0xFFFFFFFF)
+val md_theme_light_secondaryContainer = Color(0xFFFFDDB7)
+val md_theme_light_onSecondaryContainer = Color(0xFF2A1700)
+val md_theme_light_tertiary = Color(0xFF795900)
+val md_theme_light_onTertiary = Color(0xFFFFFFFF)
+val md_theme_light_tertiaryContainer = Color(0xFFFFDFA0)
+val md_theme_light_onTertiaryContainer = Color(0xFF261A00)
+val md_theme_light_error = Color(0xFFBA1A1A)
+val md_theme_light_errorContainer = Color(0xFFFFDAD6)
+val md_theme_light_onError = Color(0xFFFFFFFF)
+val md_theme_light_onErrorContainer = Color(0xFF410002)
+val md_theme_light_background = Color(0xFFFFFBFF)
+val md_theme_light_onBackground = Color(0xFF1C1C17)
+val md_theme_light_surface = Color(0xFFFFFBFF)
+val md_theme_light_onSurface = Color(0xFF1C1C17)
+val md_theme_light_surfaceVariant = Color(0xFFE6E3D1)
+val md_theme_light_onSurfaceVariant = Color(0xFF48473A)
+val md_theme_light_outline = Color(0xFF797869)
+val md_theme_light_inverseOnSurface = Color(0xFFF4F0E8)
+val md_theme_light_inverseSurface = Color(0xFF31312B)
+val md_theme_light_inversePrimary = Color(0xFFCDCD00)
+val md_theme_light_shadow = Color(0xFF000000)
+val md_theme_light_surfaceTint = Color(0xFF626200)
+val md_theme_light_outlineVariant = Color(0xFFCAC7B6)
+val md_theme_light_scrim = Color(0xFF000000)
 
-val blue200 = Color(0xff91a4fc)
-val blue700 = Color(0xff0336ff)
-val blue800 = Color(0xff0035c9)
-val blueDarkPrimary = Color(0xff1c1d24)
+val md_theme_dark_primary = Color(0xFFCDCD00)
+val md_theme_dark_onPrimary = Color(0xFF323200)
+val md_theme_dark_primaryContainer = Color(0xFF494900)
+val md_theme_dark_onPrimaryContainer = Color(0xFFEAEA00)
+val md_theme_dark_secondary = Color(0xFFFFB95C)
+val md_theme_dark_onSecondary = Color(0xFF462A00)
+val md_theme_dark_secondaryContainer = Color(0xFF653E00)
+val md_theme_dark_onSecondaryContainer = Color(0xFFFFDDB7)
+val md_theme_dark_tertiary = Color(0xFFFBBC00)
+val md_theme_dark_onTertiary = Color(0xFF402D00)
+val md_theme_dark_tertiaryContainer = Color(0xFF5C4300)
+val md_theme_dark_onTertiaryContainer = Color(0xFFFFDFA0)
+val md_theme_dark_error = Color(0xFFFFB4AB)
+val md_theme_dark_errorContainer = Color(0xFF93000A)
+val md_theme_dark_onError = Color(0xFF690005)
+val md_theme_dark_onErrorContainer = Color(0xFFFFDAD6)
+val md_theme_dark_background = Color(0xFF1C1C17)
+val md_theme_dark_onBackground = Color(0xFFE6E2D9)
+val md_theme_dark_surface = Color(0xFF1C1C17)
+val md_theme_dark_onSurface = Color(0xFFE6E2D9)
+val md_theme_dark_surfaceVariant = Color(0xFF48473A)
+val md_theme_dark_onSurfaceVariant = Color(0xFFCAC7B6)
+val md_theme_dark_outline = Color(0xFF939182)
+val md_theme_dark_inverseOnSurface = Color(0xFF1C1C17)
+val md_theme_dark_inverseSurface = Color(0xFFE6E2D9)
+val md_theme_dark_inversePrimary = Color(0xFF626200)
+val md_theme_dark_shadow = Color(0xFF000000)
+val md_theme_dark_surfaceTint = Color(0xFFCDCD00)
+val md_theme_dark_outlineVariant = Color(0xFF48473A)
+val md_theme_dark_scrim = Color(0xFF000000)
 
-val pink200 = Color(0xffff7597)
-val pink500 = Color(0xffff0266)
-val pink600 = Color(0xffd8004d)
-val pinkDarkPrimary = Color(0xff24191c)
 
-val teal_200 = Color(0xFF03DAC5)
-val teal_700 = Color(0xFF018786)
-val teal_800 = Color(0xFF00695C)
-
-val Colors.teal200 :Color
-    @Composable
-    get() = teal_200
-
-val Colors.teal700 :Color
-    @Composable
-    get() = teal_700
-
-val Colors.teal800 :Color
-    @Composable
-    get() = teal_800
-
-/**
- * Return the fully opaque color that results from compositing [onSurface] atop [surface] with the
- * given [alpha]. Useful for situations where semi-transparent colors are undesirable.
- */
-@Composable
-fun Colors.compositedOnSurface(alpha: Float): Color {
-    return onSurface.copy(alpha = alpha).compositeOver(surface)
-}
+val seed = Color(0xFFFFFF00)
