@@ -2,10 +2,7 @@ package bd.emon.movies.di.module
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.NavHostFragment
 import bd.emon.movies.R
 import dagger.Module
@@ -34,5 +31,4 @@ object ActivityModule {
 
     @Provides
     fun provideNavController(navHostFragment: NavHostFragment) = navHostFragment.navController
-
 }

@@ -84,6 +84,9 @@ dependencies {
 
     val compose_version = "1.5.0"
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")

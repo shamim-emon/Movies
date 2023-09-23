@@ -23,13 +23,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.movies.R
 import bd.emon.movies.ui.home.HomeRoute
 
 @Composable
 fun MovieNavHost(
     modifier: Modifier = Modifier,
-    navHostController: NavHostController = rememberNavController()
+    navHostController: NavHostController = rememberNavController(),
+    discoverMovieMapper: DiscoverMovieMapper
 ) {
     Scaffold(
         modifier = modifier,
@@ -41,7 +43,7 @@ fun MovieNavHost(
             modifier = Modifier.padding(padding)
         ) {
             composable(Screen.Home.route) {
-                HomeRoute()
+                HomeRoute(discoverMovieMapper = discoverMovieMapper)
             }
             composable(Screen.Trending.route) {
                 // HomeScreen()
