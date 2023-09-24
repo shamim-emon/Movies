@@ -80,10 +80,8 @@ fun MovieBottomBar(
                 onClick = {}
             )
         }
-
     }
 }
-
 
 private val screens = listOf(
     Screen.Home,
@@ -121,4 +119,3 @@ private sealed class Screen(
         title = R.string.favourite_tab
     )
 }
-

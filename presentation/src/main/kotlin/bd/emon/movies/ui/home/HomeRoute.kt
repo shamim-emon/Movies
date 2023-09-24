@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.hilt.navigation.compose.hiltViewModel
 import bd.emon.data.dataMapper.DiscoverMovieMapper
@@ -29,10 +31,13 @@ fun HomeRoute(
         movieMap[it.grp_genre_id] = discoverMovieMapper.mapFrom(it.results)
     }
 
-    val loadGenres :()->Unit = {
+    val loadGenres: () -> Unit = {
         viewModel.genreErrorState.postValue(null)
         viewModel.loadGenres(viewModel.apiParams)
     }
+
+    // state to prevent loadGenres()  call during Home Route Recomposition
+    var loadGenresCalled by remember { mutableStateOf(false) }
 
     HomeScreen(
         loadState = loadState ?: false,
@@ -47,5 +52,9 @@ fun HomeRoute(
         movieMap = movieMap
     )
 
-    loadGenres()
+    // call loadGenres() only during initial composition of HomeRoute
+    if (!loadGenresCalled) {
+        loadGenresCalled = true
+        loadGenres()
+    }
 }

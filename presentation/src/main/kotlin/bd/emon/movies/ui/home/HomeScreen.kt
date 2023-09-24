@@ -1,7 +1,6 @@
 package bd.emon.movies.ui.home
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,14 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowCircleRight
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.FilterList
@@ -33,15 +30,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -72,9 +71,14 @@ fun HomeScreen(
     pullRefreshState: SwipeRefreshState,
     loadGenres: () -> Unit,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
-    movieMap: SnapshotStateMap<Int, List<MovieEntity>>?
+    movieMap: MutableMap<Int, List<MovieEntity>>
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarErrorMessage = stringResource(id = R.string.no_internet_secondary_text)
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -105,35 +109,42 @@ fun HomeScreen(
             val contentModifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+            when {
+                genreErrorState != null && movieMap.isNotEmpty() -> {
+                    HomeContent(
+                        modifier = contentModifier,
+                        genres = genres,
+                        loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
+                        movieMap = movieMap
+                    )
 
-            when (loadState) {
-                true -> {
+                    LaunchedEffect(snackbarHostState) {
+                        snackbarHostState.showSnackbar(message = snackBarErrorMessage)
+                    }
+                }
+
+                genreErrorState != null && movieMap.isEmpty() -> {
+                    NoInternetView(
+                        modifier = contentModifier
+                            .verticalScroll(
+                                rememberScrollState()
+                            )
+                    )
+                }
+
+                loadState -> {
                     WaitView(
                         modifier = contentModifier
                     )
                 }
 
-                else -> {
-                    when (genreErrorState == null) {
-                        true -> {
-                            HomeContent(
-                                modifier = contentModifier,
-                                genres = genres,
-                                loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
-                                movieMap = movieMap
-                            )
-                        }
-
-                        else -> {
-                            NoInternetView(
-                                modifier = contentModifier
-                                    .verticalScroll(
-                                        rememberScrollState()
-                                    )
-                            )
-                        }
-                    }
-
+                !loadState -> {
+                    HomeContent(
+                        modifier = contentModifier,
+                        genres = genres,
+                        loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
+                        movieMap = movieMap
+                    )
                 }
             }
         }
@@ -159,7 +170,7 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     genres: Genres?,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
-    movieMap: SnapshotStateMap<Int, List<MovieEntity>>?
+    movieMap: MutableMap<Int, List<MovieEntity>>?
 ) {
 
     genres?.let {
@@ -171,7 +182,7 @@ fun HomeContent(
                 items = genres.genres,
                 key = { item -> item.id }
             ) { genre ->
-                Row(verticalAlignment = Alignment.CenterVertically){
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = genre.name,
                         modifier = Modifier
