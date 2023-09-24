@@ -5,17 +5,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleRight
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.Card
@@ -31,8 +38,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,9 +52,13 @@ import bd.emon.domain.entity.common.MovieEntity
 import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.R
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
+import bd.emon.movies.ui.common.ErrorImage
+import bd.emon.movies.ui.common.NoInternetView
+import bd.emon.movies.ui.common.PlaceHolderImage
 import bd.emon.movies.ui.common.WaitView
+import bd.emon.movies.ui.common.defaultThumbSize
 import bd.emon.movies.ui.theme.MovieTheme
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 
@@ -54,6 +67,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 fun HomeScreen(
     modifier: Modifier = Modifier,
     loadState: Boolean,
+    genreErrorState: Throwable?,
     genres: Genres?,
     pullRefreshState: SwipeRefreshState,
     loadGenres: () -> Unit,
@@ -100,16 +114,29 @@ fun HomeScreen(
                 }
 
                 else -> {
-                    ContentView(
-                        modifier = contentModifier,
-                        genres = genres,
-                        loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
-                        movieMap = movieMap
-                    )
+                    when (genreErrorState == null) {
+                        true -> {
+                            HomeContent(
+                                modifier = contentModifier,
+                                genres = genres,
+                                loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
+                                movieMap = movieMap
+                            )
+                        }
+
+                        else -> {
+                            NoInternetView(
+                                modifier = contentModifier
+                                    .verticalScroll(
+                                        rememberScrollState()
+                                    )
+                            )
+                        }
+                    }
+
                 }
             }
         }
-        loadGenres()
     }
 }
 
@@ -128,7 +155,7 @@ fun HomePreview() {
 }
 
 @Composable
-fun ContentView(
+fun HomeContent(
     modifier: Modifier = Modifier,
     genres: Genres?,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
@@ -144,25 +171,47 @@ fun ContentView(
                 items = genres.genres,
                 key = { item -> item.id }
             ) { genre ->
-                Text(
-                    text = genre.name,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                )
-                if (movieMap?.containsKey(genre.id) == false) {
-                    loadDiscoverMoviesByGenreId("${genre.id}")
-                } else {
-                    val movies = movieMap!![genre.id]
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp)
-                    ) {
-                        items(
-                            items = movies!!,
-                            key = { item -> item.id }
+                Row(verticalAlignment = Alignment.CenterVertically){
+                    Text(
+                        text = genre.name,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .weight(1.0f),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowForward,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+                when (movieMap?.containsKey(genre.id)) {
+                    true -> {
+                        val movies = movieMap[genre.id]
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp)
                         ) {
-                            MovieThumb(movieEntity = it)
+                            items(
+                                items = movies!!,
+                                key = { item -> item.id }
+                            ) {
+                                MovieThumb(
+                                    movieEntity = it
+                                )
+                            }
                         }
+                    }
+
+                    else -> {
+                        loadDiscoverMoviesByGenreId("${genre.id}")
+                        WaitView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(232.dp)
+                        )
                     }
                 }
             }
@@ -173,7 +222,7 @@ fun ContentView(
 @Composable
 fun MovieThumb(
     modifier: Modifier = Modifier,
-    movieEntity: MovieEntity = MovieApiDummyDataProvider.movieEntity
+    movieEntity: MovieEntity
 ) {
     Column(
         modifier = modifier
@@ -181,17 +230,21 @@ fun MovieThumb(
             .height(height = 232.dp),
     ) {
         Card(
-            modifier = Modifier
-                .wrapContentWidth()
-                .height(height = 180.dp),
+            modifier = Modifier.defaultThumbSize(),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 10.dp
             )
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(movieEntity.imageUrl),
+            SubcomposeAsyncImage(
+                model = movieEntity.imageUrl,
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                loading = {
+                    PlaceHolderImage()
+                },
+                error = {
+                    ErrorImage()
+                }
             )
         }
         Spacer(modifier = Modifier.height(height = 4.dp))
@@ -207,14 +260,16 @@ fun MovieThumb(
 }
 
 @Preview(
-    "MovieThumbPreview(Light)",
+    name = "MovieThumbPreview(Light)",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_4
+    widthDp = 120,
+    heightDp = 232
 )
 @Preview(
-    "MovieThumbPreview(Dark)",
+    name = "MovieThumbPreview(Dark)",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4
+    widthDp = 120,
+    heightDp = 232
 )
 @Composable
 fun MovieThumbPreview() {
@@ -223,7 +278,7 @@ fun MovieThumbPreview() {
             modifier = Modifier.wrapContentSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            MovieThumb()
+            MovieThumb(movieEntity = MovieApiDummyDataProvider.movieEntity)
         }
     }
 }

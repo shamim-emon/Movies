@@ -20,24 +20,32 @@ fun HomeRoute(
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val loadState by viewModel.loadingState.observeAsState()
+    val genreErrorState by viewModel.genreErrorState.observeAsState()
     val genres by viewModel.genres.observeAsState()
     val pullRefreshState: SwipeRefreshState =
         rememberSwipeRefreshState(isRefreshing = loadState ?: false)
-
     val movieMap: SnapshotStateMap<Int, List<MovieEntity>> = remember { mutableStateMapOf() }
     viewModel.discoverMovies.observeAsState().value?.let {
         movieMap[it.grp_genre_id] = discoverMovieMapper.mapFrom(it.results)
     }
 
+    val loadGenres :()->Unit = {
+        viewModel.genreErrorState.postValue(null)
+        viewModel.loadGenres(viewModel.apiParams)
+    }
+
     HomeScreen(
         loadState = loadState ?: false,
+        genreErrorState = genreErrorState,
         genres = genres,
         pullRefreshState = pullRefreshState,
-        loadGenres = { viewModel.loadGenres(viewModel.apiParams) },
+        loadGenres = loadGenres,
         loadDiscoverMoviesByGenreId = {
             viewModel.apiParams[PARAM_GENRES] = it.toInt()
             viewModel.loadDiscoverMovies(viewModel.apiParams, 1)
         },
         movieMap = movieMap
     )
+
+    loadGenres()
 }
