@@ -36,6 +36,12 @@ fun HomeRoute(
         viewModel.loadGenres(viewModel.apiParams)
     }
 
+    val clearFilters: () -> Unit = {
+        viewModel.clearFilterParams()
+        viewModel.genreErrorState.postValue(null)
+        viewModel.loadGenres(viewModel.apiParams)
+    }
+
     // state to prevent loadGenres()  call during Home Route Recomposition
     var loadGenresCalled by remember { mutableStateOf(false) }
 
@@ -49,6 +55,7 @@ fun HomeRoute(
             viewModel.apiParams[PARAM_GENRES] = it.toInt()
             viewModel.loadDiscoverMovies(viewModel.apiParams, 1)
         },
+        clearFilters = clearFilters,
         movieMap = movieMap
     )
 

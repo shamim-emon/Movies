@@ -20,8 +20,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.ClearAll
 import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -34,10 +36,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -71,6 +77,7 @@ fun HomeScreen(
     pullRefreshState: SwipeRefreshState,
     loadGenres: () -> Unit,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
+    clearFilters: () -> Unit,
     movieMap: MutableMap<Int, List<MovieEntity>>
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -89,11 +96,23 @@ fun HomeScreen(
                 },
                 modifier = modifier,
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    var showClearFilter by remember { mutableStateOf(false) }
+                    IconButton(onClick = { showClearFilter = true }) {
                         Icon(imageVector = Icons.Filled.FilterAltOff, contentDescription = null)
                     }
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(imageVector = Icons.Filled.FilterList, contentDescription = null)
+                    }
+                    when (showClearFilter) {
+                        true -> ClearFilter(
+                            onDismissRequest = { showClearFilter = false },
+                            onConfirmation = {
+                                showClearFilter = false
+                                clearFilters()
+                            }
+                        )
+
+                        else -> {}
                     }
                 },
                 navigationIcon = {},
@@ -160,7 +179,10 @@ fun HomePreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            // HomeScreen(loadState = false, loadGenres = {})
+//             HomeScreen(
+//                 loadState = false,
+//                 loadGenres = {},
+//             )
         }
     }
 }
@@ -290,6 +312,85 @@ fun MovieThumbPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             MovieThumb(movieEntity = MovieApiDummyDataProvider.movieEntity)
+        }
+    }
+}
+
+@Composable
+fun ClearFilter(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit
+) {
+    AlertDialog(
+        icon = {
+            Icon(Icons.Filled.ClearAll, contentDescription = null)
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.clear_filters),
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = R.string.prompt_clear_filter),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text(
+                    stringResource(id = R.string.yes),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text(
+                    stringResource(id = R.string.no),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
+    )
+}
+
+
+@Preview(
+    name = "ClearFilterDialogPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "ClearFilterDialogPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Preview
+@Composable
+fun ClearFilterPreview(
+) {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.wrapContentSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            ClearFilter(
+                onConfirmation = {},
+                onDismissRequest = {}
+            )
         }
     }
 }
