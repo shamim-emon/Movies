@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -169,4 +170,12 @@ fun NoInternetViewPreview() {
             )
         }
     }
+}
+
+@Composable
+fun ListDivider(modifier: Modifier = Modifier) {
+    Divider(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+    )
 }

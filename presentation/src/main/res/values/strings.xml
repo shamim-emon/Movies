@@ -12,7 +12,7 @@
     <string name="minimum_vote">Minimum Vote:</string>
     <string name="include_adult_contents">Include Adult Contents</string>
     <string name="order">Order</string>
-    <string name="order_by">Order By</string>
+    <string name="order_by">Order By:</string>
     <string name="release_year">Release Year</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>

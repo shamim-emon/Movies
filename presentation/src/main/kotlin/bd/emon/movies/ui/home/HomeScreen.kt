@@ -1,6 +1,7 @@
 package bd.emon.movies.ui.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,18 +22,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.ClearAll
 import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -39,8 +46,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,15 +58,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import bd.emon.domain.DEFAULT_MINIMUM_VOTE_COUNT
 import bd.emon.domain.entity.common.MovieEntity
 import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.R
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
 import bd.emon.movies.ui.common.ErrorImage
+import bd.emon.movies.ui.common.ListDivider
 import bd.emon.movies.ui.common.NoInternetView
 import bd.emon.movies.ui.common.PlaceHolderImage
 import bd.emon.movies.ui.common.WaitView
@@ -97,10 +110,11 @@ fun HomeScreen(
                 modifier = modifier,
                 actions = {
                     var showClearFilter by remember { mutableStateOf(false) }
+                    var showAddFilter by remember { mutableStateOf(false) }
                     IconButton(onClick = { showClearFilter = true }) {
                         Icon(imageVector = Icons.Filled.FilterAltOff, contentDescription = null)
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { showAddFilter = true }) {
                         Icon(imageVector = Icons.Filled.FilterList, contentDescription = null)
                     }
                     when (showClearFilter) {
@@ -111,6 +125,14 @@ fun HomeScreen(
                                 clearFilters()
                             }
                         )
+
+                        else -> {}
+                    }
+
+                    when (showAddFilter) {
+                        true -> {
+                            AddFilters(dismissRequest = { showAddFilter = false })
+                        }
 
                         else -> {}
                     }
@@ -317,13 +339,185 @@ fun MovieThumbPreview() {
 }
 
 @Composable
+fun AddFilters(dismissRequest: () -> Unit) {
+    Dialog(onDismissRequest = dismissRequest) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 16.dp)
+        ) {
+            var sliderPosition by remember { mutableFloatStateOf(DEFAULT_MINIMUM_VOTE_COUNT.toFloat()) }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(Alignment.Top)
+                    .padding(all = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(Icons.Filled.FilterList, contentDescription = null)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(id = R.string.filters),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = stringResource(id = R.string.minimum_vote))
+                    CompositionLocalProvider(
+                        LocalContentColor provides LocalContentColor.current.copy(
+                            alpha = 0.5f
+                        )
+                    ) {
+                        Text(
+                            text = "${sliderPosition.toInt()}",
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
+                }
+
+                Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
+                ListDivider()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(text = stringResource(id = R.string.order_by))
+                    FilterDropDownMenu()
+                }
+                ListDivider()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+
+                    TextButton(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = { dismissRequest() }
+                    ) {
+                        Text(
+                            stringResource(id = R.string.cancel),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+
+                    TextButton(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        onClick = { dismissRequest() }
+                    ) {
+                        Text(
+                            stringResource(id = R.string.save),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(
+    name = "AddFiltersPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "AddFiltersPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun AddFiltersPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.wrapContentSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            AddFilters(dismissRequest = {})
+        }
+    }
+}
+
+@Preview(
+    name = "FilterDropDownMenu(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "FilterDropDownMenu(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun FilterDropDownMenuPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.wrapContentSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            FilterDropDownMenu()
+        }
+    }
+}
+
+@Composable
+fun FilterDropDownMenu() {
+    var expanded by remember { mutableStateOf(false) }
+
+    var dropDownIcon = when (expanded) {
+        false -> Icons.Filled.KeyboardArrowDown
+        else -> Icons.Filled.KeyboardArrowUp
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .clickable { expanded = !expanded }
+                .padding(vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Load",
+                modifier = Modifier
+                    .weight(1.0f)
+                    .padding(horizontal = 16.dp),
+                textAlign = TextAlign.Start
+            )
+            Icon(
+                imageVector = dropDownIcon,
+                contentDescription = "More"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Load") },
+                onClick = { }
+            )
+            DropdownMenuItem(
+                text = { Text("Save") },
+                onClick = { }
+            )
+        }
+    }
+}
+
+@Composable
 fun ClearFilter(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ) {
     AlertDialog(
         icon = {
-            Icon(Icons.Filled.ClearAll, contentDescription = null)
+            Icon(Icons.Filled.FilterAltOff, contentDescription = null)
         },
         title = {
             Text(
@@ -367,7 +561,6 @@ fun ClearFilter(
     )
 }
 
-
 @Preview(
     name = "ClearFilterDialogPreview(Light)",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
@@ -378,10 +571,8 @@ fun ClearFilter(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     device = Devices.PIXEL_4
 )
-@Preview
 @Composable
-fun ClearFilterPreview(
-) {
+fun ClearFilterPreview() {
     MovieTheme {
         Surface(
             modifier = Modifier.wrapContentSize(),
