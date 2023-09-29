@@ -35,10 +35,10 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -46,7 +46,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -64,7 +63,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import bd.emon.domain.DEFAULT_MINIMUM_VOTE_COUNT
 import bd.emon.domain.entity.common.MovieEntity
 import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.R
@@ -75,6 +73,7 @@ import bd.emon.movies.ui.common.NoInternetView
 import bd.emon.movies.ui.common.PlaceHolderImage
 import bd.emon.movies.ui.common.WaitView
 import bd.emon.movies.ui.common.defaultThumbSize
+import bd.emon.movies.ui.common.formatHumanReadable
 import bd.emon.movies.ui.theme.MovieTheme
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -346,7 +345,7 @@ fun AddFilters(dismissRequest: () -> Unit) {
                 .fillMaxWidth()
                 .padding(all = 16.dp)
         ) {
-            var sliderPosition by remember { mutableFloatStateOf(DEFAULT_MINIMUM_VOTE_COUNT.toFloat()) }
+            var sliderPosition by remember { mutableFloatStateOf(0f) }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -354,7 +353,10 @@ fun AddFilters(dismissRequest: () -> Unit) {
                     .padding(all = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(Icons.Filled.FilterList, contentDescription = null)
+                Icon(
+                    Icons.Filled.FilterList, contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surfaceTint
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(id = R.string.filters),
@@ -362,27 +364,46 @@ fun AddFilters(dismissRequest: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(id = R.string.minimum_vote))
-                    CompositionLocalProvider(
-                        LocalContentColor provides LocalContentColor.current.copy(
-                            alpha = 0.5f
-                        )
-                    ) {
-                        Text(
-                            text = "${sliderPosition.toInt()}",
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                    }
+                    Text(
+                        text = stringResource(id = R.string.minimum_vote),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        text = sliderPosition.toLong().formatHumanReadable(),
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
                 }
 
-                Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
+                Slider(
+                    value = sliderPosition,
+                    onValueChange = { sliderPosition = it },
+                    colors = SliderDefaults.colors(
+                        inactiveTrackColor = MaterialTheme.colorScheme.inversePrimary,
+                    ),
+                    valueRange = 0.0f..9999999.0f
+                )
                 ListDivider()
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    Text(text = stringResource(id = R.string.order_by))
+                    Text(
+                        text = stringResource(id = R.string.order_by),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    FilterDropDownMenu()
+                }
+                ListDivider()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.release_year),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
                     FilterDropDownMenu()
                 }
                 ListDivider()

@@ -9,11 +9,11 @@
     <string name="no_internet_secondary_text">Check your internet and try again</string>
     <string name="no_result_primary_text">No item available</string>
     <string name="no_result_secondary_text">Nothing available on this criteria.Try resetting or clear filter from top menu</string>
-    <string name="minimum_vote">Minimum Vote:</string>
+    <string name="minimum_vote">Minimum Vote&#160;:</string>
     <string name="include_adult_contents">Include Adult Contents</string>
     <string name="order">Order</string>
-    <string name="order_by">Order By:</string>
-    <string name="release_year">Release Year</string>
+    <string name="order_by">Order By&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:</string>
+    <string name="release_year">Release Year&#160;&#160;&#160;&#160;&#160;:</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
