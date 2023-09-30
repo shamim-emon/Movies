@@ -1,5 +1,5 @@
 package bd.emon.movies.home
 
 interface MovieReleaseYearsProvider {
-    fun getReleaseYearsList(): List<Int>
+    fun getReleaseYears(): Array<String>
 }

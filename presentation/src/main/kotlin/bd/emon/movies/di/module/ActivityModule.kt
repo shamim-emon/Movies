@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import bd.emon.movies.R
+import bd.emon.movies.home.MovieReleaseYearsProvider
+import bd.emon.movies.home.MovieReleaseYearsProviderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import java.util.Calendar
 
 @Module
 @InstallIn(ActivityComponent::class)
@@ -31,4 +34,15 @@ object ActivityModule {
 
     @Provides
     fun provideNavController(navHostFragment: NavHostFragment) = navHostFragment.navController
+
+    @Provides
+    fun provideCalender() = Calendar.getInstance()
+
+    @Provides
+    fun provideMovieReleaseYearsProvider(calendar: Calendar): MovieReleaseYearsProvider =
+        MovieReleaseYearsProviderImpl(calendar)
+
+    @Provides
+    fun provideReleaseYearsList(movieReleaseProvider: MovieReleaseYearsProvider) =
+        movieReleaseProvider.getReleaseYears()
 }

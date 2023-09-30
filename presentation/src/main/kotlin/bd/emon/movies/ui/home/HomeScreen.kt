@@ -55,6 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -90,7 +91,8 @@ fun HomeScreen(
     loadGenres: () -> Unit,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
     clearFilters: () -> Unit,
-    movieMap: MutableMap<Int, List<MovieEntity>>
+    movieMap: MutableMap<Int, List<MovieEntity>>,
+    movieReleaseYears: Array<String>
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val snackBarErrorMessage = stringResource(id = R.string.no_internet_secondary_text)
@@ -130,7 +132,10 @@ fun HomeScreen(
 
                     when (showAddFilter) {
                         true -> {
-                            AddFilters(dismissRequest = { showAddFilter = false })
+                            AddFilters(
+                                dismissRequest = { showAddFilter = false },
+                                movieReleaseYears = movieReleaseYears
+                            )
                         }
 
                         else -> {}
@@ -338,7 +343,10 @@ fun MovieThumbPreview() {
 }
 
 @Composable
-fun AddFilters(dismissRequest: () -> Unit) {
+fun AddFilters(
+    dismissRequest: () -> Unit,
+    movieReleaseYears: Array<String>
+) {
     Dialog(onDismissRequest = dismissRequest) {
         Card(
             modifier = Modifier
@@ -346,6 +354,15 @@ fun AddFilters(dismissRequest: () -> Unit) {
                 .padding(all = 16.dp)
         ) {
             var sliderPosition by remember { mutableFloatStateOf(0f) }
+            val sortingCriteria: Array<String> =
+                stringArrayResource(id = R.array.movie_sorting_criteria)
+            var selectedSortCriterion by remember {
+                mutableStateOf(sortingCriteria[0])
+            }
+
+            var selectedMovieReleaseYear by remember {
+                mutableStateOf(movieReleaseYears[0])
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -392,7 +409,11 @@ fun AddFilters(dismissRequest: () -> Unit) {
                         text = stringResource(id = R.string.order_by),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
-                    FilterDropDownMenu()
+                    FilterDropDownMenu(
+                        items = sortingCriteria,
+                        selectedItem = selectedSortCriterion,
+                        itemClick = { selectedSortCriterion = it }
+                    )
                 }
                 ListDivider()
                 Row(
@@ -404,7 +425,11 @@ fun AddFilters(dismissRequest: () -> Unit) {
                         text = stringResource(id = R.string.release_year),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
-                    FilterDropDownMenu()
+                    FilterDropDownMenu(
+                        items = movieReleaseYears,
+                        selectedItem = selectedMovieReleaseYear,
+                        itemClick = { selectedMovieReleaseYear = it }
+                    )
                 }
                 ListDivider()
                 Row(
@@ -454,35 +479,17 @@ fun AddFiltersPreview() {
             modifier = Modifier.wrapContentSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            AddFilters(dismissRequest = {})
-        }
-    }
-}
-
-@Preview(
-    name = "FilterDropDownMenu(Light)",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_4
-)
-@Preview(
-    name = "FilterDropDownMenu(Dark)",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4
-)
-@Composable
-fun FilterDropDownMenuPreview() {
-    MovieTheme {
-        Surface(
-            modifier = Modifier.wrapContentSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            FilterDropDownMenu()
+            AddFilters(dismissRequest = {}, movieReleaseYears = arrayOf("1998,2002,2006"))
         }
     }
 }
 
 @Composable
-fun FilterDropDownMenu() {
+fun FilterDropDownMenu(
+    items: Array<String>,
+    selectedItem: String,
+    itemClick: (String) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
     var dropDownIcon = when (expanded) {
@@ -503,11 +510,12 @@ fun FilterDropDownMenu() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Load",
+                text = selectedItem,
                 modifier = Modifier
                     .weight(1.0f)
                     .padding(horizontal = 16.dp),
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.bodySmall
             )
             Icon(
                 imageVector = dropDownIcon,
@@ -519,14 +527,16 @@ fun FilterDropDownMenu() {
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DropdownMenuItem(
-                text = { Text("Load") },
-                onClick = { }
-            )
-            DropdownMenuItem(
-                text = { Text("Save") },
-                onClick = { }
-            )
+            items.forEach {
+                DropdownMenuItem(
+                    text = { Text(text = it) },
+                    onClick = {
+                        expanded = false
+                        itemClick(it)
+                    }
+                )
+            }
+
         }
     }
 }

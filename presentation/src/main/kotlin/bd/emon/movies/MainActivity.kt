@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.ActivityMainBinding
+import bd.emon.movies.home.MovieReleaseYearsProvider
 import bd.emon.movies.ui.MovieNavHost
 import bd.emon.movies.ui.theme.MovieTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var discoverMovieMapper: DiscoverMovieMapper
 
+    @Inject
+    lateinit var movieReleaseYearsProvider: MovieReleaseYearsProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -32,7 +36,10 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MovieNavHost(discoverMovieMapper = discoverMovieMapper)
+                    MovieNavHost(
+                        discoverMovieMapper = discoverMovieMapper,
+                        movieReleaseYearsProvider = movieReleaseYearsProvider
+                    )
                 }
             }
         }

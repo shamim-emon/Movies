@@ -12,13 +12,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.domain.PARAM_GENRES
 import bd.emon.domain.entity.common.MovieEntity
+import bd.emon.movies.home.MovieReleaseYearsProvider
+import bd.emon.movies.home.MovieReleaseYearsProviderImpl
 import bd.emon.movies.viewModels.HomeViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun HomeRoute(
-    discoverMovieMapper: DiscoverMovieMapper
+    discoverMovieMapper: DiscoverMovieMapper,
+    movieReleaseYearsProvider: MovieReleaseYearsProvider
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val loadState by viewModel.loadingState.observeAsState()
@@ -45,6 +48,7 @@ fun HomeRoute(
     // state to prevent loadGenres()  call during Home Route Recomposition
     var loadGenresCalled by remember { mutableStateOf(false) }
 
+    val movieReleaseYears = movieReleaseYearsProvider.getReleaseYears()
     HomeScreen(
         loadState = loadState ?: false,
         genreErrorState = genreErrorState,
@@ -56,7 +60,8 @@ fun HomeRoute(
             viewModel.loadDiscoverMovies(viewModel.apiParams, 1)
         },
         clearFilters = clearFilters,
-        movieMap = movieMap
+        movieMap = movieMap,
+        movieReleaseYears = movieReleaseYears
     )
 
     // call loadGenres() only during initial composition of HomeRoute
