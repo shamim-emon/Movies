@@ -11,9 +11,11 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.hilt.navigation.compose.hiltViewModel
 import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.domain.PARAM_GENRES
+import bd.emon.domain.PARAM_RELEASE_YEAR
+import bd.emon.domain.PARAM_SORT_BY
+import bd.emon.domain.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.domain.entity.common.MovieEntity
 import bd.emon.movies.home.MovieReleaseYearsProvider
-import bd.emon.movies.home.MovieReleaseYearsProviderImpl
 import bd.emon.movies.viewModels.HomeViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -25,7 +27,15 @@ fun HomeRoute(
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val loadState by viewModel.loadingState.observeAsState()
+    val filterMap: SnapshotStateMap<String, Any?> = remember { mutableStateMapOf() }
+    viewModel.loadDiscoverFilters.observeAsState().value?.let {
+        filterMap[PARAM_SORT_BY] = viewModel.apiParams[PARAM_SORT_BY] as String
+        filterMap[PARAM_VOTE_COUNT_GREATER_THAN] =
+            viewModel.apiParams[PARAM_VOTE_COUNT_GREATER_THAN]
+        filterMap[PARAM_RELEASE_YEAR] = viewModel.apiParams[PARAM_RELEASE_YEAR]
+    }
     val genreErrorState by viewModel.genreErrorState.observeAsState()
+    val filtersErrorState by viewModel.discoverFiltersErrorState.observeAsState()
     val genres by viewModel.genres.observeAsState()
     val pullRefreshState: SwipeRefreshState =
         rememberSwipeRefreshState(isRefreshing = loadState ?: false)
@@ -45,13 +55,20 @@ fun HomeRoute(
         viewModel.loadGenres(viewModel.apiParams)
     }
 
-    // state to prevent loadGenres()  call during Home Route Recomposition
-    var loadGenresCalled by remember { mutableStateOf(false) }
+    var isInitialComposition by remember { mutableStateOf(true) }
 
     val movieReleaseYears = movieReleaseYearsProvider.getReleaseYears()
+
+    viewModel.saveDiscoverFilters.observeAsState().value.let {
+        viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+        viewModel.genreErrorState.postValue(null)
+        viewModel.loadGenres(viewModel.apiParams)
+    }
+
     HomeScreen(
         loadState = loadState ?: false,
         genreErrorState = genreErrorState,
+        saveFilterErrorState = filtersErrorState,
         genres = genres,
         pullRefreshState = pullRefreshState,
         loadGenres = loadGenres,
@@ -60,13 +77,16 @@ fun HomeRoute(
             viewModel.loadDiscoverMovies(viewModel.apiParams, 1)
         },
         clearFilters = clearFilters,
+        clearFilterErrorState = { viewModel.discoverFiltersErrorState.postValue(null) },
+        updateFilters = viewModel::saveDiscoverMoviesFilters,
         movieMap = movieMap,
-        movieReleaseYears = movieReleaseYears
+        movieReleaseYears = movieReleaseYears,
+        filters = filterMap
     )
 
-    // call loadGenres() only during initial composition of HomeRoute
-    if (!loadGenresCalled) {
-        loadGenresCalled = true
+    if (isInitialComposition) {
+        isInitialComposition = false
+        viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
         loadGenres()
     }
 }

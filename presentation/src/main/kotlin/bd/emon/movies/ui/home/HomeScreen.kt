@@ -64,6 +64,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import bd.emon.domain.DESC
+import bd.emon.domain.PARAM_RELEASE_YEAR
+import bd.emon.domain.PARAM_SORT_BY
+import bd.emon.domain.PARAM_VOTE_COUNT_GREATER_THAN
+import bd.emon.domain.SAVE_TO_PREF_ERROR_DEFAULT
 import bd.emon.domain.entity.common.MovieEntity
 import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.R
@@ -86,16 +91,19 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     loadState: Boolean,
     genreErrorState: Throwable?,
+    saveFilterErrorState: Throwable?,
     genres: Genres?,
     pullRefreshState: SwipeRefreshState,
     loadGenres: () -> Unit,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
     clearFilters: () -> Unit,
+    clearFilterErrorState: () -> Unit,
+    updateFilters: (Int, Boolean, String, String) -> Unit,
     movieMap: MutableMap<Int, List<MovieEntity>>,
-    movieReleaseYears: Array<String>
+    movieReleaseYears: Array<String>,
+    filters: MutableMap<String, Any?>
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackBarErrorMessage = stringResource(id = R.string.no_internet_secondary_text)
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -134,7 +142,9 @@ fun HomeScreen(
                         true -> {
                             AddFilters(
                                 dismissRequest = { showAddFilter = false },
-                                movieReleaseYears = movieReleaseYears
+                                movieReleaseYears = movieReleaseYears,
+                                filters = filters,
+                                updateFilters = updateFilters
                             )
                         }
 
@@ -162,7 +172,8 @@ fun HomeScreen(
                         loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
                         movieMap = movieMap
                     )
-
+                    val snackBarErrorMessage =
+                        stringResource(id = R.string.no_internet_secondary_text)
                     LaunchedEffect(snackbarHostState) {
                         snackbarHostState.showSnackbar(message = snackBarErrorMessage)
                     }
@@ -190,6 +201,14 @@ fun HomeScreen(
                         loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
                         movieMap = movieMap
                     )
+                }
+
+                saveFilterErrorState != null -> {
+                    val snackBarErrorMessage = SAVE_TO_PREF_ERROR_DEFAULT
+                    LaunchedEffect(snackbarHostState) {
+                        snackbarHostState.showSnackbar(message = snackBarErrorMessage)
+                    }
+                    clearFilterErrorState()
                 }
             }
         }
@@ -345,7 +364,10 @@ fun MovieThumbPreview() {
 @Composable
 fun AddFilters(
     dismissRequest: () -> Unit,
-    movieReleaseYears: Array<String>
+    movieReleaseYears: Array<String>,
+    filters: MutableMap<String, Any?>,
+    updateFilters: (Int, Boolean, String, String) -> Unit
+
 ) {
     Dialog(onDismissRequest = dismissRequest) {
         Card(
@@ -353,15 +375,23 @@ fun AddFilters(
                 .fillMaxWidth()
                 .padding(all = 16.dp)
         ) {
-            var sliderPosition by remember { mutableFloatStateOf(0f) }
+            var sliderPosition by remember {
+                mutableFloatStateOf(
+                    (filters[PARAM_VOTE_COUNT_GREATER_THAN] as Int).toFloat()
+                )
+            }
             val sortingCriteria: Array<String> =
                 stringArrayResource(id = R.array.movie_sorting_criteria)
             var selectedSortCriterion by remember {
-                mutableStateOf(sortingCriteria[0])
+                mutableStateOf(filters[PARAM_SORT_BY].toString().replace(".$DESC", ""))
             }
 
             var selectedMovieReleaseYear by remember {
-                mutableStateOf(movieReleaseYears[0])
+                filters[PARAM_RELEASE_YEAR]?.let {
+                    mutableStateOf(it as String)
+                } ?: run {
+                    mutableStateOf(movieReleaseYears[0])
+                }
             }
             Column(
                 modifier = Modifier
@@ -449,7 +479,15 @@ fun AddFilters(
 
                     TextButton(
                         modifier = Modifier.padding(horizontal = 8.dp),
-                        onClick = { dismissRequest() }
+                        onClick = {
+                            dismissRequest()
+                            updateFilters(
+                                sliderPosition.toInt(),
+                                false,
+                                selectedSortCriterion,
+                                selectedMovieReleaseYear
+                            )
+                        }
                     ) {
                         Text(
                             stringResource(id = R.string.save),
@@ -458,28 +496,6 @@ fun AddFilters(
                     }
                 }
             }
-        }
-    }
-}
-
-@Preview(
-    name = "AddFiltersPreview(Light)",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_4
-)
-@Preview(
-    name = "AddFiltersPreview(Dark)",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4
-)
-@Composable
-fun AddFiltersPreview() {
-    MovieTheme {
-        Surface(
-            modifier = Modifier.wrapContentSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            AddFilters(dismissRequest = {}, movieReleaseYears = arrayOf("1998,2002,2006"))
         }
     }
 }
@@ -536,7 +552,6 @@ fun FilterDropDownMenu(
                     }
                 )
             }
-
         }
     }
 }
