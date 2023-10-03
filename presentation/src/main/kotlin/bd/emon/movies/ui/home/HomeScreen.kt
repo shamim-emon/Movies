@@ -101,7 +101,7 @@ fun HomeScreen(
     updateFilters: (Int, Boolean, String, String) -> Unit,
     movieMap: MutableMap<Int, List<MovieEntity>>,
     movieReleaseYears: Array<String>,
-    filters: MutableMap<String, Any?>
+    filters: HashMap<String, Any?>
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
@@ -284,7 +284,9 @@ fun HomeContent(
                     }
 
                     else -> {
-                        loadDiscoverMoviesByGenreId("${genre.id}")
+                        LaunchedEffect(key1 = genre.id){
+                            loadDiscoverMoviesByGenreId("${genre.id}")
+                        }
                         WaitView(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -376,14 +378,20 @@ fun AddFilters(
                 .padding(all = 16.dp)
         ) {
             var sliderPosition by remember {
-                mutableFloatStateOf(
-                    (filters[PARAM_VOTE_COUNT_GREATER_THAN] as Int).toFloat()
-                )
+                filters[PARAM_VOTE_COUNT_GREATER_THAN]?.let {
+                    mutableFloatStateOf((it as Int).toFloat())
+                } ?: run {
+                    mutableFloatStateOf(0.0f)
+                }
             }
-            val sortingCriteria: Array<String> =
-                stringArrayResource(id = R.array.movie_sorting_criteria)
+            val sortingCriteria: Array<String> = stringArrayResource(id = R.array.movie_sorting_criteria)
             var selectedSortCriterion by remember {
-                mutableStateOf(filters[PARAM_SORT_BY].toString().replace(".$DESC", ""))
+                filters[PARAM_SORT_BY]?.let {
+                    mutableStateOf(it.toString().replace(".$DESC", ""))
+                } ?: run {
+                    mutableStateOf(sortingCriteria[0])
+                }
+
             }
 
             var selectedMovieReleaseYear by remember {
