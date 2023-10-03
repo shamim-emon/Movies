@@ -34,7 +34,6 @@ fun HomeRoute(
         rememberSwipeRefreshState(isRefreshing = loadState ?: false)
     var isInitialComposition by remember { mutableStateOf(true) }
     val movieMap: SnapshotStateMap<Int, List<MovieEntity>> = remember { mutableStateMapOf() }
-
     val movieReleaseYears = movieReleaseYearsProvider.getReleaseYears()
 
     val loadGenres: () -> Unit = {
@@ -47,12 +46,16 @@ fun HomeRoute(
         viewModel.loadDiscoverMovies(viewModel.apiParams, 1)
     }
 
+    val loadOrReloadHomeScreen: () -> Unit = {
+        viewModel.genres.postValue(null)
+        movieMap.clear()
+        viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
+        loadGenres()
+    }
+
     val clearFilters: () -> Unit = {
         viewModel.clearFilterParams()
-        viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
-        movieMap.clear()
-        isInitialComposition = true
-        loadGenres()
+        loadOrReloadHomeScreen()
     }
 
     val clearFiltersError: () -> Unit = {
@@ -61,10 +64,7 @@ fun HomeRoute(
 
     viewModel.saveDiscoverFilters.observeAsState().value.let {
         LaunchedEffect(key1 = it) {
-            viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
-            movieMap.clear()
-            isInitialComposition = true
-            loadGenres()
+            loadOrReloadHomeScreen()
         }
     }
 
@@ -74,8 +74,7 @@ fun HomeRoute(
 
     if (isInitialComposition) {
         isInitialComposition = false
-        viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
-        loadGenres()
+        loadOrReloadHomeScreen()
     }
 
     HomeScreen(
@@ -84,7 +83,7 @@ fun HomeRoute(
         saveFilterErrorState = filtersErrorState,
         genres = genres,
         pullRefreshState = pullRefreshState,
-        loadGenres = loadGenres,
+        loadOrReloadHomeScree = loadOrReloadHomeScreen,
         loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
         clearFilters = clearFilters,
         clearFilterErrorState = clearFiltersError,

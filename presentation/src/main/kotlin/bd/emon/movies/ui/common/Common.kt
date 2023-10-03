@@ -88,6 +88,30 @@ fun ErrorImage(modifier: Modifier = Modifier) {
     )
 }
 
+@Preview(
+    name = "WaitViewPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "WaitViewPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun WaitViewPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            WaitView(
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    }
+}
+
 @Composable
 fun WaitView(modifier: Modifier = Modifier) {
     Box(
@@ -95,6 +119,30 @@ fun WaitView(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
+    }
+}
+
+@Preview(
+    name = "WaitViewPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "WaitViewPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun NoInternetViewPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NoInternetView(
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
 
@@ -121,54 +169,6 @@ fun NoInternetView(modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.no_internet_secondary_text),
             style = MaterialTheme.typography.bodyMedium
         )
-    }
-}
-
-@Preview(
-    name = "WaitViewPreview(Light)",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_4
-)
-@Preview(
-    name = "WaitViewPreview(Dark)",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4
-)
-@Composable
-fun WaitViewPreview() {
-    MovieTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            WaitView(
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-    }
-}
-
-@Preview(
-    name = "WaitViewPreview(Light)",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    device = Devices.PIXEL_4
-)
-@Preview(
-    name = "WaitViewPreview(Dark)",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4
-)
-@Composable
-fun NoInternetViewPreview() {
-    MovieTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            NoInternetView(
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
     }
 }
 

@@ -1,6 +1,7 @@
 package bd.emon.movies.ui.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.FilterAltOff
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,6 +37,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -46,6 +49,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -94,7 +98,7 @@ fun HomeScreen(
     saveFilterErrorState: Throwable?,
     genres: Genres?,
     pullRefreshState: SwipeRefreshState,
-    loadGenres: () -> Unit,
+    loadOrReloadHomeScree: () -> Unit,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
     clearFilters: () -> Unit,
     clearFilterErrorState: () -> Unit,
@@ -159,27 +163,13 @@ fun HomeScreen(
         }
     ) { paddingValues ->
 
-        SwipeRefresh(state = pullRefreshState, onRefresh = { loadGenres() }) {
+        SwipeRefresh(state = pullRefreshState, onRefresh = { loadOrReloadHomeScree() }) {
 
             val contentModifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
             when {
-                genreErrorState != null && movieMap.isNotEmpty() -> {
-                    HomeContent(
-                        modifier = contentModifier,
-                        genres = genres,
-                        loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
-                        movieMap = movieMap
-                    )
-                    val snackBarErrorMessage =
-                        stringResource(id = R.string.no_internet_secondary_text)
-                    LaunchedEffect(snackbarHostState) {
-                        snackbarHostState.showSnackbar(message = snackBarErrorMessage)
-                    }
-                }
-
-                genreErrorState != null && movieMap.isEmpty() -> {
+                genreErrorState != null -> {
                     NoInternetView(
                         modifier = contentModifier
                             .verticalScroll(
@@ -268,23 +258,30 @@ fun HomeContent(
                 when (movieMap?.containsKey(genre.id)) {
                     true -> {
                         val movies = movieMap[genre.id]
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp)
-                        ) {
-                            items(
-                                items = movies!!,
-                                key = { item -> item.id }
-                            ) {
-                                MovieThumb(
-                                    movieEntity = it
-                                )
+                        when ((movies?.size ?: 0) > 0) {
+                            true -> {
+                                LazyRow(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 8.dp)
+                                ) {
+                                    items(
+                                        items = movies!!,
+                                        key = { item -> item.id }
+                                    ) {
+                                        MovieThumb(
+                                            movieEntity = it
+                                        )
+                                    }
+                                }
+                            }
+                            else -> {
+                                NoContentView(modifier = Modifier.fillMaxSize())
                             }
                         }
                     }
 
                     else -> {
-                        LaunchedEffect(key1 = genre.id){
+                        LaunchedEffect(key1 = genre.id) {
                             loadDiscoverMoviesByGenreId("${genre.id}")
                         }
                         WaitView(
@@ -384,14 +381,14 @@ fun AddFilters(
                     mutableFloatStateOf(0.0f)
                 }
             }
-            val sortingCriteria: Array<String> = stringArrayResource(id = R.array.movie_sorting_criteria)
+            val sortingCriteria: Array<String> =
+                stringArrayResource(id = R.array.movie_sorting_criteria)
             var selectedSortCriterion by remember {
                 filters[PARAM_SORT_BY]?.let {
                     mutableStateOf(it.toString().replace(".$DESC", ""))
                 } ?: run {
                     mutableStateOf(sortingCriteria[0])
                 }
-
             }
 
             var selectedMovieReleaseYear by remember {
@@ -637,5 +634,57 @@ fun ClearFilterPreview() {
                 onDismissRequest = {}
             )
         }
+    }
+}
+
+@Preview(
+    name = "NoContentViewPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "NoContentViewPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun NoContentViewPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NoContentView(
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    }
+}
+
+@Composable
+fun NoContentView(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .background(color = MaterialTheme.colorScheme.background),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CompositionLocalProvider(LocalContentColor provides LocalContentColor.current.copy(alpha = 0.4f)) {
+            Icon(
+                imageVector = Icons.Filled.SearchOff,
+                contentDescription = null,
+                modifier = Modifier.size(124.dp),
+            )
+        }
+        Text(
+            text = stringResource(id = R.string.no_result_primary_text),
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            text = stringResource(id = R.string.no_result_secondary_text),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            textAlign = TextAlign.Center
+        )
     }
 }
