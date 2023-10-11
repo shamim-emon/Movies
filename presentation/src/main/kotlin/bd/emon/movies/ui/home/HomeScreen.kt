@@ -89,6 +89,7 @@ import bd.emon.movies.ui.theme.MovieTheme
 import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,18 +100,21 @@ fun HomeScreen(
     saveFilterErrorState: Throwable?,
     genres: Genres,
     pullRefreshState: SwipeRefreshState,
-    loadOrReloadHomeScree: () -> Unit,
-    loadDiscoverMoviesByGenreId: (String) -> Unit,
-    clearFilters: () -> Unit,
-    clearFilterErrorState: () -> Unit,
-    updateFilters: (Int, Boolean, String, String) -> Unit,
+    loadOrReloadHomeScree: (() -> Unit)? = null,
+    loadDiscoverMoviesByGenreId: ((String) -> Unit)? = null,
+    clearFilters: (() -> Unit)? = null,
+    clearFilterErrorState: (() -> Unit)? = null,
+    updateFilters: ((Int, Boolean, String, String) -> Unit)? = null,
     movies: DiscoverMovies,
     movieReleaseYears: Array<String>,
     filters: HashMap<String, Any?>,
-    movieMap: MutableMap<Int,List<MovieEntity>>,
-    addToMovieMap: (DiscoverMovies) -> Unit
+    movieMap: MutableMap<Int, List<MovieEntity>>,
+    addToMovieMap: ((DiscoverMovies) -> Unit)? = null
 ) {
-    addToMovieMap(movies)
+
+    if (!movieMap.containsKey(movies.grp_genre_id)) {
+        addToMovieMap?.invoke(movies)
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = {
@@ -139,7 +143,7 @@ fun HomeScreen(
                             onDismissRequest = { showClearFilter = false },
                             onConfirmation = {
                                 showClearFilter = false
-                                clearFilters()
+                                clearFilters?.invoke()
                             }
                         )
 
@@ -167,7 +171,7 @@ fun HomeScreen(
         }
     ) { paddingValues ->
 
-        SwipeRefresh(state = pullRefreshState, onRefresh = { loadOrReloadHomeScree() }) {
+        SwipeRefresh(state = pullRefreshState, onRefresh = { loadOrReloadHomeScree?.invoke() }) {
 
             val contentModifier = modifier
                 .fillMaxSize()
@@ -200,7 +204,7 @@ fun HomeScreen(
                     LaunchedEffect(snackbarHostState) {
                         snackbarHostState.showSnackbar(message = snackBarErrorMessage)
                     }
-                    clearFilterErrorState()
+                    clearFilterErrorState?.invoke()
                 }
             }
         }
@@ -216,10 +220,20 @@ fun HomePreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-//             HomeScreen(
-//                 loadState = false,
-//                 loadGenres = {},
-//             )
+            HomeScreen(
+                loadState = false,
+                genreErrorState = null,
+                saveFilterErrorState = null,
+                genres = MovieApiDummyDataProvider.genreList,
+                pullRefreshState = rememberSwipeRefreshState(isRefreshing = false),
+                movies = MovieApiDummyDataProvider.disocoverMovies,
+                movieReleaseYears = arrayOf("2023"),
+                filters = hashMapOf(),
+                movieMap = mutableMapOf(
+                    80 to MovieApiDummyDataProvider.movieEntities,
+                    28 to MovieApiDummyDataProvider.movieEntities,
+                )
+            )
         }
     }
 }
@@ -228,16 +242,15 @@ fun HomePreview() {
 fun HomeContent(
     modifier: Modifier = Modifier,
     genres: Genres,
-    loadDiscoverMoviesByGenreId: (String) -> Unit,
-    movieMap : MutableMap<Int,List<MovieEntity>>
+    loadDiscoverMoviesByGenreId: ((String) -> Unit)? = null,
+    movieMap: MutableMap<Int, List<MovieEntity>>
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(space = 8.dp)
     ) {
         items(
-            items = genres.genres,
-            key = { item -> item.id }
+            items = genres.genres
         ) { genre ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -257,7 +270,7 @@ fun HomeContent(
             }
             when (movieMap.containsKey(genre.id)) {
                 true -> {
-                    val movies = movieMap[genre.id]?: listOf()
+                    val movies = movieMap[genre.id] ?: listOf()
                     when (movies.isNotEmpty()) {
                         true -> {
                             LazyRow(
@@ -282,7 +295,7 @@ fun HomeContent(
                 }
 
                 else -> {
-                    loadDiscoverMoviesByGenreId("${genre.id}")
+                    loadDiscoverMoviesByGenreId?.invoke("${genre.id}")
                     WaitView(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -358,17 +371,44 @@ fun MovieThumbPreview() {
     }
 }
 
+@Preview(
+    name = "AddFiltersPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "AddFiltersPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun AddFiltersPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.wrapContentSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            AddFilters(
+                dismissRequest = { },
+                movieReleaseYears = arrayOf("2023", "2022", "2021", "2020"),
+                filters = mutableMapOf()
+            )
+        }
+    }
+}
+
 @Composable
 fun AddFilters(
+    modifier: Modifier = Modifier,
     dismissRequest: () -> Unit,
     movieReleaseYears: Array<String>,
     filters: MutableMap<String, Any?>,
-    updateFilters: (Int, Boolean, String, String) -> Unit
+    updateFilters: ((Int, Boolean, String, String) -> Unit)? = null
 
 ) {
     Dialog(onDismissRequest = dismissRequest) {
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(all = 16.dp)
         ) {
@@ -484,7 +524,7 @@ fun AddFilters(
                         modifier = Modifier.padding(horizontal = 8.dp),
                         onClick = {
                             dismissRequest()
-                            updateFilters(
+                            updateFilters?.invoke(
                                 sliderPosition.toInt(),
                                 false,
                                 selectedSortCriterion,

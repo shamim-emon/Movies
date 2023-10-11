@@ -282,4 +282,32 @@ object MovieApiDummyDataProvider {
         title = "Transformers: Rise of the Beasts",
         poster_path = "Transformers: Rise of the Beasts"
     )
+
+    val movieEntities = listOf(
+        MovieEntity(
+            id = 616037,
+            title = "Thor: Love and Thunder",
+            poster_path = "/pIkRyD18kl4FhoCNQuWxWu5cBLM.jpg"
+        ),
+        MovieEntity(
+            id = 765869,
+            title = "Black Friday",
+            poster_path = "/vf9Ex4EwSPlwbva4ZJdljsQQOML.jpg"
+        ),
+        MovieEntity(
+            id = 968051,
+            title = "The Nun II",
+            poster_path = "/5gzzkR7y3hnY8AD1wXjCnVlHba5.jpg"
+        ),
+        MovieEntity(
+            id = 926393,
+            title = "The Equalizer 3",
+            poster_path = "/b0Ej6fnXAP8fK75hlyi2jKqdhHz.jpg"
+        ),
+        MovieEntity(
+            id = 678512,
+            title = "Sound of Freedom",
+            poster_path = "/qA5kPYZA7FkVvqcEfJRoOy4kpHg.jpg"
+        )
+    )
 }

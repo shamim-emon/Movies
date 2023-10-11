@@ -86,9 +86,7 @@ fun HomeRoute(
     }
 
     val addToMovieMap: (DiscoverMovies) -> Unit = { movieGrp ->
-        if (!movieMap.containsKey(movieGrp.grp_genre_id)) {
-            movieMap[movieGrp.grp_genre_id] = discoverMovieMapper.mapFrom(movieGrp.results).toList()
-        }
+        movieMap[movieGrp.grp_genre_id] = discoverMovieMapper.mapFrom(movieGrp.results).toList()
     }
 
     if (isInitialComposition) {
