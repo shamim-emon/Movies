@@ -1,7 +1,6 @@
 package bd.emon.movies.ui.home
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
@@ -13,6 +12,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import bd.emon.data.dataMapper.DiscoverMovieMapper
 import bd.emon.domain.PARAM_GENRES
 import bd.emon.domain.entity.common.MovieEntity
+import bd.emon.domain.entity.discover.DiscoverMovies
+import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.home.MovieReleaseYearsProvider
 import bd.emon.movies.viewModels.HomeViewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -25,19 +26,30 @@ fun HomeRoute(
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
 
-    val loadState by viewModel.loadingState.observeAsState()
-    val genreErrorState by viewModel.genreErrorState.observeAsState()
-    val filtersErrorState by viewModel.discoverFiltersErrorState.observeAsState()
-    val genres by viewModel.genres.observeAsState()
+    val loadState by viewModel.loadingState.observeAsState(initial = true)
+    val genreErrorState by viewModel.genreErrorState.observeAsState(initial = null)
+    val filtersErrorState by viewModel.discoverFiltersErrorState.observeAsState(initial = null)
+    val genres by viewModel.genres.observeAsState(initial = Genres(listOf()))
+    val movies by viewModel.discoverMovies.observeAsState(
+        DiscoverMovies(
+            0,
+            mutableListOf(),
+            0,
+            0,
+            0
+        )
+    )
+    val movieMap: SnapshotStateMap<Int, List<MovieEntity>> = remember { mutableStateMapOf() }
 
     val pullRefreshState: SwipeRefreshState =
-        rememberSwipeRefreshState(isRefreshing = loadState ?: false)
+        rememberSwipeRefreshState(isRefreshing = loadState)
     var isInitialComposition by remember { mutableStateOf(true) }
-    val movieMap: SnapshotStateMap<Int, List<MovieEntity>> = remember { mutableStateMapOf() }
+
     val movieReleaseYears = movieReleaseYearsProvider.getReleaseYears()
 
     val loadGenres: () -> Unit = {
         viewModel.genreErrorState.postValue(null)
+        viewModel.genres.postValue(Genres(listOf()))
         viewModel.loadGenres(viewModel.apiParams)
     }
 
@@ -47,7 +59,7 @@ fun HomeRoute(
     }
 
     val loadOrReloadHomeScreen: () -> Unit = {
-        viewModel.genres.postValue(null)
+        viewModel.discoverMovies.postValue(DiscoverMovies(0, mutableListOf(), 0, 0, 0))
         movieMap.clear()
         viewModel.loadDiscoverMovieFiltersAndHoldInApiParamMap()
         loadGenres()
@@ -58,18 +70,25 @@ fun HomeRoute(
         loadOrReloadHomeScreen()
     }
 
+    val updateFilters: (Int, Boolean, String, String) -> Unit =
+        { minVoteCount: Int, showAdult: Boolean, orderBy: String, releaseYr: String ->
+            viewModel.saveDiscoverMoviesFilters(
+                minVoteCount = minVoteCount,
+                includeAdultContent = showAdult,
+                orderBy = orderBy,
+                releaseYearStr = releaseYr
+            )
+            loadOrReloadHomeScreen()
+        }
+
     val clearFiltersError: () -> Unit = {
         viewModel.discoverFiltersErrorState.postValue(null)
     }
 
-    viewModel.saveDiscoverFilters.observeAsState().value.let {
-        LaunchedEffect(key1 = it) {
-            loadOrReloadHomeScreen()
+    val addToMovieMap: (DiscoverMovies) -> Unit = { movieGrp ->
+        if (!movieMap.containsKey(movieGrp.grp_genre_id)) {
+            movieMap[movieGrp.grp_genre_id] = discoverMovieMapper.mapFrom(movieGrp.results).toList()
         }
-    }
-
-    viewModel.discoverMovies.observeAsState().value?.let { item ->
-        movieMap[item.grp_genre_id] = discoverMovieMapper.mapFrom(item.results)
     }
 
     if (isInitialComposition) {
@@ -78,7 +97,7 @@ fun HomeRoute(
     }
 
     HomeScreen(
-        loadState = loadState ?: false,
+        loadState = loadState,
         genreErrorState = genreErrorState,
         saveFilterErrorState = filtersErrorState,
         genres = genres,
@@ -87,9 +106,11 @@ fun HomeRoute(
         loadDiscoverMoviesByGenreId = loadDiscoverMoviesByGenreId,
         clearFilters = clearFilters,
         clearFilterErrorState = clearFiltersError,
-        updateFilters = viewModel::saveDiscoverMoviesFilters,
-        movieMap = movieMap,
+        updateFilters = updateFilters,
+        movies = movies,
         movieReleaseYears = movieReleaseYears,
-        filters = viewModel.apiParams
+        filters = viewModel.apiParams,
+        movieMap = movieMap,
+        addToMovieMap = addToMovieMap
     )
 }

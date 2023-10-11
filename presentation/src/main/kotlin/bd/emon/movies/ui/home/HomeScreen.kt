@@ -74,6 +74,7 @@ import bd.emon.domain.PARAM_SORT_BY
 import bd.emon.domain.PARAM_VOTE_COUNT_GREATER_THAN
 import bd.emon.domain.SAVE_TO_PREF_ERROR_DEFAULT
 import bd.emon.domain.entity.common.MovieEntity
+import bd.emon.domain.entity.discover.DiscoverMovies
 import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.R
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
@@ -96,17 +97,20 @@ fun HomeScreen(
     loadState: Boolean,
     genreErrorState: Throwable?,
     saveFilterErrorState: Throwable?,
-    genres: Genres?,
+    genres: Genres,
     pullRefreshState: SwipeRefreshState,
     loadOrReloadHomeScree: () -> Unit,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
     clearFilters: () -> Unit,
     clearFilterErrorState: () -> Unit,
     updateFilters: (Int, Boolean, String, String) -> Unit,
-    movieMap: MutableMap<Int, List<MovieEntity>>,
+    movies: DiscoverMovies,
     movieReleaseYears: Array<String>,
-    filters: HashMap<String, Any?>
+    filters: HashMap<String, Any?>,
+    movieMap: MutableMap<Int,List<MovieEntity>>,
+    addToMovieMap: (DiscoverMovies) -> Unit
 ) {
+    addToMovieMap(movies)
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         snackbarHost = {
@@ -179,9 +183,7 @@ fun HomeScreen(
                 }
 
                 loadState -> {
-                    WaitView(
-                        modifier = contentModifier
-                    )
+                    WaitView(modifier = contentModifier)
                 }
 
                 !loadState -> {
@@ -225,71 +227,67 @@ fun HomePreview() {
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    genres: Genres?,
+    genres: Genres,
     loadDiscoverMoviesByGenreId: (String) -> Unit,
-    movieMap: MutableMap<Int, List<MovieEntity>>?
+    movieMap : MutableMap<Int,List<MovieEntity>>
 ) {
-
-    genres?.let {
-        LazyColumn(
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(space = 8.dp)
-        ) {
-            items(
-                items = genres.genres,
-                key = { item -> item.id }
-            ) { genre ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = genre.name,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .weight(1.0f),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+    ) {
+        items(
+            items = genres.genres,
+            key = { item -> item.id }
+        ) { genre ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = genre.name,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .weight(1.0f),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                )
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowForward,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
                 }
-                when (movieMap?.containsKey(genre.id)) {
-                    true -> {
-                        val movies = movieMap[genre.id]
-                        when ((movies?.size ?: 0) > 0) {
-                            true -> {
-                                LazyRow(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp)
+            }
+            when (movieMap.containsKey(genre.id)) {
+                true -> {
+                    val movies = movieMap[genre.id]?: listOf()
+                    when (movies.isNotEmpty()) {
+                        true -> {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp)
+                            ) {
+                                items(
+                                    items = movies,
+                                    key = { item -> item.id }
                                 ) {
-                                    items(
-                                        items = movies!!,
-                                        key = { item -> item.id }
-                                    ) {
-                                        MovieThumb(
-                                            movieEntity = it
-                                        )
-                                    }
+                                    MovieThumb(
+                                        movieEntity = it
+                                    )
                                 }
                             }
-                            else -> {
-                                NoContentView(modifier = Modifier.fillMaxSize())
-                            }
                         }
-                    }
 
-                    else -> {
-                        LaunchedEffect(key1 = genre.id) {
-                            loadDiscoverMoviesByGenreId("${genre.id}")
+                        else -> {
+                            NoContentView(modifier = Modifier.fillMaxSize())
                         }
-                        WaitView(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(232.dp)
-                        )
                     }
+                }
+
+                else -> {
+                    loadDiscoverMoviesByGenreId("${genre.id}")
+                    WaitView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(232.dp)
+                    )
                 }
             }
         }
