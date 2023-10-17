@@ -2,6 +2,8 @@ package bd.emon.movies.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import bd.emon.domain.NO_DATA_ERR
+import bd.emon.domain.PARAM_API_KEY
+import bd.emon.domain.PARAM_LANGUAGE
 import bd.emon.domain.entity.trending.TrendingMovies
 import bd.emon.domain.usecase.GetTrendingMoviesUseCase
 import bd.emon.movies.base.BaseViewModel
@@ -17,9 +19,16 @@ class TrendingViewModel @Inject constructor(
     var trendingMovies: MutableLiveData<TrendingMovies> = MutableLiveData()
     var loadingState: MutableLiveData<Boolean> = MutableLiveData()
     var trendingMoviesErrorState: MutableLiveData<Throwable> = MutableLiveData()
+    lateinit var apiParams: HashMap<String, Any?>
 
     init {
         loadingState.postValue(true)
+        initApiParamMap()
+    }
+
+    private fun initApiParamMap() {
+        apiParams = hashMapOf()
+        apiParams[PARAM_API_KEY] = apiKey
     }
 
     fun loadTrendingMovies(apiKey: String, page: Int) {

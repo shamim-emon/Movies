@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import bd.emon.data.dataMapper.DiscoverMovieMapper
+import bd.emon.data.dataMapper.TrendingMovieMapper
 import bd.emon.movies.common.navigation.ScreensNavigator
 import bd.emon.movies.databinding.ActivityMainBinding
 import bd.emon.movies.home.MovieReleaseYearsProvider
@@ -26,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var discoverMovieMapper: DiscoverMovieMapper
 
     @Inject
+    lateinit var trendingMovieMapper: TrendingMovieMapper
+
+    @Inject
     lateinit var movieReleaseYearsProvider: MovieReleaseYearsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +42,8 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     MovieNavHost(
                         discoverMovieMapper = discoverMovieMapper,
-                        movieReleaseYearsProvider = movieReleaseYearsProvider
+                        movieReleaseYearsProvider = movieReleaseYearsProvider,
+                        trendingMovieMapper = trendingMovieMapper
                     )
                 }
             }

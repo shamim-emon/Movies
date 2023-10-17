@@ -24,15 +24,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import bd.emon.data.dataMapper.DiscoverMovieMapper
+import bd.emon.data.dataMapper.TrendingMovieMapper
 import bd.emon.movies.R
 import bd.emon.movies.home.MovieReleaseYearsProvider
 import bd.emon.movies.ui.home.HomeRoute
+import bd.emon.movies.ui.trending.TrendingRoute
 
 @Composable
 fun MovieNavHost(
     modifier: Modifier = Modifier,
     navHostController: NavHostController = rememberNavController(),
     discoverMovieMapper: DiscoverMovieMapper,
+    trendingMovieMapper: TrendingMovieMapper,
     movieReleaseYearsProvider: MovieReleaseYearsProvider
 ) {
     Scaffold(
@@ -51,7 +54,7 @@ fun MovieNavHost(
                 )
             }
             composable(Screen.Trending.route) {
-                // HomeScreen()
+                TrendingRoute(trendingMovieMapper = trendingMovieMapper)
             }
             composable(Screen.Search.route) {
                 // HomeScreen()
@@ -82,7 +85,15 @@ fun MovieBottomBar(
                     )
                 },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = {}
+                onClick = {
+                    navHostController.navigate(screen.route) {
+                        popUpTo(navHostController.graph.startDestinationId) {
+                            saveState = false
+                        }
+                        launchSingleTop = false
+                        restoreState = false
+                    }
+                }
             )
         }
     }

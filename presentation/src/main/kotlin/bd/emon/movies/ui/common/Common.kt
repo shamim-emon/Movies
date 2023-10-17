@@ -6,10 +6,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -24,11 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import bd.emon.domain.entity.common.MovieEntity
 import bd.emon.movies.R
+import bd.emon.movies.fakeData.MovieApiDummyDataProvider
 import bd.emon.movies.ui.theme.MovieTheme
+import coil.compose.SubcomposeAsyncImage
 
 @Preview(
     name = "PlaceHolderImage(Light)",
@@ -178,4 +195,138 @@ fun ListDivider(modifier: Modifier = Modifier) {
         modifier = modifier,
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
     )
+}
+
+
+@Composable
+fun MovieThumb(
+    modifier: Modifier = Modifier,
+    movieEntity: MovieEntity
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(ratio = 1.0f / 1.5f),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 10.dp
+            )
+        ) {
+            SubcomposeAsyncImage(
+                model = movieEntity.imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                loading = {
+                    PlaceHolderImage()
+                },
+                error = {
+                    ErrorImage()
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(height = 4.dp))
+        Text(
+            text = movieEntity.title,
+            style = MaterialTheme.typography.titleSmall,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Preview(
+    name = "MovieThumbPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    widthDp = 120,
+    heightDp = 232
+)
+@Preview(
+    name = "MovieThumbPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    widthDp = 120,
+    heightDp = 232
+)
+@Composable
+fun MovieThumbPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.wrapContentSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            MovieThumb(
+                modifier = Modifier
+                    .width(width = 120.dp)
+                    .height(height = 232.dp),
+                movieEntity = MovieApiDummyDataProvider.movieEntity
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "MovieVerticalGridPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "MovieVerticalGridPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.PIXEL_4
+)
+@Preview(
+    name = "MovieVerticalGridPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.FOLDABLE
+)
+@Preview(
+    name = "MovieVerticalGridPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.FOLDABLE
+)
+@Preview(
+    name = "MovieVerticalGridPreview(Light)",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = Devices.NEXUS_5X
+)
+@Preview(
+    name = "MovieVerticalGridPreview(Dark)",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.NEXUS_5X
+)
+@Composable
+fun MovieVerticalGridPreview() {
+    MovieTheme {
+        Surface(
+            modifier = Modifier.wrapContentSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            MovieVerticalGrid(
+                movies = MovieApiDummyDataProvider.movieEntities.toMutableList()
+            )
+        }
+    }
+}
+
+@Composable
+fun MovieVerticalGrid(
+    modifier: Modifier=Modifier.fillMaxSize(),
+    movies: MutableList<MovieEntity>
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(movies) {
+            MovieThumb(
+                movieEntity = it,
+            )
+        }
+    }
 }

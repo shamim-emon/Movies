@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import bd.emon.movies.ui.common.MovieThumb
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,7 +31,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -58,12 +58,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,15 +76,11 @@ import bd.emon.domain.entity.discover.DiscoverMovies
 import bd.emon.domain.entity.genre.Genres
 import bd.emon.movies.R
 import bd.emon.movies.fakeData.MovieApiDummyDataProvider
-import bd.emon.movies.ui.common.ErrorImage
 import bd.emon.movies.ui.common.ListDivider
 import bd.emon.movies.ui.common.NoInternetView
-import bd.emon.movies.ui.common.PlaceHolderImage
 import bd.emon.movies.ui.common.WaitView
-import bd.emon.movies.ui.common.defaultThumbSize
 import bd.emon.movies.ui.common.formatHumanReadable
 import bd.emon.movies.ui.theme.MovieTheme
-import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -282,6 +276,9 @@ fun HomeContent(
                                     key = { item -> item.id }
                                 ) {
                                     MovieThumb(
+                                        modifier = Modifier
+                                            .width(width = 120.dp)
+                                            .height(height = 232.dp),
                                         movieEntity = it
                                     )
                                 }
@@ -303,70 +300,6 @@ fun HomeContent(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun MovieThumb(
-    modifier: Modifier = Modifier,
-    movieEntity: MovieEntity
-) {
-    Column(
-        modifier = modifier
-            .width(width = 120.dp)
-            .height(height = 232.dp),
-    ) {
-        Card(
-            modifier = Modifier.defaultThumbSize(),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 10.dp
-            )
-        ) {
-            SubcomposeAsyncImage(
-                model = movieEntity.imageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                loading = {
-                    PlaceHolderImage()
-                },
-                error = {
-                    ErrorImage()
-                }
-            )
-        }
-        Spacer(modifier = Modifier.height(height = 4.dp))
-        Text(
-            text = movieEntity.title,
-            style = MaterialTheme.typography.titleSmall,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-        )
-    }
-}
-
-@Preview(
-    name = "MovieThumbPreview(Light)",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    widthDp = 120,
-    heightDp = 232
-)
-@Preview(
-    name = "MovieThumbPreview(Dark)",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    widthDp = 120,
-    heightDp = 232
-)
-@Composable
-fun MovieThumbPreview() {
-    MovieTheme {
-        Surface(
-            modifier = Modifier.wrapContentSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            MovieThumb(movieEntity = MovieApiDummyDataProvider.movieEntity)
         }
     }
 }
